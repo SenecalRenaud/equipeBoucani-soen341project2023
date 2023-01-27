@@ -1,4 +1,4 @@
 # SOEN 341 - Boucani 
 
-##Objective
+## Objective
 goal is to create a website for job postings and applications 
