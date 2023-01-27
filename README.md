@@ -1,7 +1,7 @@
 # SOEN 341 - Boucani 
 
 ## Objective
-goal is to create a website for job postings and applications 
+Our objective is to create a website which will function as a platform onto which employers can upload job postings and job seekers can apply to these postings.
 
 ## Team Members
 
@@ -10,3 +10,7 @@ goal is to create a website for job postings and applications
 * Patrick Riachi
 * Renaud Senécal
 * Jack Spiratos
+
+## Technologies
+
+* Google login
