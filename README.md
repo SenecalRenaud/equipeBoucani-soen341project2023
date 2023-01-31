@@ -15,5 +15,5 @@ Our objective is to create a website which will function as a platform onto whic
 
 * Google login
 * React
-* Django
+* Flask
 * MongoDB
