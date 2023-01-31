@@ -3,6 +3,9 @@
 ## Objective
 Our objective is to create a website which will function as a platform onto which employers can upload job postings and job seekers can apply to these postings.
 
+## Project Description
+
+
 ## Team Members
 
 * Ozan Alptekin
