@@ -19,7 +19,7 @@ Our objective is to create a website which will function as a platform onto whic
 * Google login
 * React (JavaScript)
 * Flask (Python)
-* MongoDB
+* MongoDB (TBD)
 
 ## Team Members
 * Ozan Alptekin (ozan1318)
