@@ -25,7 +25,7 @@ Finally, the main goal of the website is to facilitate the hiring/applying proce
 * Jack Spiratos (Spiratatoe)
 * Patrick Riachi (Patrickriachi)
 
-Roles TBD
+Roles TBD; Will be determined as issues get created and the website begins to be created.
 
 ## Technologies
 
