@@ -22,10 +22,10 @@ Our objective is to create a website which will function as a platform onto whic
 * MongoDB
 
 ## Team Members
-Ozan Alptekin (ozan1318)
-Antoine Cantin (ChiefsBestPal)
-Renaud Senécal (SenecalRenaud)
-Jack Spiratos (Spiratatoe)
-Patrick Riachi (Patrickriachi)
+* Ozan Alptekin (ozan1318)
+* Antoine Cantin (ChiefsBestPal)
+* Renaud Senécal (SenecalRenaud)
+* Jack Spiratos (Spiratatoe)
+* Patrick Riachi (Patrickriachi)
 
 Roles TBD
