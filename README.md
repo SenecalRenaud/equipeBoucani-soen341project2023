@@ -7,21 +7,6 @@ Our objective is to create a website which will function as a platform onto whic
 
 
 ## Team Members
-
-* Ozan Alptekin
-* Antoine Cantin
-* Patrick Riachi
-* Renaud Senécal
-* Jack Spiratos
-
-## Technologies
-
-* Google login
-* React (JavaScript)
-* Flask (Python)
-* MongoDB (TBD)
-
-## Team Members
 * Ozan Alptekin (ozan1318)
 * Antoine Cantin (ChiefsBestPal)
 * Renaud Senécal (SenecalRenaud)
@@ -29,3 +14,10 @@ Our objective is to create a website which will function as a platform onto whic
 * Patrick Riachi (Patrickriachi)
 
 Roles TBD
+
+## Technologies
+
+* Google login
+* React (JavaScript)
+* Flask (Python)
+* MongoDB (TBD)
