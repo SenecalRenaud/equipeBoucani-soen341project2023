@@ -19,7 +19,7 @@ Here are some of the key features implemented:
 Finally, the main goal of the website is to facilitate the hiring/applying process for users around the world.
 
 ## Team Members
-* Ozan Alptekin (ozan1318)
+* Ozan Alptekin (ozan1318) - QA Lead and Developer
 * Antoine Cantin (ChiefsBestPal)
 * Renaud Senécal (SenecalRenaud)
 * Jack Spiratos (Spiratatoe)
