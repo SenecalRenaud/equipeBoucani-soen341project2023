@@ -20,16 +20,15 @@ Finally, the main goal of the website is to facilitate the hiring/applying proce
 
 ## Team Members
 * Ozan Alptekin (ozan1318) - QA Lead and Developer
-* Antoine Cantin (ChiefsBestPal)
+* Antoine Cantin (ChiefsBestPal) - Tech Lead (+DB Integration), Backend Developer, Tester, [?]UI Designer 
 * Renaud Senécal (SenecalRenaud) - Developer
 * Jack Spiratos (Spiratatoe)
 * Patrick Riachi (Patrickriachi)
 
-Roles TBD; Will be determined as issues get created and the website begins to be created.
-
 ## Technologies
 
 * Google login
+* Firebase [for login only]
 * React (JavaScript)
 * Flask (Python)
 * MySQL or SQLite [TBD]
