@@ -31,4 +31,5 @@ Finally, the main goal of the website is to facilitate the hiring/applying proce
 * Firebase [for login only]
 * React (JavaScript)
 * Flask (Python)
-* MySQL
+* SQLite or MySQL [TBD]
+* Heroku or Microsoft Azure (Devops+AppService) [TBD]
