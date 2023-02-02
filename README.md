@@ -23,7 +23,7 @@ Finally, the main goal of the website is to facilitate the hiring/applying proce
 * Antoine Cantin (ChiefsBestPal) - Tech Lead (+DB Integration), Backend Developer, Tester, Hosting/Security
 * Renaud Senécal (SenecalRenaud) - Fullstack Developer and Scrum Master
 * Jack Spiratos (Spiratatoe)
-* Patrick Riachi (Patrickriachi)
+* Patrick Riachi (Patrickriachi) - Frontend Developer, UI/UX designer
 
 ## Technologies
 
