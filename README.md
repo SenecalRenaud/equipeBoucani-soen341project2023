@@ -21,7 +21,7 @@ Finally, the main goal of the website is to facilitate the hiring/applying proce
 ## Team Members
 * Ozan Alptekin (ozan1318) - QA Lead and Developer
 * Antoine Cantin (ChiefsBestPal)
-* Renaud Senécal (SenecalRenaud)
+* Renaud Senécal (SenecalRenaud) - Developer
 * Jack Spiratos (Spiratatoe)
 * Patrick Riachi (Patrickriachi)
 
