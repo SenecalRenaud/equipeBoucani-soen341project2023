@@ -32,4 +32,4 @@ Roles TBD; Will be determined as issues get created and the website begins to be
 * Google login
 * React (JavaScript)
 * Flask (Python)
-* MongoDB (TBD)
+* MySQL or SQLite [TBD]
