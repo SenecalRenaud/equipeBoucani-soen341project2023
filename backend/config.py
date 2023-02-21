@@ -5,9 +5,14 @@ load_dotenv()
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-#todo put all GLOBAL and COMMON app.config['...'] in this class...
-class ApplicationConfig:
-    SECRET_KEY = os.environ["SECRET_KEY"]
+class ApplicationSessionConfig:
+    SECRET_KEY = os.environ["SECRET_KEY"] # should set flask.Flask.secret_key
 
-    SQLALCHEMY_ECHO = True
-    pass
+    SESSION_COOKIE_SECURE = False
+    SESSION_PERMANENT = False
+    SESSION_USE_SIGNER = True
+
+    SQLALCHEMY_DATABASE_URI = f"{RDBMS_ALCHEMY_HNAME}://{DB_USER}@{DB_HOST}/{DB_NAME}"
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
+    SQLALCHEMY_ECHO = False
+    #todo SQLALCHEMY_BINDS for cors or many db?
