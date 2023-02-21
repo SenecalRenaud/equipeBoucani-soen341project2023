@@ -1,77 +1,46 @@
-from flask import Flask,jsonify,request
-from flask_sqlalchemy import SQLAlchemy
-# from sqlalchemy import Integer,DateTime,String,Text,Column
-import flask
+from flask import Flask,jsonify,request,abort,session
 
-from flask_marshmallow import Marshmallow
+# from sqlalchemy import Integer,DateTime,String,Text,Column
+# from flask.ext.session import Session, Session(app) to use flask.session instead of db.session
 
 # from werkzeug.local import LocalProxy,WSGIApplication
 
-
-#todo from flask_cors import CORS (for cross origin requests)
-#todo from flask_bcrypt import Bcrypt (for passwords, private op hash,...)
+from flask_cors import CORS #?  (for cross origin requests)
+#TODO from flask_bcrypt import Bcrypt #? (for passwords, private op hash,...)
 
 import logging
-import datetime
 import os
-
 import re
-
 import itertools
 import operator
 
-RDBMS_ALCHEMY_HNAME = 'mysql'
-_DB_NAME = "flask_test_mysql_db"
-DB_USER = "root"
-DB_PASS = "" #else -> ":'pass'"
-DB_HOST = "localhost"
-DB_PORT = ""#e.g. :5000, :3306
-
+#*******************************
+from config import ApplicationSessionConfig #env vars + Session configs
+from models import db,ma # SQLAlchemyInterface and MarshmallowSchema objects  to integrate
+#*******************************
 
 app = Flask(__name__)
 
-#Type of SQLalchemy database wanted; Lookup config keys type in flasksqlalchemy website
-app.config['SQLALCHEMY_DATABASE_URI'] = f"{RDBMS_ALCHEMY_HNAME}://{DB_USER}@{DB_HOST}/{_DB_NAME}"
+app.config.from_object(ApplicationSessionConfig)
 
-#for debug/dev safety mostly
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db.init_app(app)
 
-#if db imported from another module, do db.init_app(app)
-db = SQLAlchemy(app)
+ma.init_app(app)
 
-ma = Marshmallow(app)
+with app.app_context():
+    db.create_all()
 
-class CommentPost(db.Model):
-    """
-    Experiment MySQL Alchemy Table creation and config with OOP.
-    Python interpreter simplest launch example
-    >>> from app import db
-    >>> db.create_all()
-    """
-    __slots__ = ()
-    __tablename__ = "comment_post"
-
-    id = db.Column(db.Integer,primary_key=True)
-    title = db.Column(db.String(100),unique=True,nullable=False)
-    body = db.Column(db.Text())
-    date = db.Column(db.DateTime,default=datetime.datetime.now)
-
-    def __init__(self,title,body):
-        self.title = title
-        self.body = body
-
-class CommentPostSchema(ma.Schema):
-    class Meta:
-        fields = ('id','title','body','date')
-
+#TODO Seperate once database has scaled... For now, single modules are convenient
+from models import CommentPost,CommentPostSchema
 commentpost_schema = CommentPostSchema()
 commentposts_schema = CommentPostSchema(many=True)
 
-@app.route('/get', methods=['GET']) # methods = [list http reqs methods]
+@app.route('/get', methods=['GET'])# methods = [list http reqs methods]
 def get_all_commentposts():
     """
     GET request to view all table entries directly from 'many' mode sql schema
     :return: json response
+    Antoine Cantin@ChiefsBestPal
     """
 
     all_commentposts = CommentPost.query.all()
@@ -135,18 +104,5 @@ def delete_commentpost(_id):
 
 if __name__ == '__main__':
 
-    # with app.app_context():
-    #     db.create_all()
-    # port = int(os.environ.get('PORT', 5000))
+    #port = int(os.environ.get('PORT', 5000))
     app.run(debug=True)
-
-# with app.app_context():
-#     db.create_all()
-#
-#     db.session.add(TableExample("This the #1 Title", "And this the #1 Body"))
-#     db.session.add(TableExample("BUt This the #2 Title", "And indeed this the #2 Body"))
-#
-#     db.session.commit()
-#
-#     tableexamples = TableExample.query.all()
-#     print(tableexamples)
