@@ -1,0 +1,12 @@
+.flaskenv
+.env
+
+./virutalenv/
+./.venv/
+build/
+
+.idea/
+
+.vscode/
+
+__pycache__/
