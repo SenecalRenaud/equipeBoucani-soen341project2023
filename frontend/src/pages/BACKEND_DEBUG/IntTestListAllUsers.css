@@ -23,6 +23,25 @@ button {
   font-family: "Courier New", serif;
 
 }
+/*.Debug form{*/
+/*  display: flex;*/
+/*  height: 40vh;*/
+/*  align-self: center;*/
+/*  align-items: center;*/
+/*  flex-direction: column;*/
+/*  justify-content: center;*/
+/*}*/
+
+
+.Debug form {
+    display:grid;
+    grid-template-columns: max-content max-content;
+    grid-gap:5px;
+
+}
+.Debug form label       { text-align:right; }
+.Debug form label[for^="comment_"]:after { content: ":"; }
+.Debug form input {  }
 
 /*.App-logo {*/
 /*  height: 40vmin;*/

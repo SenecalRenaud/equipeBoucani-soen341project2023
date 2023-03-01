@@ -1,11 +1,36 @@
 import React,{useState,useEffect} from "react";
 import './IntTestListAllUsers.css';
 import CoreUICard from "../../components/CoreUICard";
-
-
+            // "Access-Control-Allow-Origin":  "http://localhost:3000/",
+            // "Access-Control-Allow-Methods": "POST",
+            // "Access-Control-Allow-Headers": "Content-Type, Authorization"
 function AntoineIntegrationTestListAllUsers() {
+  const [commentTitle, setCommentTitle] = useState("");
+  const [commentBody, setCommentBody] = useState("");
+  let handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+      fetch("http://localhost:5000/add", {
+          mode: "no-cors",
+        method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+         body: JSON.stringify({
+          title: commentTitle,
+          body: commentBody
+        })
+      })
+    } catch (err) {
+      console.log(err);
+    }
+
+  };
+
     const POLLING_DATABASE_UPDATE_INTERVAL = 5
-    const [data,setData] = useState([{}]);
+
+    let [data,setData] = useState([{}]);
     useEffect(() => {
         fetch("/get?mapAsFields=true").then(
             response => response.json()
@@ -24,7 +49,7 @@ function AntoineIntegrationTestListAllUsers() {
                 {/* eslint-disable-next-line react/style-prop-object */}
                 of the backend. <span style={{color: 'red'}}> DO NOT EDIT</span>.</h3>
         </header>
-        <div>
+        <div style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignContent: 'flex-start',alignItems: 'stretch'}}>
             <hr  style={{
     color: '#000000',
     backgroundColor: '#000000',
@@ -51,6 +76,22 @@ function AntoineIntegrationTestListAllUsers() {
 
             }
         </div>
+        <h3> Post a new comment </h3>
+        <form id="formElem" onSubmit={handleSubmit}>
+            <label htmlFor="comment_title">Title </label><input type="text" id="comment_title" name="comment_title"
+                    value={commentTitle}
+                    onChange={(e) => setCommentTitle(e.target.value)}/>
+            <label htmlFor="comment_body">Comment </label>
+            <textarea id="comment_body" name="comment_body" rows="4" cols="75" placeholder="Whats on your mind?"
+                    value={commentBody}
+                    onChange={(e) => setCommentBody(e.target.value)}>
+            </textarea>
+            <label htmlFor="submitComment"></label><input id="submitComment" type="submit" value="Submit" form="formElem"/>
+
+        </form>
+{/*TODO https://dev.to/ondiek/sending-data-from-react-to-flask-apm
+TODO https://dev.to/ondiek/sending-data-from-react-to-flask-apm
+*/}
     </div>
     );
     }

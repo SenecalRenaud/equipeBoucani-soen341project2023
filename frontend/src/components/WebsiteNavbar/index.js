@@ -17,6 +17,9 @@ return (
 		<NavLink to="/DEBUG_BACKEND" activeStyle>
 			DEBUG_BACKEND
 		</NavLink>
+			<NavLink to="/DEBUG_BACKEND_FORM" activeStyle>
+				DEBUG_BACKEND_FORM
+			</NavLink>
 		</NavMenu>
 	</Nav>
 	</>

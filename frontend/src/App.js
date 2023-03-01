@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import './App.css';
 import Navbar from './components/WebsiteNavbar';
 import { BrowserRouter as Router, Routes, Route}
@@ -6,7 +6,14 @@ import { BrowserRouter as Router, Routes, Route}
 import Home from './pages/Home/home';
 import JobPosting from "./pages/PostAJob/jobposting";
 import AntoineIntegrationTestListAllUsers from "./pages/BACKEND_DEBUG/IntTestListAllUsers";
+import Form from "./pages/BACKEND_DEBUG_FORM/Form";
+
 function App() {
+    const [articles, setArticles] = useState([""]);
+    const insertedArticle = (article) =>{
+    const new_articles = [...articles,article]
+    setArticles(new_articles)
+  }
 return (
     <Router>
     <Navbar />
@@ -14,6 +21,7 @@ return (
         <Route exact path='/' exact element={<Home />} />
         <Route path='/jobposting' element={<JobPosting/>} />
         <Route path='/DEBUG_BACKEND' element={<AntoineIntegrationTestListAllUsers/>} />
+        <Route path='/DEBUG_BACKEND_FORM' element={<Form insertedArticle={insertedArticle} />}/>
 
     </Routes>
     </Router>

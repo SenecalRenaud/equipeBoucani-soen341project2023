@@ -5,7 +5,7 @@ from flask import Flask,jsonify,request,abort,session
 
 # from werkzeug.local import LocalProxy,WSGIApplication
 
-from flask_cors import CORS #?  (for cross origin requests)
+from flask_cors import CORS,cross_origin #?  (for cross origin requests)
 #TODO from flask_bcrypt import Bcrypt #? (for passwords, private op hash,...)
 
 import logging
@@ -20,6 +20,7 @@ from models import db,ma # SQLAlchemyInterface and MarshmallowSchema objects  to
 #*******************************
 
 app = Flask(__name__)
+cors = CORS(app)
 
 app.config.from_object(ApplicationSessionConfig)
 
@@ -58,6 +59,7 @@ def get_all_commentposts():
     return jsonify(results_arr)#**{'Hello' : 'World'})
 
 @app.route('/add', methods=['POST']) # methods = [list http reqs methods]
+@cross_origin()
 def add_commentpost():
     """
     POST to host the following request json bod/headers:
