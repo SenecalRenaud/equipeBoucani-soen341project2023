@@ -20,7 +20,7 @@ return (
     <Routes>
         <Route exact path='/' exact element={<Home />} />
         <Route path='/jobposting' element={<JobPosting/>} />
-        <Route path='/BACKEND_DEBUG_FORM' element={<Form postedArticle={postedComment}/>}/>
+        <Route path='/BACKEND_DEBUG_FORM' element={<Form postedComment={postedComment}/>}/>
     </Routes>
     </Router>
 );

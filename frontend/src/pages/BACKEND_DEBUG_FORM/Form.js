@@ -9,8 +9,8 @@ const Form = (props) => {
 
     const handleSubmit=  (event)=>{
       event.preventDefault()
-        APIService.InsertArticle({title,body})
-      .then((response) => props.postedArticle(response))
+        APIService.PostComment({title,body})
+      .then((response) => props.postedComment(response))
       .catch(error => console.log('error',error))
       setTitle('')
       setBody('')

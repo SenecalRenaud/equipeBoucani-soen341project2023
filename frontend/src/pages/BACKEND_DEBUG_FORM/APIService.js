@@ -1,6 +1,6 @@
 export default class APIService{
 
-    static async InsertArticle(request_body){
+    static async PostComment(request_body){
         return await fetch(`http://localhost:5000/add`,{
             //'mode': "no-cors",//remove this line if troublesome in environment where deployed
             'method':'POST',
