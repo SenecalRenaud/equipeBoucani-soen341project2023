@@ -1,10 +1,10 @@
 import React from 'react';
+import { Header } from '../../components';
 
 const Home = () => {
   return (
-    <div>
-      <h1>Welcome to Boucani Student Center</h1>
-    </div>
+      <Header />
+
   );
 };
 

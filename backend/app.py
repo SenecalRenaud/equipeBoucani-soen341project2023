@@ -38,6 +38,7 @@ from models import CommentPost,CommentPostSchema
 commentpost_schema = CommentPostSchema()
 commentposts_schema = CommentPostSchema(many=True)
 
+#TODO Might remove logger once the web app has scaled more
 logger = logging.getLogger('tdm')
 logger.setLevel(logging.INFO)
 # logger.addHandler(handler
