@@ -68,8 +68,9 @@ def get_all_commentposts():
         return jsonify(response_fieldsdict)
     return jsonify(results_arr)#**{'Hello' : 'World'})
 
-#TODO @cross_origin()
+
 @app.route('/add', methods=['POST']) # methods = [list http reqs methods]
+@cross_origin()
 def add_commentpost():
     """
     POST to host the following request json bod/headers:

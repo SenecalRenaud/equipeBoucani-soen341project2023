@@ -13,12 +13,13 @@ function PostCommentForm  (props)  {
 
     CommentAPIService.AddCommentPost({"title" : commentTitle, "body" : commentBody})
       .then((response) => props.postedComment(response))
+        .then((any)=> window.location.reload())
       .catch(error => console.log('Following error occured after fetching from API: ',error))
 
     setCommentTitle('')
     setCommentBody('')
 
-    window.location.reload();
+    //console.log(window.location.href);
 
   };
 
@@ -57,7 +58,8 @@ function PostCommentForm  (props)  {
 
             ) : (
                 data.id.map((id,i) => (
-                    <CoreUICard key={i}
+                    <CoreUICard
+                        key={i}
                         title={data.title[i]}
                         body={data.body[i]}
                                 id={id}
