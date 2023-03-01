@@ -64,7 +64,6 @@ return (<>
         //event.preventDefault();
 
         CommentAPIService.DeleteComment(comment_id)
-            //.then((response) => props.postedComment(response))
             .then((any)=> window.location.reload())
             .catch(error => console.log('Following error occured after fetching from API: ',error))
 
