@@ -5,10 +5,9 @@ import logo2 from '../../assets/logo2.png';
 
 const Menu = () => (
   <>
-  <p><a href="#home">Home</a></p>
-  <p><a href="#possibility">Job Postings</a></p>
-  <p><a href="#wgpt3">What is Boucani?</a></p>
-   <p><a href="#blog">Profile</a></p>
+  <p to="/" activeStyle> Home</p>
+  <p to="/jobposting" activeStyle>Post a Job</p>
+  <p to="/BACKEND_DEBUG_FORM" activeStyle>BACKEND_DEBUG_FORM</p>
   </>
 )
 
