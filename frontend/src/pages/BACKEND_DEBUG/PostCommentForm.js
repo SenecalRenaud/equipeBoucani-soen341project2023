@@ -19,8 +19,6 @@ function PostCommentForm  (props)  {
     setCommentTitle('')
     setCommentBody('')
 
-    //console.log(window.location.href);
-
   };
 
     // POLLING_DATABASE_UPDATE_INTERVAL = 5
