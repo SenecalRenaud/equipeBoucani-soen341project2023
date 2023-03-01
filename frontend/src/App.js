@@ -5,8 +5,8 @@ import { BrowserRouter as Router, Routes, Route}
     from 'react-router-dom';
 import Home from './pages/Home/home';
 import JobPosting from "./pages/PostAJob/jobposting";
-// import IntTestListAllUsers from "./pages/BACKEND_DEBUG/IntTestListAllUsers";
-import Form from "./pages/BACKEND_DEBUG_FORM/Form";
+
+import PostCommentForm from "./pages/BACKEND_DEBUG/PostCommentForm";
 
 function App() {
     const [comments, setComments] = useState([""]);
@@ -20,7 +20,7 @@ return (
     <Routes>
         <Route exact path='/' exact element={<Home />} />
         <Route path='/jobposting' element={<JobPosting/>} />
-        <Route path='/BACKEND_DEBUG_FORM' element={<Form postedComment={postedComment}/>}/>
+        <Route path='/BACKEND_DEBUG' element={<PostCommentForm postedComment={postedComment} />}/>
     </Routes>
     </Router>
 );

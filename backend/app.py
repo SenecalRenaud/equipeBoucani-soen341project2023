@@ -1,3 +1,5 @@
+from time import strftime
+
 from flask import Flask,jsonify,request,abort,session
 
 # from sqlalchemy import Integer,DateTime,String,Text,Column
@@ -36,6 +38,14 @@ from models import CommentPost,CommentPostSchema
 commentpost_schema = CommentPostSchema()
 commentposts_schema = CommentPostSchema(many=True)
 
+logger = logging.getLogger('tdm')
+logger.setLevel(logging.INFO)
+# logger.addHandler(handler
+@app.after_request
+def after_request(response):
+    timestamp = strftime('[%Y-%b-%d %H:%M]')
+    logger.error('%s %s %s %s %s %s', timestamp, request.remote_addr, request.method, request.scheme, request.full_path, response.status)
+    return response
 @app.route('/get', methods=['GET'])# methods = [list http reqs methods]
 def get_all_commentposts():
     """
@@ -58,8 +68,8 @@ def get_all_commentposts():
         return jsonify(response_fieldsdict)
     return jsonify(results_arr)#**{'Hello' : 'World'})
 
+#TODO @cross_origin()
 @app.route('/add', methods=['POST']) # methods = [list http reqs methods]
-@cross_origin()
 def add_commentpost():
     """
     POST to host the following request json bod/headers:

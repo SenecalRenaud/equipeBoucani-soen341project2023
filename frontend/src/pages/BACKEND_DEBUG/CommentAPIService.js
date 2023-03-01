@@ -13,13 +13,3 @@ export default class CommentAPIService{
     .catch(error => console.log("API CORE EXCEPTION... " + error))
     }
 }
-// const formElem_onsubmit = async (e) => {
-//   e.preventDefault();
-//   var form = document.querySelector("#formElem");
-//  // var form = document.forms[0];
-//     // let data = {
-//     //   title : form.querySelector('input[name="comment_title"]').value,
-//     //   body : form.querySelector('input[name="comment_body"]').value
-//     // }
-//
-// };
