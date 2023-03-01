@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import './App.css';
-import Navbar from './components/WebsiteNavbar';
+import NavbarAntoine from './components/WebsiteNavbar'; //antoines navbar kept here
+import { Header, Navbar} from './components'; //jack's part
 import { BrowserRouter as Router, Routes, Route}
     from 'react-router-dom';
 import Home from './pages/Home/home';
@@ -17,6 +18,7 @@ function App() {
 return (
     <Router>
     <Navbar />
+    <Header />
     <Routes>
         <Route exact path='/' exact element={<Home />} />
         <Route path='/jobposting' element={<JobPosting/>} />
