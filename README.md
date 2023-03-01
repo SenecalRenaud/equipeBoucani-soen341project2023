@@ -19,16 +19,16 @@ Here are some of the key features implemented:
 Finally, the main goal of the website is to facilitate the hiring/applying process for users around the world.
 
 ## Team Members
-* Ozan Alptekin (ozan1318) - QA Lead and Developer
-* Antoine Cantin (ChiefsBestPal) - Team/Tech Lead (+DB Integration), Backend Developer, Tester, Hosting/Security
+* Antoine Cantin (ChiefsBestPal) - Team/Tech Lead (+DB Integration), Fullstack Developer,Backend Design, Tester, Hosting/Security
 * Renaud Senécal (SenecalRenaud) - Fullstack Developer and Scrum Master
+* Ozan Alptekin (ozan1318) - QA Lead and Developer
 * Jack Spiratos (Spiratatoe) - Frontend Developer, UI/UX designer, Tester
 * Patrick Riachi (Patrickriachi) - Frontend Developer, UI/UX designer
 
 ## Technologies
 
-* Google login
-* Firebase [for registration and user models/schemas only]
+* Google login [tbd]
+* Firebase [for registration and user models/schemas only] [tbd]
 * React (JavaScript)
 * Flask (Python)
 * MySQL
