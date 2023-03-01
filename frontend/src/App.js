@@ -5,7 +5,9 @@ import { Header, Navbar} from './components'; //jack's part
 import { BrowserRouter as Router, Routes, Route}
     from 'react-router-dom';
 import Home from './pages/Home/home';
+
 import JobPostingForm from "./pages/PostAJob/JobPostingForm";
+
 
 import PostCommentForm from "./pages/BACKEND_DEBUG/PostCommentForm";
 
@@ -21,8 +23,10 @@ return (
     <Header />
     <Routes>
         <Route exact path='/' exact element={<Home />} />
+
         <Route path='/jobposting' element={<JobPostingForm/>} />
         <Route path='/BACKEND_DEBUG' element={<PostCommentForm postedComment={postedComment}/>}/>
+
     </Routes>
     </Router>
 );

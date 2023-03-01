@@ -9,7 +9,7 @@ export const CardGivenTitle = styled.h4`
     font-size: 1.25em;
 `;
 export const CardArticle = styled.div`
-    border: 1px solid red;
+    border: 1px solid darkblue;
     margin: 10px;
     width: 100%;
     align-self: stretch;
@@ -24,12 +24,14 @@ export const CardDeleteButton = styled.button`
     font-size: 2ch;
     background: none;
     
+    
 `;
 export const CardEditButton = styled.button`
     float: right;
     margin-right: 3.5em;
     font-size: 2ch;
     background: none;
+    color: green;
     
 `;
 const CoreUICard = ({title,body,id,date}) => {
