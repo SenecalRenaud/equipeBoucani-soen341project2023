@@ -22,12 +22,18 @@ class CommentPost(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     title = db.Column(db.String(100),unique=True,nullable=False)
     body = db.Column(db.Text())
-    date = db.Column(db.DateTime,default=datetime.datetime.now)
+    date = db.Column(db.DateTime(timezone=True),default=datetime.datetime.now)
 
     def __init__(self,title,body):
         self.title = title
         self.body = body
-
+# md.create_all()
+# eng = md.bind
+# con = eng.connect()
+# res = con.execute(data_table.insert().values(id=1))
+# s = sqlalchemy.sql.select([data_table])
+# res = con.execute(s)
+# rw = res.fetchone()
 class CommentPostSchema(ma.Schema):
     class Meta:
         fields = ('id','title','body','date')

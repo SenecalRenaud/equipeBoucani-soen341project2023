@@ -14,11 +14,8 @@ return (
 		<NavLink to="/jobposting" activeStyle>
 			Post a Job
 		</NavLink>
-		<NavLink to="/DEBUG_BACKEND" activeStyle>
-			DEBUG_BACKEND
-		</NavLink>
-			<NavLink to="/DEBUG_BACKEND_FORM" activeStyle>
-				DEBUG_BACKEND_FORM
+			<NavLink to="/BACKEND_DEBUG_FORM" activeStyle>
+				BACKEND_DEBUG_FORM
 			</NavLink>
 		</NavMenu>
 	</Nav>

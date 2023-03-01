@@ -5,14 +5,14 @@ import { BrowserRouter as Router, Routes, Route}
     from 'react-router-dom';
 import Home from './pages/Home/home';
 import JobPosting from "./pages/PostAJob/jobposting";
-import AntoineIntegrationTestListAllUsers from "./pages/BACKEND_DEBUG/IntTestListAllUsers";
+// import IntTestListAllUsers from "./pages/BACKEND_DEBUG/IntTestListAllUsers";
 import Form from "./pages/BACKEND_DEBUG_FORM/Form";
 
 function App() {
-    const [articles, setArticles] = useState([""]);
-    const insertedArticle = (article) =>{
-    const new_articles = [...articles,article]
-    setArticles(new_articles)
+    const [comments, setComments] = useState([""]);
+    const postedComment = (comment) =>{
+    let new_comments = [...comments,comment]
+    setComments(new_comments)
   }
 return (
     <Router>
@@ -20,9 +20,7 @@ return (
     <Routes>
         <Route exact path='/' exact element={<Home />} />
         <Route path='/jobposting' element={<JobPosting/>} />
-        <Route path='/DEBUG_BACKEND' element={<AntoineIntegrationTestListAllUsers/>} />
-        <Route path='/DEBUG_BACKEND_FORM' element={<Form insertedArticle={insertedArticle} />}/>
-
+        <Route path='/BACKEND_DEBUG_FORM' element={<Form postedArticle={postedComment}/>}/>
     </Routes>
     </Router>
 );
