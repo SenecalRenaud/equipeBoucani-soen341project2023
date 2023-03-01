@@ -19,7 +19,7 @@ function App() {
 return (
     <Router>
     <Navbar />
-    <Header />
+
     <Routes>
         <Route exact path='/'  element={<Home />} />
         <Route path='/jobposting' element={<JobPostingForm/>} />
