@@ -5,9 +5,9 @@ import { Header, Navbar} from './components'; //jack's part
 import { BrowserRouter as Router, Routes, Route}
     from 'react-router-dom';
 import Home from './pages/Home/home';
-import JobPosting from "./pages/PostAJob/jobposting";
-// import IntTestListAllUsers from "./pages/BACKEND_DEBUG/IntTestListAllUsers";
-import Form from "./pages/BACKEND_DEBUG_FORM/Form";
+import JobPostingForm from "./pages/PostAJob/JobPostingForm";
+
+import PostCommentForm from "./pages/BACKEND_DEBUG/PostCommentForm";
 
 function App() {
     const [comments, setComments] = useState([""]);
@@ -21,8 +21,8 @@ return (
     <Header />
     <Routes>
         <Route exact path='/' exact element={<Home />} />
-        <Route path='/jobposting' element={<JobPosting/>} />
-        <Route path='/BACKEND_DEBUG_FORM' element={<Form postedComment={postedComment}/>}/>
+        <Route path='/jobposting' element={<JobPostingForm/>} />
+        <Route path='/BACKEND_DEBUG' element={<PostCommentForm postedComment={postedComment}/>}/>
     </Routes>
     </Router>
 );
