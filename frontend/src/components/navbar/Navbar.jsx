@@ -2,12 +2,21 @@ import React, { useState } from 'react'
 import { RiMenu3Line, RiCloseLin, RiCloseLine } from 'react-icons/ri'; //might be an error here if there isnt a node_modules present... 
 import './navbar.css';
 import logo2 from '../../assets/logo2.png';
+import {Nav, NavLink} from "./NavElements";
 
-const Menu = () => (
+const NavMenu = () => (
   <>
-  <p to="/" activeStyle> Home</p>
-  <p to="/jobposting" activeStyle>Post a Job</p>
-  <p to="/BACKEND_DEBUG" activeStyle>BACKEND_DEBUG</p>
+        <Nav>
+		<NavLink to="/" activeStyle>
+			Home
+		</NavLink>
+		<NavLink to="/jobposting" activeStyle>
+			Post a Job
+		</NavLink>
+        <NavLink to="/BACKEND_DEBUG" activeStyle>
+            BACKEND_CRUD_DEBUG
+        </NavLink>
+        </Nav>
   </>
 )
 
@@ -24,7 +33,7 @@ const Navbar = () => {
         </div>
 
         <div className='gpt3__navbar-links_container'>
-          <Menu />
+          <NavMenu />
         </div>
 
       </div>
@@ -43,7 +52,7 @@ const Navbar = () => {
           {toggleMenu && (
         <div className="gpt3__navbar-menu_container scale-up-center">
           <div className="gpt3__navbar-menu_container-links">
-          <Menu />
+          <NavMenu />
           </div>
           <div className="gpt3__navbar-menu_container-links-sign">
             <p>Sign in</p>

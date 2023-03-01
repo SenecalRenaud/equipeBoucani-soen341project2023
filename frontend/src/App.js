@@ -1,6 +1,8 @@
 import React, {useState} from "react";
 import './App.css';
-import Navbar from './components/WebsiteNavbar';
+
+import { Header, Navbar} from './components';
+
 import { BrowserRouter as Router, Routes, Route}
     from 'react-router-dom';
 import Home from './pages/Home/home';
@@ -17,8 +19,9 @@ function App() {
 return (
     <Router>
     <Navbar />
+    <Header />
     <Routes>
-        <Route exact path='/' exact element={<Home />} />
+        <Route exact path='/'  element={<Home />} />
         <Route path='/jobposting' element={<JobPostingForm/>} />
         <Route path='/BACKEND_DEBUG' element={<PostCommentForm postedComment={postedComment} />}/>
     </Routes>
