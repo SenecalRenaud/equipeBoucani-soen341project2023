@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import { faTrashCan,faPen } from '@fortawesome/free-solid-svg-icons'
+import { faTrashCan,faPen } from '@fortawesome/free-solid-svg-icons';
+import CommentAPIService from "../../pages/BACKEND_DEBUG/CommentAPIService";
 export const CardTitle = styled.h1`
     font-size: 2em;
 `;
@@ -41,7 +42,7 @@ return (<>
 
 
         <CardTitle>Comment post ID#{id} </CardTitle>
-        <CardDeleteButton><FontAwesomeIcon icon={faTrashCan}/></CardDeleteButton>
+        <CardDeleteButton onClick={() => handleDelete(id)}><FontAwesomeIcon icon={faTrashCan}/></CardDeleteButton>
         <CardEditButton><FontAwesomeIcon icon={faPen}/></CardEditButton>
 
         <CardGivenTitle >{title}</CardGivenTitle>
@@ -58,4 +59,17 @@ return (<>
 
     </CardArticle>
     </>);};
+
+    const handleDelete = (comment_id) => {
+        //event.preventDefault();
+
+        CommentAPIService.DeleteComment(comment_id)
+            //.then((response) => props.postedComment(response))
+            .then((any)=> window.location.reload())
+            .catch(error => console.log('Following error occured after fetching from API: ',error))
+
+        //console.log(window.location.href);
+
+    };
+
 export default CoreUICard;

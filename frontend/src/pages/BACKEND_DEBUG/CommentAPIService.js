@@ -12,4 +12,16 @@ export default class CommentAPIService{
     .then(response => response.json())
     .catch(error => console.log("API CORE EXCEPTION... " + error))
     }
+
+    static async DeleteComment(comment_id){
+        return await fetch(`http://localhost:5000/delete/` + comment_id + '/',{
+            //'mode': "no-cors",//remove this line if troublesome in environment where deployed
+            'method':'DELETE',
+            headers : {
+                'Content-Type':'application/json',
+            },
+        })
+            .then(response => response.json())
+            .catch(error => console.log("API CORE EXCEPTION... " + error))
+    }
 }
