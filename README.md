@@ -33,3 +33,5 @@ Finally, the main goal of the website is to facilitate the hiring/applying proce
 * Flask (Python)
 * MySQL
 * Heroku or Microsoft Azure (Devops+AppService) [TBD]
+
+Sprint 2 Demo Video Link: https://youtu.be/2tKjS2NA4Sw
