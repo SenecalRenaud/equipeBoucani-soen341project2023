@@ -23,10 +23,25 @@ class CommentPost(db.Model):
     title = db.Column(db.String(100),unique=True,nullable=False)
     body = db.Column(db.Text())
     date = db.Column(db.DateTime(timezone=True),default=datetime.datetime.now)
-
+    editDate = db.Column(db.DateTime(timezone=True),default= lambda : None )
     def __init__(self,title,body):
         self.title = title
         self.body = body
+
+        self.isEdited = False
+        self._editDate = None
+
+    # @property
+    # def editDate(self):
+    #     return self._editDate
+    # @editDate.setter
+    # def editDate(self,_arbitraryDate):
+    #     self.isEdited = True
+    #     if not isinstance(_arbitraryDate,datetime.datetime):
+    #         _arbitraryDate = datetime.datetime.utcfromtimestamp(0)
+    #     self._editDate = _arbitraryDate
+
+
 # md.create_all()
 # eng = md.bind
 # con = eng.connect()
@@ -36,7 +51,7 @@ class CommentPost(db.Model):
 # rw = res.fetchone()
 class CommentPostSchema(ma.Schema):
     class Meta:
-        fields = ('id','title','body','date')
+        fields = ('id','title','body','date','editDate')
 
     # _links = ma.Hyperlinks(
 

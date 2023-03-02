@@ -1,3 +1,4 @@
+import datetime
 from time import strftime
 
 from flask import Flask,jsonify,request,abort,session
@@ -57,7 +58,7 @@ def get_all_commentposts():
 
     all_commentposts = CommentPost.query.all()
     results_arr = commentposts_schema.dump(all_commentposts)
-
+    print(results_arr)
     if request.args.get('mapAsFields') == 'true':
         print("Mapped fields into dict instead of array of obj!")
         response_fieldsdict = dict(map(lambda kv: (kv[0], [kv[1]]), results_arr[0].items()))
@@ -67,6 +68,7 @@ def get_all_commentposts():
                 response_fieldsdict[k].append(v)
         assert all(len(listed_fields_v) == len(results_arr) for listed_fields_v in response_fieldsdict.values())
         return jsonify(response_fieldsdict)
+
     return jsonify(results_arr)#**{'Hello' : 'World'})
 
 
@@ -100,8 +102,12 @@ def get_commentpost(_id):
 def update_commentpost(_id):
     commentpost = CommentPost.query.get(_id)
 
-    commentpost.title = request.json['title']
-    commentpost.body = request.json['body']
+    if 'title' in request.json:
+        commentpost.title = request.json['title']
+    if 'body' in request.json:
+        commentpost.body = request.json['body']
+
+    commentpost.editDate = datetime.datetime.now()
 
     db.session.commit()
 

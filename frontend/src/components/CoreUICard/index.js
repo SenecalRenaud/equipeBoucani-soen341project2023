@@ -35,7 +35,7 @@ export const CardEditButton = styled.button`
     color: green;
     
 `;
-const CoreUICard = ({title,body,id,date}) => {
+const CoreUICard = ({title,body,id,date,editDate}) => {
 return (<>
     <CardArticle>
 
@@ -53,9 +53,12 @@ return (<>
 
         </CardText>
 
-        <CardDate>Date posted: {date}
-
+        <CardDate>Date Posted: {date}
         </CardDate>
+        <CardText></CardText>
+        <CardDate>{editDate !== "Invalid Date" ? "Date Edited: " + editDate : ""}
+        </CardDate>
+
 
     </CardArticle>
     </>);};
