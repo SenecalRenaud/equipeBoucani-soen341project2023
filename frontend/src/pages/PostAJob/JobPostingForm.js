@@ -26,11 +26,9 @@ const JobPostingForm = (props) => {
         setSalary(event.target.value);
     };
 
-    const handleIndustryTagsChange = (event) => {
-        const tag = event.target.value;
-        if (tag && industryTags.length < 3) {
+    const handleIndustryTagClick = (tag) => {
+        if (industryTags.length < 3) {
             setIndustryTags([...industryTags, tag]);
-            event.target.value = '';
         }
     };
 
@@ -125,23 +123,22 @@ const JobPostingForm = (props) => {
                     <label htmlFor="industry-tags-input">Industry</label>
                     <div className="industry-tags-section">
                         <div className="industry-tags-example">
-                            <span>IT</span>
-                            <span>Tutoring</span>
-                            <span>Engineering</span>
-                            <span>Finance</span>
-                            <span>Marketing</span>
-                            <span>Design</span>
-                            <span>Healthcare</span>
-                            <span>Education</span>
-                            <span>Food</span>
-                            <span>Travel</span>
+                            <span onClick={() => handleIndustryTagClick('IT')}>IT</span>
+                            <span onClick={() => handleIndustryTagClick('Tutoring')}>Tutoring</span>
+                            <span onClick={() => handleIndustryTagClick('Engineering')}>Engineering</span>
+                            <span onClick={() => handleIndustryTagClick('Finance')}>Finance</span>
+                            <span onClick={() => handleIndustryTagClick('Marketing')}>Marketing</span>
+                            <span onClick={() => handleIndustryTagClick('Design')}>Design</span>
+                            <span onClick={() => handleIndustryTagClick('Healthcare')}>Healthcare</span>
+                            <span onClick={() => handleIndustryTagClick('Education')}>Education</span>
+                            <span onClick={() => handleIndustryTagClick('Food')}>Food</span>
+                            <span onClick={() => handleIndustryTagClick('Travel')}>Travel</span>
                         </div>
                         <div className="industry-tags-input-wrapper">
                             {industryTags.map((tag, index) => (
                                 <div key={index} className="industry-tag">
                                     {tag}
-                                    <button type="button" onClick={() => handleRemoveIndustryTag(index)}>
-                                        X
+                                    <button type="button" onClick={() => handleRemoveIndustryTag(index)}> X
                                     </button>
                                 </div>
                             ))}
@@ -149,7 +146,7 @@ const JobPostingForm = (props) => {
                                 id="industry-tags-input"
                                 type="text"
                                 placeholder="Add an industry tag"
-                                onKeyPress={(event) => event.key === 'Enter' && handleIndustryTagsChange(event)}
+                                onKeyPress={(event) => event.key === 'Enter' && handleIndustryTagClick(event)}
                             />
                         </div>
                     </div>
@@ -174,4 +171,3 @@ const JobPostingForm = (props) => {
 };
 
 export default JobPostingForm;
-
