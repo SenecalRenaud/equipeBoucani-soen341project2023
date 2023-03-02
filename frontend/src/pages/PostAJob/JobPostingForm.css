@@ -40,12 +40,17 @@
     padding: 0rem 0rem;
     border: none;
     border-radius: 5px;
-    color: #fff;
+    color: #282c34;
     cursor: pointer;
 }
 
 .job-type-section .active {
     background: linear-gradient(to right, #0077ff, #8c2fff);
+    color: #ffffff;
+}
+
+.job-type-section .inactive {
+    color: #031B34;
 }
 
 form label {
@@ -95,6 +100,7 @@ form .salary-scroll-bar {
 
 form .salary-display {
     font-size: 1.2rem;
+    min-width: 75px;
 }
 
 form .industry-tags-section {

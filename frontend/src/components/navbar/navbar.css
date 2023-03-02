@@ -61,7 +61,8 @@
     border: 0;
     outline: none;
     cursor: pointer;
-
+    min-height: 66px;
+    min-width: 66px;
 }
 
 .gpt3__navbar-menu {
