@@ -39,9 +39,7 @@ function PostCommentForm  (props)  {
 
         <header className="Debug-header">
         <h1> Flask and React integration </h1>
-            <h3>by Antoine Cantin. TEMPORARY PAGE to test requests,routes,etc.. and api feature
-                {/* eslint-disable-next-line react/style-prop-object */}
-                of the backend. <span style={{color: 'red'}}> DO NOT EDIT</span>.</h3>
+            <h3> temporary format. <span style={{color: 'red'}}> DO NOT EDIT</span>.</h3>
         </header>
         <div style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignContent: 'flex-start',alignItems: 'stretch'}}>
             <hr  style={{

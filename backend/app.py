@@ -17,12 +17,23 @@ import re
 import itertools
 import operator
 
+
 #*******************************
 from config import ApplicationSessionConfig #env vars + Session configs
 from models import db,ma # SQLAlchemyInterface and MarshmallowSchema objects  to integrate
 #*******************************
 
+
 app = Flask(__name__)
+
+# import firebase_admin
+# import pyrebase
+# from firebase_admin import credentials, auth
+# cred = credentials.Certificate('firebase_integration/fbAdminConfig.json')
+# firebase = firebase_admin.initialize_app(cred)
+# pb = pyrebase.initialize_app(json.load(open('firebase_integration/fbconfig.json')))#Data source
+# users = [{'uid': 1, 'name': 'Napolean Bonaparte'}]#Api route to get users
+
 cors = CORS(app)
 
 app.config.from_object(ApplicationSessionConfig)
@@ -124,5 +135,5 @@ def delete_commentpost(_id):
 
 if __name__ == '__main__':
 
-    #port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 5000))
     app.run(debug=True)
