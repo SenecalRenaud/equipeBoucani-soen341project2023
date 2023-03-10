@@ -4,18 +4,41 @@ import pyrebase #NOTE: Pyrebase4 to fix collections 3.10 module errors
 import json
 
 from functools import wraps,reduce,lru_cache
+
+import requests
 fb_config = json.load(open('.firebase_config.json'))
 fb_config.setdefault('databaseURL',"")
 
 _firebase = pyrebase.initialize_app(fb_config)
-auth = _firebase.auth()
+_auth = _firebase.auth()
 
-
-user = auth.create_user_with_email_and_password(
-    email = "test@hotmail.com",
+# from firebase_admin import auth,credentials
+# print(auth.list_users())
+if __name__ == '__main__':
+    SIGNIN_INFO = dict(
+        email = "test@hotmail.com",
     password = "abc123"
-)
-print(user)
+    )
+    user = None
+    try:
+        user = _auth.create_user_with_email_and_password(
+            **SIGNIN_INFO
+        )
+
+    except requests.exceptions.HTTPError as err:
+        #NOTE: print(err.strerror)
+        user = _auth.sign_in_with_email_and_password(
+            **SIGNIN_INFO
+        )
+    else:
+        print("Created new user! ")
+
+    info = _auth.get_account_info(user[r'idToken'])
+
+    print(*user.items(),sep="\n",end="\n\n\r")
+
+#TODO _auth.send_email_verification(user[r'idToken'])
+#TODO _auth.send_password_reset_email(user['email'])
 
 # def check_token(f):
 #     @wraps(f)
@@ -29,3 +52,14 @@ print(user)
 #             return {'message':'Invalid token provided.'},400
 #         return f(*args, **kwargs)
 #     return wrap
+# @app.route('/api/token')
+# def token():
+#     email = request.form.get('email')
+#     password = request.form.get('password')
+#     try:
+#         user = pb.auth().sign_in_with_email_and_password(email, password)
+#         jwt = user['idToken']
+#         return {'token': jwt}, 200
+#     except:
+#         return {'message': 'There was an error logging in'},400
+#

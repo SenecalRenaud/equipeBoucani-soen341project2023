@@ -1,7 +1,14 @@
 import datetime
 from time import strftime
 
-from flask import Flask,jsonify,request,abort,session
+from flask import \
+    Flask,\
+    jsonify,\
+    request,\
+    abort,\
+    session,\
+    redirect,\
+    render_template
 
 # from sqlalchemy import Integer,DateTime,String,Text,Column
 # from flask.ext.session import Session, Session(app) to use flask.session instead of db.session
@@ -10,29 +17,27 @@ from flask import Flask,jsonify,request,abort,session
 
 from flask_cors import CORS,cross_origin #?  (for cross origin requests)
 #TODO from flask_bcrypt import Bcrypt #? (for passwords, private op hash,...)
+import pyrebase
 
 import logging
 import os
 import re
 import itertools
 import operator
-
+import json
 
 #*******************************
 from config import ApplicationSessionConfig #env vars + Session configs
 from models import db,ma # SQLAlchemyInterface and MarshmallowSchema objects  to integrate
+
+from authentification import fb_config,_firebase,_auth
 #*******************************
 
+# import firebase_admin
+# from firebase_admin import credentials, auth
+#todo cred = credentials.Certificate('firebase_integration/fbAdminConfig.json')
 
 app = Flask(__name__)
-
-# import firebase_admin
-# import pyrebase
-# from firebase_admin import credentials, auth
-# cred = credentials.Certificate('firebase_integration/fbAdminConfig.json')
-# firebase = firebase_admin.initialize_app(cred)
-# pb = pyrebase.initialize_app(json.load(open('firebase_integration/fbconfig.json')))#Data source
-# users = [{'uid': 1, 'name': 'Napolean Bonaparte'}]#Api route to get users
 
 cors = CORS(app)
 
@@ -44,6 +49,45 @@ ma.init_app(app)
 
 with app.app_context():
     db.create_all()
+
+@app.route("/", methods=['POST','GET'])
+def index():
+    if 'user' in session:
+        return f'Hi, {session["user"]}' + "<br>" +\
+    render_template(r"logouttest.html")
+    if request.method == r"POST":
+        print("Signing in!")
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        try:
+            user = _auth.sign_in_with_email_and_password(email,password)
+            #info = _auth.get_account_info(user[r'idToken'])
+            session['user'] = user['email'] #todo: high-level identifier e.g. username goes here
+            redirect("/")
+        except:
+            return "Failed login"
+    return render_template(r"logintest.html")
+@app.route('/firebase-api/logout')
+def logout():
+    loggedout_user = session.pop('user')
+    return redirect(r'/')
+@app.route('/firebase-api/signup')
+def signup():
+    email = request.form.get('email')
+    password = request.form.get('password')
+    if email is None or password is None:
+        return {'message': 'Error missing email or password'},400
+    try:
+        user = _auth.create_user(
+               email=email,
+               password=password
+        )
+        return {'message': f'Successfully created user {user.uid}'},200
+    except:
+        return {'message': 'Error creating user'},400#Api route to get a new token for a valid user
+
+
 
 #TODO Seperate once database has scaled... For now, single modules are convenient
 from models import CommentPost,CommentPostSchema
