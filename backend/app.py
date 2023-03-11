@@ -30,7 +30,7 @@ import json
 from config import ApplicationSessionConfig #env vars + Session configs
 from models import db,ma # SQLAlchemyInterface and MarshmallowSchema objects  to integrate
 
-from authentification import fb_config,_firebase,_auth
+from authentification import fb_config,_firebase,_auth,user_db
 #*******************************
 
 # import firebase_admin
@@ -68,6 +68,10 @@ def index():
         except:
             return "Failed login"
     return render_template(r"logintest.html")
+@app.route('/firebase-api/login')
+def login():
+
+    return
 @app.route('/firebase-api/logout')
 def logout():
     loggedout_user = session.pop('user')
@@ -76,16 +80,22 @@ def logout():
 def signup():
     email = request.form.get('email')
     password = request.form.get('password')
+    firstName,lastName = request.form.get("firstName"),request.form.get("lastName")
+    inputProfilePic = request.form.get("profilePicture")
+    user_db.child("")
     if email is None or password is None:
         return {'message': 'Error missing email or password'},400
     try:
         user = _auth.create_user(
                email=email,
-               password=password
+               password=password,
+                display_name= firstName + " " + lastName,
+                photo_url= str(inputProfilePic)
         )
+
         return {'message': f'Successfully created user {user.uid}'},200
     except:
-        return {'message': 'Error creating user'},400#Api route to get a new token for a valid user
+        return {'message': 'Error creating user'},400 #Api route to get a new token for a valid user
 
 
 

@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 
 import datetime
+import dataclasses
 
 from uuid import uuid1,uuid4,uuid5
 generate_pr_uuid = lambda : uuid4().hex
@@ -42,17 +43,25 @@ class CommentPost(db.Model):
     #     self._editDate = _arbitraryDate
 
 
-# md.create_all()
-# eng = md.bind
-# con = eng.connect()
-# res = con.execute(data_table.insert().values(id=1))
-# s = sqlalchemy.sql.select([data_table])
-# res = con.execute(s)
-# rw = res.fetchone()
 class CommentPostSchema(ma.Schema):
     class Meta:
         fields = ('id','title','body','date','editDate')
 
     # _links = ma.Hyperlinks(
 
+@dataclasses.dataclass
+class User:#todo user WTF form validators to help (forms.py)
+    firstName: str
+    lastName: str
+    email: str
+    password: str
+    emailVerified : bool
+    #major,profile pic, resume,
+    pass
 
+class Employer(User):
+    pass
+class JobSeeker(User):
+    pass
+class Admin(User):
+    pass

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Firebase Signup Test</title>
+</head>
+<body>
+<script>
+
+
+
+</script>
+<form action="/firebase-api/signup" method="POST">
+    <label>
+        First Name:
+        <input type="text" name="firstName"/>
+    </label><br>
+    <label>
+        Last Name:
+        <input type="text" name="lastName"/>
+    </label><br>
+    <label>
+        Email:
+        <input type="email" name="email">
+    </label><br>
+
+    <label> User type:
+      <br> Student/Job Seeker:  <input type="radio" name="userType" value="jobseeker">
+
+    <br> Employer: <input type="radio" name="userType" value="employer">
+    <br> Admin: <input type="radio" name="userType" value="admin">
+    </label><br>
+
+    <label> Password:
+        <input type="password" name="password"/>
+    </label><label> Confirm Password: <input id="confirmPassword" type="password"/></label>
+    <br>
+
+
+<p><label for="profilePicture" style="cursor: pointer;">Upload Profile Picture: </label></p>
+       <p><input type="file"  accept="image/*" name="profilePicture" id="profilePicture"  onchange="loadPfp(event)"
+    placeholder="Photo" required="" capture>
+           <img src="http://lorempixel.com/100/100" id="pfpOutput" width="200" /></p>
+
+<script>
+var loadPfp = function(event) {
+	var image = document.getElementById('pfpOutput');
+	image.src = URL.createObjectURL(event.target.files[0]);
+};
+</script>
+    <input type="submit" value="Create Account" onclick="console.log('ASDSAD')"/>
+</form>
+</body>
+</html>

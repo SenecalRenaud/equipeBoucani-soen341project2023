@@ -11,9 +11,10 @@ fb_config.setdefault('databaseURL',"")
 
 _firebase = pyrebase.initialize_app(fb_config)
 _auth = _firebase.auth()
+user_db = _firebase.database()
+user_storage = _firebase.storage()
 
-# from firebase_admin import auth,credentials
-# print(auth.list_users())
+
 if __name__ == '__main__':
     SIGNIN_INFO = dict(
         email = "test@hotmail.com",
