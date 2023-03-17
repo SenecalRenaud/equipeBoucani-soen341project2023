@@ -49,7 +49,7 @@ class ApplicationSessionConfig:
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 465
     MAIL_USERNAME = 'equipeboucani@gmail.com'
-    MAIL_PASSWORD = 'contact me for this'
+    MAIL_PASSWORD = 'qgkkzdzoxtoniwtg'
     MAIL_USE_TLS = False
     MAIL_USE_SSL = True
 
