@@ -13,27 +13,26 @@
 <form action="/firebase-api/signup" method="POST">
     <label>
         First Name:
-        <input type="text" name="firstName"/>
+        <input type="text" name="firstName" required />
     </label><br>
     <label>
         Last Name:
-        <input type="text" name="lastName"/>
+        <input type="text" name="lastName" required />
     </label><br>
     <label>
         Email:
-        <input type="email" name="email">
+        <input type="email" name="email" required>
     </label><br>
 
     <label> User type:
-      <br> Student/Job Seeker:  <input type="radio" name="userType" value="jobseeker">
-
+      <br> Student/Job Seeker:  <input type="radio" name="userType" value="jobseeker" required>
     <br> Employer: <input type="radio" name="userType" value="employer">
     <br> Admin: <input type="radio" name="userType" value="admin">
     </label><br>
 
     <label> Password:
-        <input type="password" name="password"/>
-    </label><label> Confirm Password: <input id="confirmPassword" type="password"/></label>
+        <input type="password" name="password" required/>
+    </label><label> Confirm Password: <input id="confirmPassword" type="password" required/></label>
     <br>
 
 
@@ -45,7 +44,10 @@
 <script>
 var loadPfp = function(event) {
 	var image = document.getElementById('pfpOutput');
+    console.log(document.getElementById('pfpOutput'));
+    console.log(event.target.files[0]);
 	image.src = URL.createObjectURL(event.target.files[0]);
+    console.log(image.src)
 };
 </script>
     <input type="submit" value="Create Account" onclick="console.log('ASDSAD')"/>

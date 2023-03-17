@@ -69,7 +69,7 @@ return (<>
 
 
 
-        <CardTitle>Job post ID#{id} </CardTitle>
+        <CardTitle>Comment post ID#{id} </CardTitle>
         <CardDeleteButton onClick={() => handleDelete(id)}><FontAwesomeIcon icon={faTrashCan}/></CardDeleteButton>
         <CardEditButton onClick={() => {setToBeEditedID(id); toggleModal(); setJobTitle(title); setJobDescription(body)}}><FontAwesomeIcon icon={faPen}/></CardEditButton>
 

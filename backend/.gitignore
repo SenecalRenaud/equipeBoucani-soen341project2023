@@ -1,6 +1,11 @@
-.firebase_config.json
 .flaskenv
 .env
+.env.*
+
+.credentials_firebase_adminsdk_8mtwu_187f5d4799.json
+.firebase_config.json
+.env.local
+
 
 ./virutalenv/
 ./.venv/
