@@ -14,7 +14,7 @@ function PostCommentForm  (props)  {
     CommentAPIService.AddCommentPost({"title" : commentTitle, "body" : commentBody})
       .then((response) => props.postedComment(response))
         .then((any)=> window.location.reload())
-      .catch(error => console.log('Following error occurred after fetching from API: ',error))
+      .catch(error => console.log('Following error occured after fetching from API: ',error))
 
     setCommentTitle('')
     setCommentBody('')

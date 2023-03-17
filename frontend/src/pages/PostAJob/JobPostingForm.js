@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import './JobPostingForm.css';
-import JobPostingAPIService from "./JobPostingAPIService";
 
 const JobPostingForm = (props) => {
-    let jobTypeTwo = '';
     const [jobType, setJobType] = useState('');
     const [jobTitle, setJobTitle] = useState('');
     const [location, setLocation] = useState('');
@@ -14,7 +12,6 @@ const JobPostingForm = (props) => {
 
     const handleJobTypeChange = (type) => {
         setJobType(type);
-        jobTypeTwo = type;
     };
 
     const handleJobTitleChange = (event) => {
@@ -50,18 +47,17 @@ const JobPostingForm = (props) => {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        JobPostingAPIService.AddJobPosting({"jobtype" : jobType, "title" : jobTitle, "location" : location, "salary" : salary, "tags" : industryTags.toString(), "description" : jobDescription})
-            .then((response) => props.postedComment(response))
-                .then((any)=> window.location.reload())
-            .catch(error => console.log('Following error occurred after fetching from API: ',error))
+        const jobPositionData = {
+            jobType,
+            jobTitle,
+            location,
+            salary,
+            industryTags,
+            jobDescription,
+        };
 
-        setJobType('')
-        setJobTitle('')
-        setLocation('')
-        setSalary(0)
-        setIndustryTags([])
-        setJobDescription('')
-
+        console.log(jobPositionData);
+        // TODO: send jobPositionData to backend using a post request method
     };
 
     return (
