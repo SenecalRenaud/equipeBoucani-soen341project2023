@@ -3,6 +3,7 @@ from flask_marshmallow import Marshmallow
 
 import datetime
 import dataclasses
+import enum
 
 from uuid import uuid1,uuid4,uuid5
 generate_pr_uuid = lambda : uuid4().hex
@@ -49,19 +50,40 @@ class CommentPostSchema(ma.Schema):
 
     # _links = ma.Hyperlinks(
 
-@dataclasses.dataclass
-class User:#todo user WTF form validators to help (forms.py)
-    firstName: str
-    lastName: str
-    email: str
-    password: str
-    emailVerified : bool
-    #major,profile pic, resume,
-    pass
+from sqlalchemy import Integer,DateTime,String,Text,Column,Enum,VARCHAR
 
-class Employer(User):
-    pass
-class JobSeeker(User):
-    pass
-class Admin(User):
-    pass
+class UserType(enum.Enum):
+    APPLICANT = 0
+    STUDENT = 0
+    JOBSEEKER = 0
+    EMPLOYER = 1
+    ADMIN = 2
+    @classmethod
+    def _missing_(cls, value: object):
+        try:
+            value = value.upper()
+
+            for member in cls:
+
+                if member.value == value:
+
+                    return member
+        except:
+            pass
+        return cls['APPLICANT']
+
+class UserExtraInfo(db.Model):
+    __tablename__ = "users_extra_info"
+
+    firebaseUUID = db.Column(db.VARCHAR(255),primary_key=True)
+    userType = db.Column(db.Enum(UserType))
+
+    def __init__(self,firebaseUUID,userType):
+
+        self.firebaseUUID = firebaseUUID
+        self.userType = userType
+
+class UserExtraInfoSchema(ma.Schema):
+    class Meta:
+        fields = ('firebaseUUID','userType')
+

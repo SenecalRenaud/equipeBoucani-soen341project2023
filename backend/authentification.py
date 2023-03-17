@@ -3,7 +3,10 @@
 import pyrebase #NOTE: Pyrebase4 to fix collections 3.10 module errors
 
 import firebase_admin
-from firebase_admin import credentials, auth,storage,firestore
+from firebase_admin import credentials, auth,storage,\
+    firestore as adminsdk_firestore
+
+from google.cloud import firestore
 
 from functools import wraps,reduce,lru_cache
 import json
@@ -17,42 +20,50 @@ FIREBASE_CONFIG_JSON_NAME = ".firebase_config.json"
 FIREBASE_ADMINSDK_CREDS_SERVICEKEYS_FILENAME = ".credentials_firebase_adminsdk_8mtwu_187f5d4799.json"
 
 dotenv.load_dotenv(".env.local")
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = FIREBASE_ADMINSDK_CREDS_SERVICEKEYS_FILENAME
 
+firebase_sdkadmin = firebase_admin.initialize_app()
 
 fb_config = json.load(open(FIREBASE_CONFIG_JSON_NAME))
-fb_config.setdefault('databaseURL',"")
+fb_config.setdefault('databaseURL',
+                     "jdbc:mysql://localhost:3306/flask_test_mysql_db"
+                     )#todo improve this since its pretty much hardcoded
 fb_config.setdefault('storageBucket',os.environ['FIREBASE_STORAGE_BUCKET'])
 
 fb_adminsdk_cred = credentials.Certificate(FIREBASE_ADMINSDK_CREDS_SERVICEKEYS_FILENAME)
 
 
 firebase_default_app = firebase_admin.initialize_app(fb_adminsdk_cred,
-                                                     {'storageBucket': os.environ['FIREBASE_STORAGE_BUCKET']})
+                                                     {'storageBucket': os.environ['FIREBASE_STORAGE_BUCKET']},
+                                                     name="adminsdk_firebase")
 
 _firebase = pyrebase.initialize_app(fb_config)
 _auth = _firebase.auth()#Pyrebase4 api,: send_email_verification, send_password_reset_email, etc..
 fb_db = _firebase.database()
 fb_storage = _firebase.storage()
 
-userPfpBucket = storage.bucket()
+userPfpBucket = storage.bucket(name=os.environ['FIREBASE_STORAGE_BUCKET'])
 
-firestore_db = firestore.client()
+firestore_db = adminsdk_firestore.client()
+# firestore_db = firestore.Client(project=os.environ['FIREBASE_PROJECT_ID'])
 
 if __name__ == '__main__':
 
+
+
     print(fb_db.__repr__())
-    print(fb_db.child("users"))
-
-    doc_ref = firestore_db.collection(u'test_db_user').document(u'antoinecantin')
-    doc_ref.set(
-        {
-            u'first': u'Antoine',
-            u'last': u'Cantin',
-            u'born': 2002
-
+    data = {
+            u'firebaseUUID': u'99asdjN32489hsdub*adn',
+            u'userType': 'EMPLOYER'
         }
-    )
-    print(doc_ref)
+
+    fb_db.child("users_extra_info").child("AntoineCantin").set(data)
+    print(fb_db.child("users_extra_info").get().val())
+    # users_ref = firestore_db.collection(u'users')
+    # doc_ref = users_ref.document(u'antoinecantin')
+    # doc_ref.set(data
+    # )
+    #print(doc_ref)
 
 
     # SIGNIN_INFO = dict(

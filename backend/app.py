@@ -62,6 +62,21 @@ ma.init_app(app)
 with app.app_context():
     db.create_all()
 
+#TODO Might remove logger once the web app has scaled more
+logger = logging.getLogger('tdm')
+logger.setLevel(logging.INFO)
+# logger.addHandler(handler
+@app.after_request
+def after_request(response):
+    timestamp = strftime('[%Y-%b-%d %H:%M]')
+    logger.error('%s %s %s %s %s %s', timestamp, request.remote_addr, request.method, request.scheme, request.full_path, response.status)
+    return response
+
+#TODO Seperate once database has scaled... For now, single modules are convenient
+from models import *
+commentpost_schema = CommentPostSchema()
+commentposts_schema = CommentPostSchema(many=True)
+userextrainfo_schema = UserExtraInfoSchema()
 
 @app.route("/")
 def index():
@@ -76,7 +91,7 @@ def index():
 
         header_content =  f'Hi, {user_recordinfo["displayName"]}' + "\t" + \
                             "\t" + f"<a href='/firebase-api/userprofile'><img src=\"{user_recordinfo['photoUrl']}\" width='75' height='75'/></a>" +\
-                          render_template(r"header_logout.html")
+                          "<sub>(click to view profile)</sub>" + render_template(r"header_logout.html")
 
     else:
         header_content = render_template(r"header_login_or_signup.html")
@@ -113,6 +128,8 @@ def signup():
         email = request.form.get('email')
         password = request.form.get('password')
         firstName,lastName = request.form.get("firstName"),request.form.get("lastName")
+        userTypeVal = request.form.get('userType')
+
         uploaded_pfp_file = request.files['profilePicture']
         filename = secure_filename(uploaded_pfp_file.filename)
         if filename:
@@ -142,8 +159,16 @@ def signup():
                     display_name= firstName + " " + lastName,
                     photo_url= blob.public_url
             )
-            redirect(url_for("index"))
-            return {'message': f'Successfully created user {user.uid}'},200
+
+            userextrainfo = UserExtraInfo(user.uid,UserType[userTypeVal])
+            db.session.add(userextrainfo)
+            db.session.commit()
+
+            print( {'message': f'Successfully created user {user.uid}'},200)
+
+            session['user'] = _auth.sign_in_with_email_and_password(email, password)
+
+            return redirect(url_for("index"))
         except ValueError as validatorErr:
             return {'message': 'Property value error in user creation fields... ',
                     'error-traceback': validatorErr.__traceback__.tb_frame.__str__(),
@@ -162,6 +187,7 @@ def account_profile_view():
 
     user_recordinfo = _auth.get_account_info(session['user']['idToken'])['users'][0]
 
+    userextrainfo = UserExtraInfo.query.get(user_recordinfo['localId'])
 
     fname,lname = user_recordinfo['displayName'].split(' ',maxsplit=1)
     context = dict(
@@ -171,25 +197,13 @@ def account_profile_view():
         joinDate = strftime("%A %B %d %Y", localtime(
                             float(user_recordinfo['createdAt'])/ 1000)),
         lastSeenDatetime =  strftime("%A %B %d %Y, %H:%M:%S", localtime(
-                            float(user_recordinfo['lastLoginAt'])/ 1000))
+                            float(user_recordinfo['lastLoginAt'])/ 1000)),
+        userType = str(userextrainfo.userType.name).title()
     )
 
     return render_template("profiletest.html",**context)
 
-#TODO Seperate once database has scaled... For now, single modules are convenient
-from models import CommentPost,CommentPostSchema
-commentpost_schema = CommentPostSchema()
-commentposts_schema = CommentPostSchema(many=True)
 
-#TODO Might remove logger once the web app has scaled more
-logger = logging.getLogger('tdm')
-logger.setLevel(logging.INFO)
-# logger.addHandler(handler
-@app.after_request
-def after_request(response):
-    timestamp = strftime('[%Y-%b-%d %H:%M]')
-    logger.error('%s %s %s %s %s %s', timestamp, request.remote_addr, request.method, request.scheme, request.full_path, response.status)
-    return response
 @app.route('/get', methods=['GET'])# methods = [list http reqs methods]
 def get_all_commentposts():
     """
