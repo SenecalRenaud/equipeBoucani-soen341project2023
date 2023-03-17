@@ -5,6 +5,19 @@
     <title>Firebase User Profile Test</title>
 </head>
 <body>
+<header>
+    <h1> {{userType}} Profile </h1>
+    <br><hr>
+    <img src="{{profilePictureURL}}" width="150" height="150">
+</header>
+<p> First Name: {{firstName}} </p>
+<p> Last Name: {{lastName}} </p>
+<p> Email: {{email}} </p>
+<hr>
 
+<footer>
+    <p>Member since: {{joinDate}}</p>
+    <p>Last Seen: {{lastSeenDatetime}}</p>
+</footer>
 </body>
 </html>

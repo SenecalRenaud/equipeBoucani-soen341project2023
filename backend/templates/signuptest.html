@@ -10,14 +10,14 @@
 
 
 </script>
-<form action="/firebase-api/signup" method="POST">
+<form action="/firebase-api/signup" method="POST" enctype="multipart/form-data">
     <label>
         First Name:
-        <input type="text" name="firstName" required />
+        <input type="text" name="firstName" required pattern="[a-zA-Z-]+"/>
     </label><br>
     <label>
         Last Name:
-        <input type="text" name="lastName" required />
+        <input type="text" name="lastName" required pattern="[a-zA-Z-]+"/>
     </label><br>
     <label>
         Email:
@@ -31,8 +31,11 @@
     </label><br>
 
     <label> Password:
-        <input type="password" name="password" required/>
-    </label><label> Confirm Password: <input id="confirmPassword" type="password" required/></label>
+        <input type="password" name="password" required
+        onchange="checkConfirmedPassword();" />
+    </label><label> Confirm Password: <input id="confirmPassword" name="confirmPassword"
+                                             type="password" required
+            onchange="checkConfirmedPassword();"/></label>
     <br>
 
 
@@ -42,13 +45,19 @@
            <img src="http://lorempixel.com/100/100" id="pfpOutput" width="200" /></p>
 
 <script>
-var loadPfp = function(event) {
-	var image = document.getElementById('pfpOutput');
-    console.log(document.getElementById('pfpOutput'));
-    console.log(event.target.files[0]);
+const loadPfp = function(event) {
+	let image = document.getElementById('pfpOutput');
 	image.src = URL.createObjectURL(event.target.files[0]);
-    console.log(image.src)
+
 };
+const checkConfirmedPassword = function() {
+    const confirmedPw = document.querySelector('input[name=confirmPassword]');
+    if (confirmedPw.value === document.querySelector('input[name=password]').value ){
+        confirmedPw.setCustomValidity("");
+    }else {
+        confirmedPw.setCustomValidity("Passwords don't match. Must confirm. ")
+    }
+}
 </script>
     <input type="submit" value="Create Account" onclick="console.log('ASDSAD')"/>
 </form>
