@@ -16,7 +16,7 @@ Here are some of the key features implemented:
 6. Notification System: Users will receive notifications through email whenever a new update has occured on the dashboard.
 7. Admin Panel: Admins can manage the website as well as deleting suspicious posts.
 
-Finally, the main goal of the website is to facilitate the hiring/applying process for users around the world.
+Finally, the main goal of the website is to facilitate the hiring/applying process for users around the world. 
 
 ## Team Members
 * Antoine Cantin (ChiefsBestPal) - Team/Tech Lead (+DB Integration), Fullstack Developer,Backend Design, Tester, Hosting/Security
@@ -27,8 +27,8 @@ Finally, the main goal of the website is to facilitate the hiring/applying proce
 
 ## Technologies
 
-* Google login [tbd]
-* Firebase [for registration and user models/schemas only] [tbd]
+* Google Cloud APIs
+* Firebase [for registration and user models/schemas only]
 * React (JavaScript)
 * Flask (Python)
 * MySQL
