@@ -209,6 +209,12 @@ def get_all_commentposts():
             if response_fieldsdict.setdefault(k, None):
                 response_fieldsdict[k].append(v)
         assert all(len(listed_fields_v) == len(results_arr) for listed_fields_v in response_fieldsdict.values())
+        # print("\033[7m",end=" ")
+        # print(response_fieldsdict,end=" ")
+        # print("\033[0m", end="\n\r")
+        # response_fieldsdict: dict where
+        # key[i]: 'someField e.g postedDate'
+        # values: list of all keys e.g list of all postedDate
         return jsonify(response_fieldsdict)
 
     return jsonify(results_arr)#**{'Hello' : 'World'})
