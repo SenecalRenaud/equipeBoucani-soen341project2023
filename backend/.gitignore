@@ -6,6 +6,8 @@
 .firebase_config.json
 .env.local
 
+uploads_cache/*
+!uploads_cache/tmp
 
 ./virutalenv/
 ./.venv/
