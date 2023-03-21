@@ -19,9 +19,8 @@ from requests import HTTPError
 from werkzeug.utils import secure_filename
 
 from flask_cors import CORS,cross_origin #?  (for cross origin requests)
-#TODO from flask_bcrypt import Bcrypt #? (for passwords, private op hash,...)
-#TODO TEST, AND ALSO UPDATE REQUIREMENTS... ADD AS EXTRA USER FIELD
-import pyrebase
+from flask_bcrypt import Bcrypt #? (keys and password hashing engine)
+
 
 import logging
 import os
@@ -53,9 +52,11 @@ from firebase_admin._auth_utils import EmailAlreadyExistsError,EmailNotFoundErro
 
 app = Flask(__name__)
 
+app.config.from_object(ApplicationSessionConfig)
+
 cors = CORS(app)
 
-app.config.from_object(ApplicationSessionConfig)
+bcrypt = Bcrypt(app)
 
 db.init_app(app)
 
@@ -115,8 +116,16 @@ def signin():
         email = request.form.get('email')
         password = request.form.get('password')
 
+
+
         try:
             user = _auth.sign_in_with_email_and_password(email,password)
+
+            pwdHash = firestore_db.collection(u'Users').document(user['localId']).get().to_dict()['pwdHash']
+            print("Password bcrypt few-rounds salted hash matched: ",end=" ")
+            print(bcrypt.check_password_hash(
+                pwdHash,password
+            ))
 
             session['user'] = user# ['email'] #todo: high-level identifier e.g. username goes here
             return redirect("/")
@@ -174,7 +183,8 @@ def signup():
                 dict(
                     firstName = firstName,
                     lastName = lastName,
-                    userType = UserType[userTypeVal.upper()].name
+                    userType = UserType[userTypeVal.upper()].name,
+                    pwdHash = bcrypt.generate_password_hash(password)
                 )#Can add more fields later if update whole 'Users' collection database as well!
             )
 
