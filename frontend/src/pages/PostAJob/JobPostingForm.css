@@ -1,12 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Calibri&display=swap');
+
 .job-position-container {
     display: flex;
     justify-content: center;
-    margin-top: 5rem;
     align-items: center;
     height: 100vh;
 }
 
 .blur-card {
+    font-family: 'Calibri', sans-serif;
     width: 600px;
     padding: 2rem;
     border-radius: 5px;
@@ -29,7 +31,7 @@
 }
 
 .job-type-section h3 {
-    margin: 0;
+    margin: 15px;
     font-size: 1.2rem;
 }
 
@@ -45,12 +47,12 @@
 }
 
 .job-type-section .active {
-    background: linear-gradient(to right, #0077ff, #8c2fff);
+    background-color: #da5b00;
     color: #ffffff;
 }
 
 .job-type-section .inactive {
-    color: #031B34;
+    color: #da5b00;
 }
 
 form label {
@@ -77,12 +79,21 @@ form textarea::placeholder {
 form input:focus,
 form textarea:focus {
     outline: none;
-    border-color: #0077ff;
+    border-color: #da5b00;
 }
 
 form input[type="range"] {
     width: 100%;
 }
+
+#start-date-input {
+    margin-bottom: 1rem;
+}
+
+#end-date-input {
+    margin-bottom: 1rem;
+}
+
 
 form .salary-section {
     display: flex;
@@ -92,7 +103,6 @@ form .salary-section {
 
 form .salary-scroll-bar {
     height: 10px;
-    background: linear-gradient(to right, #0077ff, #8c2fff);
     position: relative;
     margin-right: 0.5rem;
     border-radius: 5px;
@@ -118,7 +128,7 @@ form .industry-tags-example {
 
 form .industry-tags-example span {
     font-size: 0.8rem;
-    background: linear-gradient(to right, #0077ff, #8c2fff);
+    background-color: #da5b00;
     color: #fff;
     padding: 0.5rem;
     border-radius: 5px;
@@ -130,11 +140,12 @@ form .industry-tags-input-wrapper {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    width: 100%;
 }
 
 form .industry-tag {
     font-size: 0.8rem;
-    background: linear-gradient(to right, #0077ff, #8c2fff);
+    background-color: #da5b00;
     color: #fff;
     padding: 0.5rem;
     border-radius: 5px;
@@ -148,7 +159,7 @@ form .industry-tag {
     font-size: 0.8rem;
     width: 20px;
     height: 20px;
-    background-color: #0077ff;
+    background-color: #da5b00;
     color: #fff;
     border: none;
     border-radius: 50%;
@@ -180,7 +191,7 @@ form .apply-button {
 }
 
 form .apply-button {
-    background: linear-gradient(to right, #0077ff, #8c2fff);
+    background-color: #da5b00;
     width: 10rem;
     margin-left: 14rem;
 }
