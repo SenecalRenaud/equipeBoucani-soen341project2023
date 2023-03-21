@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `job_post` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `jobtype` text NOT NULL,
   `title` varchar(100) DEFAULT NULL,
   `location` text DEFAULT NULL,
@@ -36,16 +36,13 @@ CREATE TABLE `job_post` (
   `tags` text DEFAULT NULL,
   `description` text DEFAULT NULL,
   `date` datetime DEFAULT NULL,
-  `editDate` datetime DEFAULT NULL
+  `editDate` datetime DEFAULT NULL,
+  PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `comment_post`
 --
-
-INSERT INTO `job_post` (`id`, `jobtype`, `title`, `location`, `salary` ,`tags`, `description`, `date`, `editDate`) VALUES
-(1, 'Full-Time', 'Software Dev', 'Montreal', '5000', '', '', '2023-02-15 00:52:12', NULL),
-(2, 'Part-Time', 'Software Eng', 'Quebec City', '2000', '', '','2023-02-15 00:52:12', NULL);
 
 --
 -- Indexes for dumped tables
@@ -61,10 +58,6 @@ INSERT INTO `job_post` (`id`, `jobtype`, `title`, `location`, `salary` ,`tags`, 
 
 --
 --
-ALTER TABLE `job_post`
-    ADD PRIMARY KEY (`id`),
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
