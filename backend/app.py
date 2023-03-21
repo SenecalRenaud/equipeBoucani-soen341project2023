@@ -10,6 +10,7 @@ from flask import \
     redirect,\
     render_template,\
     url_for
+from requests import HTTPError
 
 # from sqlalchemy import Integer,DateTime,String,Text,Column
 # from flask.ext.session import Session, Session(app) to use flask.session instead of db.session
@@ -84,10 +85,15 @@ def index():
         return redirect(rf"/firebase-api/{query_val}")
 
     elif 'user' in session:
+
         if query_val == "logout":
             return redirect(r"/firebase-api/logout")
-
-        user_recordinfo = _auth.get_account_info(session['user']['idToken'])['users'][0]
+        try:
+            user_recordinfo = _auth.get_account_info(session['user']['idToken'])['users'][0]
+        except HTTPError as invalidIDTokenOrAuth:
+            print(invalidIDTokenOrAuth)
+            print("Forcefully logout user")
+            return redirect(r"/firebase-api/logout")
 
         header_content =  f'Hi, {user_recordinfo["displayName"]}' + "\t" + \
                             "\t" + f"<a href='/firebase-api/userprofile'><img src=\"{user_recordinfo['photoUrl']}\" width='75' height='75'/></a>" +\
