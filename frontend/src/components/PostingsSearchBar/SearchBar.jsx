@@ -5,8 +5,8 @@ const SearchBar = ({keyword,setKeyword}) => {
   const BarStyling = {flexGrow: 2};//width:"20rem",background:"#F2F1F9", border:"none", padding:"0.5rem"};
   return (
     <input
-        // type='search'
-        // id='postingsSearchBar'
+        type='search'
+        id='postingsSearchBar'
      style={BarStyling}
      key="random1"
      value={keyword}

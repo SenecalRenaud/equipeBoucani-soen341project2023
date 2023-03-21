@@ -3,9 +3,6 @@ import CoreUICard from "../CoreUICard";
 
 
 const CoreUICardList = ({data}) => {
-  console.log("AA")
-  console.log(data)
-  console.log(typeof data.id === 'undefined')
   return (
     <>
     {(typeof data.id === 'undefined') ? (

@@ -10,6 +10,8 @@ import CoreUICardList from "../../components/CoreUICardList";
             // "Access-Control-Allow-Methods": "POST",
             // "Access-Control-Allow-Headers": "Content-Type, Authorization"
 function PostCommentForm  (props)  {
+    var filteredIndicesHashSet = new Set();
+
     const [searchBarInput, setSearchBarInput] = useState('');
     // const [postingsListDefault, setPostingsListDefault] = useState();
     // const [postingsList, setPostingsList] = useState();
@@ -32,7 +34,8 @@ function PostCommentForm  (props)  {
         )
     },[])
   const updateSearchInput = async (searchBarInput) => {
-        var filteredIndicesHashSet = new Set();
+
+        filteredIndicesHashSet.clear();
 
         //TODO MAKE MORE EFFICIENT DATA-STRUCTURE WISE... THIS WORKS BUT ITS NOT QUITE SCALABLE
         for (let [fieldName,allFieldInstances] of Object.entries(defaultData)) {
@@ -59,6 +62,8 @@ function PostCommentForm  (props)  {
          Object.keys(defaultData).reduce(
              (obj, key, index) => ({ ...obj, [key]: filtered[index] }), {})
      );
+
+     document.getElementById("searchResultCount").innerText = filteredIndicesHashSet.size;
   }
 
 
@@ -94,11 +99,19 @@ function PostCommentForm  (props)  {
                     keyword={searchBarInput}
                     setKeyword={updateSearchInput}
                 />
-                &emsp;<FontAwesomeIcon icon={faFilter}>
-                <button id='postingsFilterButton'
-                ></button> </FontAwesomeIcon>
+                &emsp;
+                    <FontAwesomeIcon
+                        id='postingsFilterButton'
+                        style={{cursor: 'pointer'}}
+                        icon={faFilter}
+                        onClick={(e)=> {alert("Filters are not ready to be implemeted yet! Soon !");}}
+                    />
+
             </section>
 
+            <span style={{fontSize: '.6em' , marginTop: "-1rem"}}>
+                {"\n\r Found "} <b id="searchResultCount">{(data.id ? data.id.length : 0)}</b> {" results."}
+            </span>
             <hr  style={{
     color: '#000000',
     backgroundColor: '#000000',
