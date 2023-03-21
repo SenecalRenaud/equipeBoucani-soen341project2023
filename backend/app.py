@@ -65,6 +65,8 @@ ma.init_app(app)
 with app.app_context():
     db.create_all()
 
+
+
 #TODO Might remove logger once the web app has scaled more
 logger = logging.getLogger('tdm')
 logger.setLevel(logging.INFO)
@@ -154,14 +156,16 @@ def signup():
                 os.path.join(
                     app.config['TEMP_UPLOAD_PATH'],filename))
             )
+            blob = userPfpBucket.blob(filename)
+            blob.upload_from_filename(pfpfilepath)
+            blob.make_public()  # public access URL to download and view PFPs externally
         else:
-            print("DEFAULT PROFILE PIC TODO IMPLEMENT HERE !!!")
-            # todo default pic: https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg
-            return abort(501)
+            blob = userPfpBucket.get_blob(
+                f"default{UserType(UserType[userTypeVal].value).name.title()}Pfp.png"
+            )
 
-        blob = userPfpBucket.blob(filename)
-        blob.upload_from_filename(pfpfilepath)
-        blob.make_public() # public access URL to download and view PFPs externally
+            #return abort(501)
+
 
         fb_db.child("") #Pyrebase database standard operation
 
