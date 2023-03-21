@@ -86,7 +86,7 @@ const JobPostingForm = (props) => {
 
     return (
         <div className="job-position-container">
-            <div className="blur-card">
+            <div className="job-posting-card">
                 <h1>Job Posting</h1>
                 <div className="job-type-section">
                     <h3>Job Type</h3>

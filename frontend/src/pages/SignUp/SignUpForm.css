@@ -1,0 +1,59 @@
+.sign-up-container {
+    font-family: 'Calibri', sans-serif;
+    width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.sign-up-container h1 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.sign-up-container label {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.sign-up-container input,
+.sign-up-container select {
+    width: 100%;
+    font-family: 'Calibri', sans-serif;
+    font-size: 14px;
+    padding: 5px 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.sign-up-container input[type='file'] {
+    font-size: 12px;
+}
+
+.sign-up-container button {
+    display: block;
+    width: 100%;
+    font-family: 'Calibri', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 0;
+    margin-top: 20px;
+    background-color: #da5b00;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.sign-up-container button:hover {
+    background-color: #b84a00;
+}

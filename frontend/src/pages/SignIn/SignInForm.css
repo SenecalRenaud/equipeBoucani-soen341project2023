@@ -1,0 +1,60 @@
+.sign-in-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30vh;
+}
+
+.sign-in-card {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Calibri', sans-serif;
+}
+
+.sign-in-container h1 {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sign-in-container label {
+    display: block;
+    font-family: 'Calibri', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.sign-in-container input {
+    width: 100%;
+    font-family: 'Calibri', sans-serif;
+    font-size: 14px;
+    padding: 5px 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.sign-in-container button {
+    display: block;
+    width: 100%;
+    font-family: 'Calibri', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 0;
+    margin-top: 20px;
+    background-color: #da5b00;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.sign-in-container button:hover {
+    background-color: #b84a00;
+}
