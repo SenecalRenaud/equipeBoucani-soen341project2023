@@ -20,6 +20,7 @@ from werkzeug.utils import secure_filename
 
 from flask_cors import CORS,cross_origin #?  (for cross origin requests)
 #TODO from flask_bcrypt import Bcrypt #? (for passwords, private op hash,...)
+#TODO TEST, AND ALSO UPDATE REQUIREMENTS... ADD AS EXTRA USER FIELD
 import pyrebase
 
 import logging
@@ -47,8 +48,8 @@ from forms import login_required
 #*******************************
 
 from firebase_admin import auth,credentials,storage,firestore
-from firebase_admin.exceptions import FirebaseError
-
+from firebase_admin.exceptions import FirebaseError,AlreadyExistsError
+from firebase_admin._auth_utils import EmailAlreadyExistsError,EmailNotFoundError
 
 app = Flask(__name__)
 
@@ -77,7 +78,7 @@ def after_request(response):
 from models import *
 commentpost_schema = CommentPostSchema()
 commentposts_schema = CommentPostSchema(many=True)
-userextrainfo_schema = UserExtraInfoSchema()
+# userextrainfo_schema = UserExtraInfoSchema()
 
 @app.route("/")
 def index():
@@ -158,29 +159,51 @@ def signup():
         if email is None or password is None:
             return {'message': 'Error missing email or password'},400
         try:
-
+            user_infofields = dict(
+                email=email,
+                password=password,
+                display_name=firstName + " " + lastName,
+                photo_url=blob.public_url
+            )
             user = auth.create_user(
-                   email=email,
-                   password=password,
-                    display_name= firstName + " " + lastName,
-                    photo_url= blob.public_url
+                   **user_infofields
+            )
+            del user_infofields['display_name']
+            del user_infofields['password']
+            user_infofields.update(
+                dict(
+                    firstName = firstName,
+                    lastName = lastName,
+                    userType = UserType[userTypeVal.upper()].name
+                )#Can add more fields later if update whole 'Users' collection database as well!
             )
 
-            userextrainfo = UserExtraInfo(user.uid,UserType[userTypeVal])
-            db.session.add(userextrainfo)
-            db.session.commit()
+            user_docref = firestore_db.collection(u'Users').document(
+                str(user.uid)
+            )
+            user_docref.set(
+                user_infofields
+            )
+
+            # userextrainfo = UserExtraInfo(user.uid,UserType[userTypeVal])
+            # db.session.add(userextrainfo)
+            # db.session.commit()
 
             print( {'message': f'Successfully created user {user.uid}'},200)
 
             session['user'] = _auth.sign_in_with_email_and_password(email, password)
 
             return redirect(url_for("index"))
+        except EmailAlreadyExistsError as userAlreadyExists:
+            print(userAlreadyExists.__str__().replace("email ","email [" + str(email) + "]"))
+            return {'message' : 'Email ' + str(email) + ' is already taken !'},403
         except ValueError as validatorErr:
             return {'message': 'Property value error in user creation fields... ',
                     'error-traceback': validatorErr.__traceback__.tb_frame.__str__(),
                     'error-cause':validatorErr.__cause__.__str__(),
                     'error-context': validatorErr.__context__.__str__()},400
-        except FirebaseError:
+        except FirebaseError as privateFirebaseErr:
+            print(privateFirebaseErr,type(privateFirebaseErr))
             return {'message': 'Firebase Error while creating user'},403 #Api route to get a new token for a valid user
         except (RuntimeError,Exception,InterruptedError) as err :
             print(err)
@@ -193,7 +216,9 @@ def account_profile_view():
 
     user_recordinfo = _auth.get_account_info(session['user']['idToken'])['users'][0]
 
-    userextrainfo = UserExtraInfo.query.get(user_recordinfo['localId'])
+    #userextrainfo = UserExtraInfo.query.get(user_recordinfo['localId'])
+    user_docref = firestore_db.collection('Users').document(user_recordinfo['localId'])
+    user_doc = user_docref.get()
 
     fname,lname = user_recordinfo['displayName'].split(' ',maxsplit=1)
     context = dict(
@@ -204,7 +229,7 @@ def account_profile_view():
                             float(user_recordinfo['createdAt'])/ 1000)),
         lastSeenDatetime =  strftime("%A %B %d %Y, %H:%M:%S", localtime(
                             float(user_recordinfo['lastLoginAt'])/ 1000)),
-        userType = str(userextrainfo.userType.name).title()
+        userType = str(user_doc.to_dict()['userType']).title()
     )
 
     return render_template("profiletest.html",**context)

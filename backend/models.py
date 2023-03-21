@@ -72,18 +72,18 @@ class UserType(enum.Enum):
             pass
         return cls['APPLICANT']
 
-class UserExtraInfo(db.Model):
-    __tablename__ = "users_extra_info"
-
-    firebaseUUID = db.Column(db.VARCHAR(255),primary_key=True)
-    userType = db.Column(db.Enum(UserType))
-
-    def __init__(self,firebaseUUID,userType):
-
-        self.firebaseUUID = firebaseUUID
-        self.userType = userType
-
-class UserExtraInfoSchema(ma.Schema):
-    class Meta:
-        fields = ('firebaseUUID','userType')
+# class UserExtraInfo(db.Model):
+#     __tablename__ = "users_extra_info"
+#
+#     firebaseUUID = db.Column(db.VARCHAR(255),primary_key=True)
+#     userType = db.Column(db.Enum(UserType))
+#
+#     def __init__(self,firebaseUUID,userType):
+#
+#         self.firebaseUUID = firebaseUUID
+#         self.userType = userType
+#
+# class UserExtraInfoSchema(ma.Schema):
+#     class Meta:
+#         fields = ('firebaseUUID','userType')
 

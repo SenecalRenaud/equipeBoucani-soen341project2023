@@ -47,11 +47,10 @@ userPfpBucket = storage.bucket(name=os.environ['FIREBASE_STORAGE_BUCKET'])
 firestore_db = adminsdk_firestore.client()
 
 if __name__ == '__main__':
-    doc_ref = firestore_db.collection(u'users').document(u'elovelace')
+    doc_ref = firestore_db.collection(u'test_users').document(u'datafile1')
     doc_ref.set({
-        u'first': u'Ada',
-        u'last': u'Lovelace',
-        u'born': 1815
+        'field1': 324234.242,
+        'field2' : "something"
     })
 
     # print(fb_db.__repr__())
