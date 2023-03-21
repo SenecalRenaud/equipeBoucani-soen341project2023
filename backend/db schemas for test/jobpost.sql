@@ -62,7 +62,8 @@ INSERT INTO `job_post` (`id`, `jobtype`, `title`, `location`, `salary` ,`tags`, 
 --
 --
 ALTER TABLE `job_post`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+    ADD PRIMARY KEY (`id`),
+    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
