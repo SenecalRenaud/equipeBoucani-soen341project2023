@@ -17,7 +17,7 @@ import dotenv
 import os
 
 FIREBASE_CONFIG_JSON_NAME = ".firebase_config.json"
-FIREBASE_ADMINSDK_CREDS_SERVICEKEYS_FILENAME = ".credentials_firebase_adminsdk_8mtwu_187f5d4799.json"
+FIREBASE_ADMINSDK_CREDS_SERVICEKEYS_FILENAME = ".credentials_firebase_adminsdk_n0xv8_cd14a39876.json"
 
 dotenv.load_dotenv(".env.local")
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = FIREBASE_ADMINSDK_CREDS_SERVICEKEYS_FILENAME
@@ -45,20 +45,23 @@ fb_storage = _firebase.storage()
 userPfpBucket = storage.bucket(name=os.environ['FIREBASE_STORAGE_BUCKET'])
 
 firestore_db = adminsdk_firestore.client()
-# firestore_db = firestore.Client(project=os.environ['FIREBASE_PROJECT_ID'])
 
 if __name__ == '__main__':
+    doc_ref = firestore_db.collection(u'users').document(u'elovelace')
+    doc_ref.set({
+        u'first': u'Ada',
+        u'last': u'Lovelace',
+        u'born': 1815
+    })
 
-
-
-    print(fb_db.__repr__())
-    data = {
-            u'firebaseUUID': u'99asdjN32489hsdub*adn',
-            u'userType': 'EMPLOYER'
-        }
-
-    fb_db.child("users_extra_info").child("AntoineCantin").set(data)
-    print(fb_db.child("users_extra_info").get().val())
+    # print(fb_db.__repr__())
+    # data = {
+    #         u'firebaseUUID': u'99asdjN32489hsdub*adn',
+    #         u'userType': 'EMPLOYER'
+    #     }
+    #
+    # fb_db.child("users_extra_info").child("AntoineCantin").set(data)
+    # print(fb_db.child("users_extra_info").get().val())
     # users_ref = firestore_db.collection(u'users')
     # doc_ref = users_ref.document(u'antoinecantin')
     # doc_ref.set(data

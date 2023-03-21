@@ -118,7 +118,7 @@ def signin():
             user = _auth.sign_in_with_email_and_password(email,password)
 
             session['user'] = user# ['email'] #todo: high-level identifier e.g. username goes here
-            redirect("/")
+            return redirect("/")
         except:
             return {'message': "Failed login"}, 401
 
