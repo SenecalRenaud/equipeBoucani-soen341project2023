@@ -42,8 +42,7 @@ _auth = _firebase.auth()#Pyrebase4 api,: send_email_verification, send_password_
 fb_db = _firebase.database()
 fb_storage = _firebase.storage()
 
-#TODO Later make more buckets for Resume documents, etc...
-userPfpBucket = storage.bucket(name=os.environ['FIREBASE_STORAGE_BUCKET'])
+mainStorageBucket = storage.bucket(name=os.environ['FIREBASE_STORAGE_BUCKET'])
 
 firestore_db = adminsdk_firestore.client()
 

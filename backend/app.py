@@ -42,7 +42,7 @@ from authentification import fb_config,\
     fb_db,\
     fb_storage,\
     firebase_default_app,\
-    userPfpBucket,\
+    mainStorageBucket,\
     firestore_db
 
 from forms import login_required
@@ -154,6 +154,19 @@ def signup():
         firstName,lastName = request.form.get("firstName"),request.form.get("lastName")
         userTypeVal = request.form.get('userType')
 
+        uploaded_pdf_resume_file = request.files['uploadedResume']
+        filename = secure_filename(uploaded_pdf_resume_file.filename)
+        uploaded_pdf_resume_file.save(
+            (resumefilepath :=
+             os.path.join(
+                 app.config['TEMP_UPLOAD_PATH'], filename))
+        )
+
+        resume_blob = mainStorageBucket.blob(r"resumes/" + filename)
+        resume_blob.upload_from_filename(resumefilepath)
+        os.remove(resumefilepath)
+        resume_blob.make_public() #NOTE: Maybe better if resumes are private ?... right now not necessary
+
         uploaded_pfp_file = request.files['profilePicture']
         filename = secure_filename(uploaded_pfp_file.filename)
         if filename:
@@ -163,11 +176,11 @@ def signup():
                 os.path.join(
                     app.config['TEMP_UPLOAD_PATH'],filename))
             )
-            blob = userPfpBucket.blob(filename)
+            blob = mainStorageBucket.blob(r"profilePictures/" + filename)
             blob.upload_from_filename(pfpfilepath)
             blob.make_public()  # public access URL to download and view PFPs externally
         else:
-            blob = userPfpBucket.get_blob(
+            blob = mainStorageBucket.get_blob(
                 f"default{UserType(UserType[userTypeVal].value).name.title()}Pfp.png"
             )
 
@@ -195,7 +208,8 @@ def signup():
                     firstName = firstName,
                     lastName = lastName,
                     userType = UserType[userTypeVal.upper()].name,
-                    pwdHash = bcrypt.generate_password_hash(password)
+                    pwdHash = bcrypt.generate_password_hash(password),
+                    resume_url = resume_blob.public_url
                 )#Can add more fields later if update whole 'Users' collection database as well!
             )
 
@@ -244,12 +258,13 @@ def account_profile_view():
     context = dict(
         firstName = fname,lastName=lname,
         email = user_recordinfo['email'],
-        profilePictureURL = user_recordinfo['photoUrl'],
+        profilePictureURL = user_doc.to_dict()['photo_url'],#user_recordinfo['photoUrl'],
         joinDate = strftime("%A %B %d %Y", localtime(
                             float(user_recordinfo['createdAt'])/ 1000)),
         lastSeenDatetime =  strftime("%A %B %d %Y, %H:%M:%S", localtime(
                             float(user_recordinfo['lastLoginAt'])/ 1000)),
-        userType = str(user_doc.to_dict()['userType']).title()
+        userType = str(user_doc.to_dict()['userType']).title(),
+        uploadedResumeURL=user_doc.to_dict()['resume_url']
     )
 
     return render_template("profiletest.html",**context)
@@ -298,6 +313,11 @@ def update_user_details(_uid):
             user = auth.get_user(_uid)
             firstName,lastName = user.display_name.strip().split(' ',1)
             pfp_publicurl = user.photo_url
+
+            user_docref = firestore_db.collection(u'Users').document(
+                str(_uid))
+            resume_url = None if 'resume_url' in user_docref.get().to_dict() else user_docref.get().to_dict()['resume_url']
+
             if 'firstName' in request.form:
                 firstName = request.form['firstName']
             if 'lastName' in request.form:
@@ -312,13 +332,30 @@ def update_user_details(_uid):
                          os.path.join(
                              app.config['TEMP_UPLOAD_PATH'], filename))
                     )
-                    blob = userPfpBucket.blob(filename)
+                    blob = mainStorageBucket.blob(r"profilePictures/" + filename)
                     blob.upload_from_filename(pfpfilepath)
                     blob.make_public()  # public access URL to download and view PFPs externally
-                    userPfpBucket.delete_blob(
-                        pfp_publicurl.rsplit('/', 1)[-1]
+                    mainStorageBucket.delete_blob(
+                        "profilePictures/" + pfp_publicurl.rsplit('/', 1)[-1]
                     )
                     pfp_publicurl = blob.public_url
+            if 'uploadedResume' in request.files:
+                uploaded_pdf_resume_file = request.files['uploadedResume']
+                filename = secure_filename(uploaded_pdf_resume_file.filename)
+                uploaded_pdf_resume_file.save(
+                    (resumefilepath :=
+                     os.path.join(
+                         app.config['TEMP_UPLOAD_PATH'], filename))
+                )
+
+                resume_blob = mainStorageBucket.blob(r"resumes/" + filename)
+                resume_blob.upload_from_filename(resumefilepath)
+                mainStorageBucket.delete_blob(
+                    "resumes/" + pfp_publicurl.rsplit('/', 1)[-1]
+                )
+                os.remove(resumefilepath)
+                resume_blob.make_public()
+                resume_url = resume_blob.public_url
 
             auth.update_user(_uid,
                              display_name=firstName + ' ' + lastName,
@@ -330,7 +367,8 @@ def update_user_details(_uid):
                 dict(
                     firstName=firstName,
                     lastName=lastName,
-                    photo_url=pfp_publicurl
+                    photo_url=pfp_publicurl,
+                    resume_url=resume_url
                 )
             )
 
@@ -427,6 +465,15 @@ def delete_commentpost(_id):
     return commentpost_schema.jsonify(commentpost)
 
 if __name__ == '__main__':
+
+    # auth.update_user("VXmMwunX4eSDGNCVOt4m6nsR0R03",
+    #                  photo_url="https://storage.googleapis.com/boucani-webappv2.appspot.com/profilePictures/tumblr_static_filename.gif")
+    #
+    # auth.update_user("B39a36hOG9cSJJwaXGF1WS6J54x2",
+    #                  photo_url="https://storage.googleapis.com/boucani-webappv2.appspot.com/profilePictures/1OR7Jtk.png")
+    #
+    # auth.update_user("p8PSJ2iforSkT9szSg0lvGDCyyy2",
+    #                  photo_url="https://storage.googleapis.com/boucani-webappv2.appspot.com/profilePictures/OG_Spider_Man_2.jpg")
 
     port = int(os.environ.get('PORT', 5000))
     app.run(debug=True)

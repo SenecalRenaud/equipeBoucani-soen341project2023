@@ -43,11 +43,21 @@
        <p><input type="file"  accept="image/*" name="profilePicture" id="profilePicture"  onchange="loadPfp(event)"
     placeholder="Photo" capture>
            <img src="http://lorempixel.com/100/100" id="pfpOutput" width="200" /></p>
-
+<p><label for="uploadedResume" style="cursor: pointer;">Upload Resume: </label></p>
+       <p><input type="file"  accept="application/pdf" name="uploadedResume" id="uploadedResume"  onchange="loadResume(event)"
+    placeholder="Resume" capture>
+           <iframe src="https://mag.wcoomd.org/uploads/2018/05/blank.pdf" id="resumeOutput" width="80%" height="450px" >
+           </iframe>
+       </p>
 <script>
 const loadPfp = function(event) {
 	let image = document.getElementById('pfpOutput');
 	image.src = URL.createObjectURL(event.target.files[0]);
+
+};
+const loadResume = function(event) {
+	let iframe_pdf = document.getElementById('resumeOutput');
+	iframe_pdf.src = URL.createObjectURL(event.target.files[0]);
 
 };
 const checkConfirmedPassword = function() {

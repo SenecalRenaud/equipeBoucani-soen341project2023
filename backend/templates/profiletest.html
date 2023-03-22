@@ -33,7 +33,7 @@
     <form class="js-edit hide" id="alter_form" method="POST"
           action="http://localhost:5000/firebase-api/edit-user/current/"
           enctype="multipart/form-data"
-            onsubmit="console.log('ADdasd');this.submit()">
+            onsubmit="console.log('...');this.submit()">
     <header>
 
     <br><hr>
@@ -41,7 +41,14 @@
        <p><input type="file"  accept="image/*" name="profilePicture" id="profilePicture"  onchange="loadPfp(event)"
     placeholder="Photo" capture>
            <img src="{{profilePictureURL}}" id="pfpOutput" width="200" /></p>
+
 </header>
+        <p><label for="uploadedResume" style="cursor: pointer;">Upload Resume: </label></p>
+       <p><input type="file"  accept="application/pdf" name="uploadedResume" id="uploadedResume"  onchange="loadResume(event)"
+    placeholder="Resume" capture>
+           <iframe src="{{uploadedResumeURL}}" id="resumeOutput" width="80%" height="450px" >
+           </iframe>
+       </p>
         <label>
             First Name:
             <input type="text" name="firstName" value="{{firstName}}"/>
@@ -88,6 +95,11 @@ edit.addEventListener('submit', event => {
 const loadPfp = function(event) {
 	let image = document.getElementById('pfpOutput');
 	image.src = URL.createObjectURL(event.target.files[0]);
+
+};
+const loadResume = function(event) {
+	let iframe_pdf = document.getElementById('resumeOutput');
+	iframe_pdf.src = URL.createObjectURL(event.target.files[0]);
 
 };
 // function alter_name(){
