@@ -198,9 +198,9 @@ const JobPostingForm = (props) => {
                         required
                     />
                     <p className="word-count">{wordCount}/200 words</p>
-                    <button className="apply-button" type="submit">
-                        Submit
-                    </button>
+                    <div className="apply-button-container">
+                        <button className="apply-button">Submit</button>
+                    </div>
                 </form>
             </div>
         </div>

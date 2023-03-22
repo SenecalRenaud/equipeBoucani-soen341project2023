@@ -9,6 +9,16 @@ const SignUpForm = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [profilePicture, setProfilePicture] = useState(null);
     const [userType, setUserType] = useState('');
+    const [previewImage, setPreviewImage] = useState(null);
+
+    const handleProfilePictureChange = (event) => {
+        setProfilePicture(event.target.files[0]);
+        if (event.target.files[0]) {
+            setPreviewImage(URL.createObjectURL(event.target.files[0]));
+        } else {
+            setPreviewImage(null);
+        }
+    };
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -68,8 +78,14 @@ const SignUpForm = () => {
                 <input
                     id="profile-picture-input"
                     type="file"
-                    onChange={(event) => setProfilePicture(event.target.files[0])}
+                    onChange={handleProfilePictureChange}
                 />
+
+                {previewImage && (
+                    <div className="profile-picture-preview">
+                        <img src={previewImage} alt="Profile Preview" />
+                    </div>
+                )}
 
                 <label htmlFor="user-type-select">User Type</label>
                 <select

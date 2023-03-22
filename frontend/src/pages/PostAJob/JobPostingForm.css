@@ -1,22 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Calibri&display=swap');
 
 .job-position-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    font-family: 'Calibri', sans-serif;
+    width: 75%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.job-posting-card {
-    font-family: 'Calibri', sans-serif;
-    width: 100%;
-    max-width: 600px;
-    padding: 2rem;
-    align-items: center;
-    border-radius: 5px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    background-color: #fff;
-}
+
 
 .job-posting-card h1 {
     margin-bottom: 2rem;
@@ -28,11 +22,11 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 2rem;
-    margin-top: 20px;
+    margin-top: 1.25rem;
 }
 
 .job-type-section h3 {
-    margin: 15px;
+    margin: 1rem;
     font-size: 1.2rem;
 }
 
@@ -103,7 +97,7 @@ form .salary-section {
 }
 
 form .salary-scroll-bar {
-    height: 10px;
+    height: 0.625rem;
     position: relative;
     margin-right: 0.5rem;
     border-radius: 5px;
@@ -158,8 +152,8 @@ form .industry-tag {
 
 .industry-tag button {
     font-size: 0.8rem;
-    width: 20px;
-    height: 20px;
+    width: 1.25rem;
+    height: 1.25rem;
     background-color: #da5b00;
     color: #fff;
     border: none;
@@ -181,8 +175,14 @@ form .word-count {
     margin-bottom: 0.5rem;
 }
 
-form .apply-button {
+.apply-button-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
     margin-top: 2rem;
+}
+
+form .apply-button {
     font-size: 1.2rem;
     padding: 0.5rem 1rem;
     border: none;
@@ -192,12 +192,11 @@ form .apply-button {
     background-color: #da5b00;
     width: 10rem;
     display: flex;
-    margin-left: 175px;
     align-items: center;
     justify-content: center;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 40rem) {
     .blur-card {
         width: 90%;
     }
