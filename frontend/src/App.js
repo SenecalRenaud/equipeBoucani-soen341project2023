@@ -9,8 +9,8 @@ import Home from './pages/Home/home';
 import JobPostingForm from "./pages/PostAJob/JobPostingForm";
 
 import PostCommentForm from "./pages/BACKEND_DEBUG/PostCommentForm";
-import SignUpForm from "./pages/SignUp/SignUp";
-import SignInForm from "./pages/SignIn/SignIn";
+import SignUpForm from "./pages/SignUp/SignUpForm";
+import SignInForm from "./pages/SignIn/SignInForm";
 
 function App() {
     const [comments, setComments] = useState([""]);
