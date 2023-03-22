@@ -56,8 +56,8 @@ const Navbar = () => {
           <NavMenu />
           </div>
           <div className="gpt3__navbar-menu_container-links-sign">
-            <p>Sign in</p>
-            <button type="button">Sign up</button>
+		  <p> <Link to="/signin"> Sign in </Link></p>
+		  <button type="button"><Link to="/signup"> Sign up </Link></button>
           </div>
         </div>
         )}
