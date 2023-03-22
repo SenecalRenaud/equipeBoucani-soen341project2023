@@ -1,65 +1,73 @@
-.Debug {
+.post-comment-container {
+  font-family: 'Calibri', sans-serif;
+  width: 75%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  color: #282c34;
+}
+
+.post-comment-container h1,
+.post-comment-container h3 {
   text-align: center;
-  min-height: 100vh;
+  margin-bottom: 1rem;
+}
+
+.job-posts {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  font-size: calc(10px + 2vmin);
-  color: white;
-  background-color: #282c34;
-
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
-button {
-  color: red;
-  height: 5vmin;
-  width: 5vmin;
-  font-size: 2.5vmin;
-  padding-right: .8vmax;
-  position: relative;
+
+.comment-form {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  grid-gap: 5px;
+  margin: 0 auto;
 }
-.Debug-header {
 
-  font-family: "Courier New", serif;
-
+.comment-form label {
+  text-align: right;
 }
-/*.Debug form{*/
-/*  display: flex;*/
-/*  height: 40vh;*/
-/*  align-self: center;*/
-/*  align-items: center;*/
-/*  flex-direction: column;*/
-/*  justify-content: center;*/
-/*}*/
 
-
-.Debug form {
-    display:grid;
-    grid-template-columns: max-content max-content;
-    grid-gap:5px;
-
+.comment-form label[for^='comment_']:after {
+  content: ':';
 }
-.Debug form label       { text-align:right; }
-.Debug form label[for^="comment_"]:after { content: ":"; }
-.Debug form input {  }
 
-/*.App-logo {*/
-/*  height: 40vmin;*/
-/*  pointer-events: none;*/
-/*}*/
-/*@media (prefers-reduced-motion: no-preference) {*/
-/*  .App-logo {*/
-/*    animation: App-logo-spin infinite 20s linear;*/
-/*  }*/
-/*}*/
-/*@keyframes App-logo-spin {*/
-/*  from {*/
-/*    transform: rotate(0deg);*/
-/*  }*/
-/*  to {*/
-/*    transform: rotate(360deg);*/
-/*  }*/
-/*}*/
+.comment-form input,
+.comment-form textarea {
+  margin-left: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1.2rem;
+}
 
+.comment-form textarea {
+  width: 100%;
+  resize: none;
+}
 
+.submit-button-wrapper {
+  display: flex;
+  justify-content: center;
+  grid-column: 1 / span 2;
+}
 
+#submitComment {
+  background-color: #da5b00;
+  color: #fff;
+  border: none;
+  border-radius:  5px;
+  font-size: 1.2rem;
+  padding: 8px 16px;
+  margin-top: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#submitComment:hover {
+  background-color: #b84a00;
+}
