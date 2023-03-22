@@ -1,4 +1,4 @@
 FLASK_APP=app
 FLASK_ENV=development
-SECRET_KEY=ashakjdkjas98237dagdu82
+SECRET_KEY=asdad23adsadafa2342saa
 APPLICATION_ROOT=/

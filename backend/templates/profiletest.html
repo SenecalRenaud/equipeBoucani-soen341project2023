@@ -4,14 +4,22 @@
     <meta charset="UTF-8">
     <title>Firebase User Profile Test</title>
 </head>
+<style>
+.hide {
+    display: none;
+}
+</style>
 <body>
-<header>
+<section>
     <h1> {{userType}} Profile </h1>
+    <div class="js-display">
+<header>
+
     <br><hr>
     <img src="{{profilePictureURL}}" width="150" height="150">
 </header>
-<p> First Name: {{firstName}} </p>
-<p> Last Name: {{lastName}} </p>
+<p > First Name: {{firstName}} </p>
+<p>Last Name: {{lastName}} </p>
 <p> Email: {{email}} </p>
 <hr>
 
@@ -19,5 +27,95 @@
     <p>Member since: {{joinDate}}</p>
     <p>Last Seen: {{lastSeenDatetime}}</p>
 </footer>
+        <button class="update-btn">Update</button>
+        </div>
+
+    <form class="js-edit hide" id="alter_form" method="POST"
+          action="http://localhost:5000/firebase-api/edit-user/current/"
+          enctype="multipart/form-data"
+            onsubmit="console.log('ADdasd');this.submit()">
+    <header>
+
+    <br><hr>
+    <p><label for="profilePicture" style="cursor: pointer;">Upload Profile Picture: </label></p>
+       <p><input type="file"  accept="image/*" name="profilePicture" id="profilePicture"  onchange="loadPfp(event)"
+    placeholder="Photo" capture>
+           <img src="{{profilePictureURL}}" id="pfpOutput" width="200" /></p>
+</header>
+        <label>
+            First Name:
+            <input type="text" name="firstName" value="{{firstName}}"/>
+        </label>
+        <label>
+            Last Name:
+            <input type="text" name="lastName" value="{{lastName}}"/>
+        </label>
+<p> Email: {{email}} </p>
+<hr>
+
+<footer>
+    <p>Member since: {{joinDate}}</p>
+    <p>Last Seen: {{lastSeenDatetime}}</p>
+</footer>
+
+        <input type="submit" form="alter_form"
+               name="submitFormButton" value="Save Changes !!" />
+<!--        <button onclick="alter_name();" class="save-btn" type="button">Save Changes</button>-->
+
+        </form>
+</section>
+
+<script defer>
+    const section = document.querySelector('section');
+    const display = section.querySelector('.js-display');
+    const edit = section.querySelector('.js-edit');
+
+section.addEventListener('click', event => {
+  const { target } = event;
+  if (target.classList.contains('update-btn')) {
+    display.classList.add('hide');
+    edit.classList.remove('hide');
+  } else if (target.classList.contains('save-btn')) {
+    display.classList.remove('hide');
+    edit.classList.add('hide');
+  }
+});
+
+edit.addEventListener('submit', event => {
+  event.preventDefault();
+});
+
+const loadPfp = function(event) {
+	let image = document.getElementById('pfpOutput');
+	image.src = URL.createObjectURL(event.target.files[0]);
+
+};
+// function alter_name(){
+//     alter_form.submit();
+//
+//     let content = {
+//             firstName : alter_form.firstName.value.toString(),
+//             lastName : alter_form.lastName.value.toString(),
+//             profilePicture :  alter_form.profilePicture.value.toString()
+//             };
+//
+//     fetch("http://localhost:5000/firebase-api/edit-user/current/", {
+//         method: 'PATCH',
+//         headers: {
+//             'Content-type': 'application/json; charset=UTF-8',
+//             'Accept': 'application/json'
+//         },
+//         body: JSON.stringify(content)
+//     }).then((response) => {
+//         console.log('PATCH Response.status: ', response.status);
+//         if(response.status !== 204)
+//             return response.json();
+//         else
+//             return response.statusText;
+//     }).then((data) => {
+//         window.location.reload()
+//     });
+// }
+</script>
 </body>
 </html>

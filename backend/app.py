@@ -10,6 +10,7 @@ from flask import \
     redirect,\
     render_template,\
     url_for
+
 from requests import HTTPError
 
 # from sqlalchemy import Integer,DateTime,String,Text,Column
@@ -20,6 +21,7 @@ from werkzeug.utils import secure_filename
 
 from flask_cors import CORS,cross_origin #?  (for cross origin requests)
 from flask_bcrypt import Bcrypt #? (keys and password hashing engine)
+# from flask_session import Session
 
 
 import logging
@@ -45,18 +47,20 @@ from authentification import fb_config,\
 
 from forms import login_required
 #*******************************
+import pyrebase
 
 from firebase_admin import auth,credentials,storage,firestore
 from firebase_admin.exceptions import FirebaseError,AlreadyExistsError
-from firebase_admin._auth_utils import EmailAlreadyExistsError,EmailNotFoundError
+from firebase_admin._auth_utils import EmailAlreadyExistsError, EmailNotFoundError, UserNotFoundError
 
 app = Flask(__name__)
 
-app.config.from_object(ApplicationSessionConfig)
-
 cors = CORS(app)
 
+app.config.from_object(ApplicationSessionConfig)
+
 bcrypt = Bcrypt(app)
+# Session(app)
 
 db.init_app(app)
 
@@ -89,8 +93,8 @@ def index():
         return redirect(rf"/firebase-api/{query_val}")
 
     elif 'user' in session:
-
         if query_val == "logout":
+
             return redirect(r"/firebase-api/logout")
         try:
             user_recordinfo = _auth.get_account_info(session['user']['idToken'])['users'][0]
@@ -130,14 +134,16 @@ def signin():
             ))
 
             session['user'] = user# ['email'] #todo: high-level identifier e.g. username goes here
+            print(session['user'], " JUST SIGNED IN !!!")
             return redirect("/")
-        except:
+        except Exception as err:
+            print(err)
             return {'message': "Failed login"}, 401
 
     return render_template("logintest.html")
 @app.route('/firebase-api/logout')
 def logout():
-
+    print(session['user'], " JUST LOGGED OUT !")
     loggedout_user = session.pop('user')
     return redirect(r'/')
 @app.route('/firebase-api/signup',methods=['POST','GET'])
@@ -151,6 +157,7 @@ def signup():
         uploaded_pfp_file = request.files['profilePicture']
         filename = secure_filename(uploaded_pfp_file.filename)
         if filename:
+
             uploaded_pfp_file.save(
                 (pfpfilepath :=
                 os.path.join(
@@ -204,7 +211,6 @@ def signup():
             # db.session.commit()
 
             print( {'message': f'Successfully created user {user.uid}'},200)
-
             session['user'] = _auth.sign_in_with_email_and_password(email, password)
 
             return redirect(url_for("index"))
@@ -248,8 +254,99 @@ def account_profile_view():
 
     return render_template("profiletest.html",**context)
 
+@app.route("/firebase-api/get-user/<_uid>/")
+@cross_origin()
+def get_user_details(_uid):
+    _uid = _uid.strip()
+    if _uid == "current" and 'user' in session:
+        # print("USER IN SESSION !")
+        user_recordinfo = _auth.get_account_info(session['user']['idToken'])['users'][0]
+        _uid = user_recordinfo['localId']
+    # print(_uid)
+    # print(session)
+    doc_ref = firestore_db.collection(u'Users').document(_uid)
+    doc = doc_ref.get()
+    if not doc.exists:
+        return {'message': 'firebase auth user id Requested to backend was not found !'},404
 
-@app.route('/get', methods=['GET'])# methods = [list http reqs methods]
+    user_fields = doc.to_dict()
+    userrecord_metadata = auth.get_user(_uid).user_metadata
+
+    user_fields.update(
+        dict(
+    lastSeenEpoch = max(userrecord_metadata.last_refresh_timestamp,userrecord_metadata.last_sign_in_timestamp),
+    creationEpoch = userrecord_metadata.creation_timestamp,
+            uid = _uid
+        ) # JS Epoch format... for some datetime modules, may need to divide by 1000, etc..
+    )
+    del user_fields['pwdHash'] #do not need/want pass bcrypt hash bytes-string in requests
+
+    return jsonify(user_fields)
+
+@app.route("/firebase-api/edit-user/<_uid>/",methods=['PATCH','POST'])
+def update_user_details(_uid):
+    print("UPDATING USER!!!")
+
+    _uid = _uid.strip()
+    if _uid == "current" and 'user' in session:
+        # print("USER IN SESSION !")
+        user_recordinfo = _auth.get_account_info(session['user']['idToken'])['users'][0]
+        _uid = user_recordinfo['localId']
+
+    if request.method == 'POST':
+        try:
+            user = auth.get_user(_uid)
+            firstName,lastName = user.display_name.strip().split(' ',1)
+            pfp_publicurl = user.photo_url
+            if 'firstName' in request.form:
+                firstName = request.form['firstName']
+            if 'lastName' in request.form:
+                lastName = request.form['lastName']
+            if 'profilePicture' in request.files:#request.json:
+                uploaded_pfp_file = request.files['profilePicture']
+
+                filename = secure_filename(uploaded_pfp_file.filename)
+                if filename:
+                    uploaded_pfp_file.save(
+                        (pfpfilepath :=
+                         os.path.join(
+                             app.config['TEMP_UPLOAD_PATH'], filename))
+                    )
+                    blob = userPfpBucket.blob(filename)
+                    blob.upload_from_filename(pfpfilepath)
+                    blob.make_public()  # public access URL to download and view PFPs externally
+                    userPfpBucket.delete_blob(
+                        pfp_publicurl.rsplit('/', 1)[-1]
+                    )
+                    pfp_publicurl = blob.public_url
+
+            auth.update_user(_uid,
+                             display_name=firstName + ' ' + lastName,
+                             photo_url=pfp_publicurl)
+
+            firestore_db.collection(u'Users').document(
+                str(_uid)
+            ).update(
+                dict(
+                    firstName=firstName,
+                    lastName=lastName,
+                    photo_url=pfp_publicurl
+                )
+            )
+
+        except ValueError as badUid:
+            print(badUid)
+            return {'message': 'Uid is invalid'},400
+        except UserNotFoundError as userNotFound:
+            return {'message': str(userNotFound)},404
+        except FirebaseError as serverFirebaseErr:
+            print(serverFirebaseErr)
+            return {'message': 'Firebase error, contact developpers.'},403
+
+        print({'message': f'Sucessfully updated user profile {_uid}'}, 200)
+    return redirect("/firebase-api/userprofile")
+
+@app.route('/get', methods=['GET'])
 def get_all_commentposts():
     """
     GET request to view all table entries directly from 'many' mode sql schema
