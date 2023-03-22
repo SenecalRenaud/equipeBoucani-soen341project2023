@@ -10,6 +10,7 @@ const SignUpForm = () => {
     const [profilePicture, setProfilePicture] = useState(null);
     const [userType, setUserType] = useState('');
     const [previewImage, setPreviewImage] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleProfilePictureChange = (event) => {
         setProfilePicture(event.target.files[0]);
@@ -20,9 +21,27 @@ const SignUpForm = () => {
         }
     };
 
+    const validatePassword = () => {
+        const regex = /^(?=(?:.*[a-zA-Z]){4,})(?=(?:.*\d){2,}).{6,}$/;
+        if (!regex.test(password)) {
+            setErrorMessage(
+                'Password must be at least 6 characters long and contain at least 2 digits.'
+            );
+            return false;
+        }
+        if (password !== confirmPassword) {
+            setErrorMessage('Passwords do not match.');
+            return false;
+        }
+        setErrorMessage('');
+        return true;
+    };
+
     const handleSubmit = (event) => {
         event.preventDefault();
-        // TODO: Implement the sign-up logic
+        if (validatePassword()) {
+            // TODO: Implement the sign-up logic
+        }
     };
 
     return (
@@ -64,6 +83,8 @@ const SignUpForm = () => {
                     onChange={(event) => setPassword(event.target.value)}
                     required
                 />
+
+                {errorMessage && <p className="error-message">{errorMessage}</p>}
 
                 <label htmlFor="confirm-password-input">Confirm Password</label>
                 <input
