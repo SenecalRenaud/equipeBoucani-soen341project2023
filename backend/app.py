@@ -308,7 +308,12 @@ def update_user_details(_uid):
         user_recordinfo = _auth.get_account_info(session['user']['idToken'])['users'][0]
         _uid = user_recordinfo['localId']
 
-    if request.method == 'POST':
+    if request.method == "PATCH":
+        print(NotImplementedError("Not Implemented: client side PATCH request to update firebase user"))
+        return {'message' : "Firebase user update >Not implemented< with PATCH requests. Must make a client-side REST API that fetches with PATCH REQUEST.\n\r "
+                            "Native backend only uses POST to update users " }
+
+    elif request.method == 'POST':
         try:
             user = auth.get_user(_uid)
             firstName,lastName = user.display_name.strip().split(' ',1)
