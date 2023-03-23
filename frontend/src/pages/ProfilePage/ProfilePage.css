@@ -1,0 +1,28 @@
+.profile_picture{
+    max-height: 400px;
+    max-width: 400px;
+    border-radius:10px;
+
+}
+
+.profile_container_1{
+    display:flex;
+    background-color:white;
+    border-radius : 10px;
+    margin-left: 25px;
+    margin-right: 25px;
+    justify-content: center;
+    max-height: 800px;
+    max-width: 500px;
+    padding-top: 50px;
+
+
+}
+
+.profile-content h1 {
+    font-family: var(--font-family);
+    font-weight: 800;
+    font-size: 62px;
+    line-height: 75px;
+    letter-spacing: -0.04em;
+}

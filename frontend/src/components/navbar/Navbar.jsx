@@ -4,6 +4,7 @@ import './navbar.css';
 import logo2 from '../../assets/logo2.png';
 import {Nav, NavLink} from "./NavElements";
 
+
 const NavMenu = () => (
   <>
         <Nav>
@@ -15,6 +16,9 @@ const NavMenu = () => (
 		</NavLink>
         <NavLink to="/BACKEND_DEBUG" activeStyle>
             BACKEND_CRUD_DEBUG
+        </NavLink>
+            <NavLink to="/ProfilePage" activeStyle>
+            Profile
         </NavLink>
         </Nav>
   </>

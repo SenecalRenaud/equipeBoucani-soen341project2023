@@ -9,6 +9,7 @@ import Home from './pages/Home/home';
 import JobPostingForm from "./pages/PostAJob/JobPostingForm";
 
 import PostCommentForm from "./pages/BACKEND_DEBUG/PostCommentForm";
+import ProfilePage from "./pages/ProfilePage/ProfilePage";
 
 function App() {
     const [comments, setComments] = useState([""]);
@@ -24,6 +25,7 @@ return (
         <Route exact path='/'  element={<Home />} />
         <Route path='/jobposting' element={<JobPostingForm/>} />
         <Route path='/BACKEND_DEBUG' element={<PostCommentForm postedComment={postedComment} />}/>
+        <Route path='/ProfilePage' element={<ProfilePage />} />
     </Routes>
     </Router>
 );

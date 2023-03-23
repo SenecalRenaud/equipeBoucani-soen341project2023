@@ -32,7 +32,7 @@ db.init_app(app)
 ma.init_app(app)
 
 with app.app_context():
-    db.create_all()
+     db.create_all()
 
 #TODO Seperate once database has scaled... For now, single modules are convenient
 from models import CommentPost,CommentPostSchema
