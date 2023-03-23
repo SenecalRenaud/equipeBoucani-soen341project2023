@@ -161,6 +161,30 @@ def get_jobpost(_id):
     return jobpost_schema.jsonify(jobpost)
 
 
+@app.route('/getjob', methods=['GET'])  # methods = [list http reqs methods]
+def get_all_jobposts():
+    """
+    GET request to view all table entries directly from 'many' mode sql schema
+    :return: json response
+    Antoine Cantin@ChiefsBestPal
+    """
+
+    all_jobposts = JobPost.query.all()
+    results_arr = jobposts_schema.dump(all_jobposts)
+    print(results_arr)
+    if request.args.get('mapAsFields') == 'true':
+        print("Mapped fields into dict instead of array of obj!")
+        response_fieldsdict = dict(map(lambda kv: (kv[0], [kv[1]]), results_arr[0].items()))
+
+        for k, v in itertools.chain.from_iterable(map(operator.methodcaller('items'), results_arr[1:])):
+            if response_fieldsdict.setdefault(k, None):
+                response_fieldsdict[k].append(v)
+        assert all(len(listed_fields_v) == len(results_arr) for listed_fields_v in response_fieldsdict.values())
+        return jsonify(response_fieldsdict)
+
+    return jsonify(results_arr)  # **{'Hello' : 'World'})
+
+
 @app.route("/updatejob/<_id>/", methods=['PUT'])
 def update_jobpost(_id):
     jobpost = JobPost.query.get(_id)

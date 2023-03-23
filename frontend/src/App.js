@@ -11,13 +11,19 @@ import JobPostingForm from "./pages/PostAJob/JobPostingForm";
 import PostCommentForm from "./pages/BACKEND_DEBUG/PostCommentForm";
 import SignUpForm from "./pages/SignUp/SignUpForm";
 import SignInForm from "./pages/SignIn/SignInForm";
+import ViewJobPosts from "./pages/JobPosts/ViewJobPosts";
 
 function App() {
     const [comments, setComments] = useState([""]);
     const postedComment = (comment) =>{
-    let new_comments = [...comments,comment]
-    setComments(new_comments)
-  }
+        let new_comments = [...comments,comment]
+        setComments(new_comments)
+    }
+    const [jobs, setJobs] = useState([""]);
+    const postedJob = (job) =>{
+        let new_jobs = [...jobs, job]
+        setJobs(new_jobs)
+    }
 return (
     <Router>
     <Navbar />
@@ -28,6 +34,7 @@ return (
         <Route path='/signup' element={<SignUpForm/>} />
         <Route path='/signin' element={<SignInForm/>} />
         <Route path='/BACKEND_DEBUG' element={<PostCommentForm postedComment={postedComment} />}/>
+        <Route path='/viewjobposts' element={<ViewJobPosts postedJob={postedJob} />} />
     </Routes>
     </Router>
 );
