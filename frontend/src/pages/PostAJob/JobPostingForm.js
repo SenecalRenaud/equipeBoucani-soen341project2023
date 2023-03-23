@@ -11,6 +11,8 @@ const JobPostingForm = (props) => {
     const [industryTags, setIndustryTags] = useState([]);
     const [jobDescription, setJobDescription] = useState('');
     const [wordCount, setWordCount] = useState(0);
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
 
     const handleJobTypeChange = (type) => {
         setJobType(type);
@@ -29,10 +31,23 @@ const JobPostingForm = (props) => {
         setSalary(event.target.value);
     };
 
-    const handleIndustryTagClick = (tag) => {
-        if (industryTags.length < 3) {
+    const addIndustryTag = (tag) => {
+        if (industryTags.length < 3 && tag) {
             setIndustryTags([...industryTags, tag]);
         }
+    };
+
+    const handleIndustryTagClick = (event) => {
+        if (event.key === 'Enter') {
+            const tag = event.target.value.trim();
+            addIndustryTag(tag);
+            event.target.value = '';
+            event.preventDefault();
+        }
+    };
+
+    const handleExampleTagClick = (tag) => {
+        addIndustryTag(tag);
     };
 
     const handleRemoveIndustryTag = (index) => {
@@ -47,8 +62,17 @@ const JobPostingForm = (props) => {
         }
     };
 
+    const handleStartDateChange = (event) => {
+        setStartDate(event.target.value);
+    };
+
+    const handleEndDateChange = (event) => {
+        setEndDate(event.target.value);
+    };
+
     const handleSubmit = (event) => {
         event.preventDefault();
+
 
         JobPostingAPIService.AddJobPosting({"jobtype" : jobType, "title" : jobTitle, "location" : location, "salary" : salary, "tags" : industryTags.toString(), "description" : jobDescription})
             .then((response) => props.postedComment(response))
@@ -61,12 +85,21 @@ const JobPostingForm = (props) => {
         setSalary(0)
         setIndustryTags([])
         setJobDescription('')
-
+        
+        const jobPositionData = {
+            jobType,
+            jobTitle,
+            location,
+            salary,
+            industryTags,
+            jobDescription,
+            ...(jobType === 'Time-Period' && { startDate, endDate }),
+        };
     };
 
     return (
         <div className="job-position-container">
-            <div className="blur-card">
+            <div className="job-posting-card">
                 <h1>Job Posting</h1>
                 <div className="job-type-section">
                     <h3>Job Type</h3>
@@ -98,6 +131,26 @@ const JobPostingForm = (props) => {
                         onChange={handleJobTitleChange}
                         required
                     />
+                    {jobType === 'Time-Period' && (
+                        <>
+                            <label htmlFor="start-date-input">Start Date</label>
+                            <input
+                                id=                                "start-date-input"
+                                type="date"
+                                value={startDate}
+                                onChange={handleStartDateChange}
+                                required
+                            />
+                            <label htmlFor="end-date-input">End Date</label>
+                            <input
+                                id="end-date-input"
+                                type="date"
+                                value={endDate}
+                                onChange={handleEndDateChange}
+                                required
+                            />
+                        </>
+                    )}
                     <label htmlFor="location-input">Location</label>
                     <input
                         id="location-input"
@@ -108,66 +161,59 @@ const JobPostingForm = (props) => {
                     />
                     <label htmlFor="salary-input">Salary</label>
                     <div className="salary-section">
-                        <div className="salary-scroll-bar" style={{ width: `${salary / 100}%` }}>
-                            <div className="salary-scroll-thumb"></div>
-                        </div>
-                        <div className="salary-display">$              {salary} CAD
-                        </div>
                         <input
                             id="salary-input"
                             type="range"
-                            min="10"
+                            min="100"
                             max="10000"
-                            step="10"
+                            step="100"
                             value={salary}
                             onChange={handleSalaryChange}
-                            required
                         />
+                        <span className="salary-display">${salary}</span>
                     </div>
-                    <label htmlFor="industry-tags-input">Industry</label>
+                    <label htmlFor="industry-tags-input">Industry Tags</label>
                     <div className="industry-tags-section">
                         <div className="industry-tags-example">
-                            <span onClick={() => handleIndustryTagClick('IT')}>IT</span>
-                            <span onClick={() => handleIndustryTagClick('Tutoring')}>Tutoring</span>
-                            <span onClick={() => handleIndustryTagClick('Engineering')}>Engineering</span>
-                            <span onClick={() => handleIndustryTagClick('Finance')}>Finance</span>
-                            <span onClick={() => handleIndustryTagClick('Marketing')}>Marketing</span>
-                            <span onClick={() => handleIndustryTagClick('Design')}>Design</span>
-                            <span onClick={() => handleIndustryTagClick('Healthcare')}>Healthcare</span>
-                            <span onClick={() => handleIndustryTagClick('Education')}>Education</span>
-                            <span onClick={() => handleIndustryTagClick('Food')}>Food</span>
-                            <span onClick={() => handleIndustryTagClick('Travel')}>Travel</span>
+                            <span onClick={() => handleExampleTagClick('IT')}>IT</span>
+                            <span onClick={() => handleExampleTagClick('Tutoring')}>Tutoring</span>
+                            <span onClick={() => handleExampleTagClick('Engineering')}>Engineering</span>
+                            <span onClick={() => handleExampleTagClick('Finance')}>Finance</span>
+                            <span onClick={() => handleExampleTagClick('Marketing')}>Marketing</span>
+                            <span onClick={() => handleExampleTagClick('Design')}>Design</span>
+                            <span onClick={() => handleExampleTagClick('Healthcare')}>Healthcare</span>
+                            <span onClick={() => handleExampleTagClick('Education')}>Education</span>
+                            <span onClick={() => handleExampleTagClick('Food')}>Food</span>
+                            <span onClick={() => handleExampleTagClick('Travel')}>Travel</span>
                         </div>
                         <div className="industry-tags-input-wrapper">
                             {industryTags.map((tag, index) => (
                                 <div key={index} className="industry-tag">
                                     {tag}
-                                    <button type="button" onClick={() => handleRemoveIndustryTag(index)}> X
-                                    </button>
+                                    <button onClick={() => handleRemoveIndustryTag(index)}>x</button>
                                 </div>
                             ))}
                             <input
                                 id="industry-tags-input"
                                 type="text"
                                 placeholder="Add an industry tag"
-                                onKeyPress={(event) => event.key === 'Enter' && handleIndustryTagClick(event)}
+                                onKeyPress={handleIndustryTagClick}
+                                disabled={industryTags.length >= 3} // Add the disabled attribute here
                             />
                         </div>
                     </div>
                     <label htmlFor="job-description-input">Job Description</label>
-                    <div className="job-description-section">
-                        <div className="word-count">{wordCount}/200 words</div>
-                        <textarea
-                            id="job-description-input"
-                            value={jobDescription}
-                            onChange={handleJobDescriptionChange}
-                            maxLength={200}
-                            required
-                        />
+                    <textarea
+                        id="job-description-input"
+                        value={jobDescription}
+                        onChange={handleJobDescriptionChange}
+                        maxLength="200"
+                        required
+                    />
+                    <p className="word-count">{wordCount}/200 words</p>
+                    <div className="apply-button-container">
+                        <button className="apply-button">Submit</button>
                     </div>
-                    <button type="submit" className={`apply-button ${jobType}`}>
-                        Apply
-                    </button>
                 </form>
             </div>
         </div>
