@@ -1,24 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Calibri&display=swap');
+
 .job-position-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 5rem;
-    align-items: center;
-    height: 100vh;
-}
-
-.blur-card {
-    width: 600px;
-    padding: 2rem;
-    border-radius: 5px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    font-family: 'Calibri', sans-serif;
+    width: 60%;
+    margin: 0 auto;
+    padding: 20px;
     background-color: #fff;
-    color: #000;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.blur-card h1 {
-    margin-top: 0;
+
+
+.job-posting-card h1 {
     margin-bottom: 2rem;
-    font-size: 2rem;
+    font-size: 24px;
     text-align: center;
 }
 
@@ -26,10 +22,11 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 2rem;
+    margin-top: 1.25rem;
 }
 
 .job-type-section h3 {
-    margin: 0;
+    margin: 1rem;
     font-size: 1.2rem;
 }
 
@@ -45,12 +42,12 @@
 }
 
 .job-type-section .active {
-    background: linear-gradient(to right, #0077ff, #8c2fff);
+    background-color: #da5b00;
     color: #ffffff;
 }
 
 .job-type-section .inactive {
-    color: #031B34;
+    color: #da5b00;
 }
 
 form label {
@@ -77,12 +74,21 @@ form textarea::placeholder {
 form input:focus,
 form textarea:focus {
     outline: none;
-    border-color: #0077ff;
+    border-color: #da5b00;
 }
 
 form input[type="range"] {
     width: 100%;
 }
+
+#start-date-input {
+    margin-bottom: 1rem;
+}
+
+#end-date-input {
+    margin-bottom: 1rem;
+}
+
 
 form .salary-section {
     display: flex;
@@ -91,8 +97,7 @@ form .salary-section {
 }
 
 form .salary-scroll-bar {
-    height: 10px;
-    background: linear-gradient(to right, #0077ff, #8c2fff);
+    height: 0.625rem;
     position: relative;
     margin-right: 0.5rem;
     border-radius: 5px;
@@ -118,7 +123,7 @@ form .industry-tags-example {
 
 form .industry-tags-example span {
     font-size: 0.8rem;
-    background: linear-gradient(to right, #0077ff, #8c2fff);
+    background-color: #da5b00;
     color: #fff;
     padding: 0.5rem;
     border-radius: 5px;
@@ -130,11 +135,12 @@ form .industry-tags-input-wrapper {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    width: 100%;
 }
 
 form .industry-tag {
     font-size: 0.8rem;
-    background: linear-gradient(to right, #0077ff, #8c2fff);
+    background-color: #da5b00;
     color: #fff;
     padding: 0.5rem;
     border-radius: 5px;
@@ -146,9 +152,9 @@ form .industry-tag {
 
 .industry-tag button {
     font-size: 0.8rem;
-    width: 20px;
-    height: 20px;
-    background-color: #0077ff;
+    width: 1.25rem;
+    height: 1.25rem;
+    background-color: #da5b00;
     color: #fff;
     border: none;
     border-radius: 50%;
@@ -169,23 +175,28 @@ form .word-count {
     margin-bottom: 0.5rem;
 }
 
-form .apply-button {
+.apply-button-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
     margin-top: 2rem;
+}
+
+form .apply-button {
     font-size: 1.2rem;
     padding: 0.5rem 1rem;
     border: none;
     border-radius: 5px;
     color: #fff;
     cursor: pointer;
-}
-
-form .apply-button {
-    background: linear-gradient(to right, #0077ff, #8c2fff);
+    background-color: #da5b00;
     width: 10rem;
-    margin-left: 14rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 40rem) {
     .blur-card {
         width: 90%;
     }

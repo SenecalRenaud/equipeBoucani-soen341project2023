@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { RiMenu3Line, RiCloseLin, RiCloseLine } from 'react-icons/ri'; //might be an error here if there isnt a node_modules present... 
+import { RiMenu3Line, RiCloseLin, RiCloseLine } from 'react-icons/ri'; //might be an error here if there isnt a node_modules present...
+import {Link} from "react-router-dom";
 import './navbar.css';
 import logo2 from '../../assets/logo2.png';
 import {Nav, NavLink} from "./NavElements";
-
 
 const NavMenu = () => (
   <>
@@ -17,9 +17,7 @@ const NavMenu = () => (
         <NavLink to="/BACKEND_DEBUG" activeStyle>
             BACKEND_CRUD_DEBUG
         </NavLink>
-            <NavLink to="/ProfilePage" activeStyle>
-            My Profile
-        </NavLink>
+
         </Nav>
   </>
 )
@@ -43,9 +41,8 @@ const Navbar = () => {
       </div>
 
       <div className="gpt3__navbar-sign">
-        <p>Sign in</p>
-        <button type="button">Sign up</button>
-
+          <p> <Link to="/signin"> Sign in </Link></p>
+          <button type="button"><Link to="/signup"> Sign up </Link></button>
       </div>
       
 
@@ -59,8 +56,8 @@ const Navbar = () => {
           <NavMenu />
           </div>
           <div className="gpt3__navbar-menu_container-links-sign">
-            <p>Sign in</p>
-            <button type="button">Sign up</button>
+		  <p> <Link to="/signin"> Sign in </Link></p>
+		  <button type="button"><Link to="/signup"> Sign up </Link></button>
           </div>
         </div>
         )}
