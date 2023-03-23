@@ -18,7 +18,7 @@ const NavMenu = () => (
             BACKEND_CRUD_DEBUG
         </NavLink>
             <NavLink to="/ProfilePage" activeStyle>
-            Profile
+            My Profile
         </NavLink>
         </Nav>
   </>
