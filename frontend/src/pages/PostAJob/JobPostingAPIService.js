@@ -1,7 +1,7 @@
 export default class JobPostingAPIService{
 
     static async AddJobPosting(request_body){
-        return await fetch(`http://localhost:5000/addJob`,{
+        return await fetch(`http://localhost:5000/addjob`,{
             //'mode': "no-cors",//remove this line if troublesome in environment where deployed
             'method':'POST',
             headers : {
