@@ -21,7 +21,7 @@ from werkzeug.utils import secure_filename
 
 from flask_cors import CORS,cross_origin #?  (for cross origin requests)
 from flask_bcrypt import Bcrypt #? (keys and password hashing engine)
-# from flask_session import Session
+# from flask_session import Session // TODO: Assert Accept certain MIME Types/Subtypes
 
 
 import logging
@@ -45,7 +45,7 @@ from authentification import fb_config,\
     mainStorageBucket,\
     firestore_db
 
-from forms import login_required
+#from forms import login_required //TODO
 #*******************************
 import pyrebase
 
@@ -89,10 +89,13 @@ commentposts_schema = CommentPostSchema(many=True)
 
 @app.route("/")
 def index():
+    if _auth.current_user:
+        print("Currently logged in: " + _auth.current_user)
     if (query_val := request.args.get("goto",default=None)) in ("signin","signup"):
         return redirect(rf"/firebase-api/{query_val}")
 
     elif 'user' in session:
+        print(" User "  + session['user']['email'] + " is logged in on server-side session!")
         if query_val == "logout":
 
             return redirect(r"/firebase-api/logout")
@@ -134,7 +137,7 @@ def signin():
             ))
 
             session['user'] = user# ['email'] #todo: high-level identifier e.g. username goes here
-            print(session['user'], " JUST SIGNED IN !!!")
+            print(session['user'], "\n\tJUST SIGNED IN !!!")
             return redirect("/")
         except Exception as err:
             print(err)

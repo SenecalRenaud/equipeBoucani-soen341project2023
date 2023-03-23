@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './SignInForm.css';
 import CommentAPIService from "../BACKEND_DEBUG/CommentAPIService";
+import {Link} from "react-router-dom";
 
 const SignInForm = () => {
     const [email, setEmail] = useState('');
@@ -16,7 +17,7 @@ const SignInForm = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log('Email:', email, 'Password:', password);
+        console.log('Email:', email, 'Password:', password); //TODO REMOVE ASAP WHEN DEBUGGING DONE
 
         const formData = new FormData();
         formData.append('email', email);
@@ -47,6 +48,8 @@ const SignInForm = () => {
                         onChange={handlePasswordChange}
                         required
                     />
+                    <p> Forgot your password? <span style={{textDecoration: "underline", color: "grey"}}>
+                        <Link to="/forgotpassword"> Click here </Link></span> </p>
                     <button className="sign-in-button" type="submit">
                         Sign In
                     </button>

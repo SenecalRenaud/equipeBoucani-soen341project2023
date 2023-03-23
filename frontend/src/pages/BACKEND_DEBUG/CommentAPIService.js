@@ -42,6 +42,7 @@ export default class CommentAPIService{
             'method':'POST',
             body:formData,
         })
+            //TODO do headers Content-Type: Mime types for form data ?
             //.then(response => response.json())
             .catch(error => console.log("API CORE EXCEPTION... " + error))
     }
