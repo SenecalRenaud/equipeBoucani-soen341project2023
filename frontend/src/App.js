@@ -8,8 +8,8 @@ import { BrowserRouter as Router, Routes, Route}
 import Home from './pages/Home/home';
 import JobPostingForm from "./pages/PostAJob/JobPostingForm";
 import PostCommentForm from "./pages/BACKEND_DEBUG/PostCommentForm";
-import SignUp from "./pages/SignUp/SignUp";
-import SignIn from "./pages/SignIn/SignIn";
+import SignUp from "./pages/SignUp/SignUpForm";
+import SignIn from "./pages/SignIn/SignInForm";
 
 
 function App() {
