@@ -142,7 +142,7 @@ def delete_commentpost(_id):
     return commentpost_schema.jsonify(commentpost)
 
 
-@app.route("/addJob", methods=['POST'])
+@app.route("/addjob", methods=['POST'])
 @cross_origin()
 def addJobPost():
     jobtype, title, location, salary, description, tags = request.json['jobtype'], request.json['title'], request.json[
@@ -150,6 +150,47 @@ def addJobPost():
 
     jobpost = JobPost(jobtype, title, location, salary, description, tags)
     db.session.add(jobpost)
+    db.session.commit()
+
+    return jobpost_schema.jsonify(jobpost)
+
+
+@app.route("/getjob/<_id>/", methods=['GET'])
+def get_jobpost(_id):
+    jobpost = JobPost.query.get(_id)
+    return jobpost_schema.jsonify(jobpost)
+
+
+@app.route("/updatejob/<_id>/", methods=['PUT'])
+def update_jobpost(_id):
+    jobpost = JobPost.query.get(_id)
+
+    if 'jobtype' in request.json:
+        jobpost.jobtype = request.json['jobtype']
+    if 'title' in request.json:
+        jobpost.title = request.json['title']
+    if 'location' in request.json:
+        jobpost.location = request.json['location']
+    if 'salary' in request.json:
+        jobpost.salary = request.json['salary']
+    if 'tags' in request.json:
+        jobpost.tags = request.json['tags']
+    if 'description' in request.json:
+        jobpost.description = request.json['description']
+
+    jobpost.editDate = datetime.datetime.now()
+
+    db.session.commit()
+
+    return jobpost_schema.jsonify(jobpost)
+
+
+@app.route("/deletejob/<_id>/", methods=['DELETE'])
+def delete_jobpost(_id):
+    jobpost = JobPost.query.get(_id)
+
+    db.session.delete(jobpost)
+
     db.session.commit()
 
     return jobpost_schema.jsonify(jobpost)
