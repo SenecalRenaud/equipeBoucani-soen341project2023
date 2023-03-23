@@ -49,7 +49,7 @@ class ApplicationSessionConfig:
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 465
     MAIL_USERNAME = 'equipeboucani@gmail.com'
-    MAIL_PASSWORD = 'qgkkzdzoxtoniwtg'
+    MAIL_PASSWORD = os.environ["FLASK_MAIL_APP_PW"]
     MAIL_USE_TLS = False
     MAIL_USE_SSL = True
 
