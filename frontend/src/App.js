@@ -8,8 +8,8 @@ import { BrowserRouter as Router, Routes, Route}
 import Home from './pages/Home/home';
 import JobPostingForm from "./pages/PostAJob/JobPostingForm";
 import PostCommentForm from "./pages/BACKEND_DEBUG/PostCommentForm";
-import SignUp from "./pages/SignUp/signup";
-import SignIn from "./pages/SignIn/signin";
+import SignUp from "./pages/SignUp/SignUp";
+import SignIn from "./pages/SignIn/SignIn";
 
 
 function App() {
@@ -26,8 +26,8 @@ return (
         <Route exact path='/'  element={<Home />} />
         <Route path='/jobposting' element={<JobPostingForm/>} />
         <Route path='/BACKEND_DEBUG' element={<PostCommentForm postedComment={postedComment} />}/>
-        <Route path='/signup' element={<SignUp/>}/>
-        <Route path='/signin' element={<SignIn/>}/>
+        <Route path='/signup' element={<SignUp/>} />
+        <Route path='/signin' element={<SignIn/>} />
     </Routes>
     </Router>
 );
