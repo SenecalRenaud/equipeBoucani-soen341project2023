@@ -11,6 +11,7 @@ import JobPostingForm from "./pages/PostAJob/JobPostingForm";
 import PostCommentForm from "./pages/BACKEND_DEBUG/PostCommentForm";
 import SignUpForm from "./pages/SignUp/SignUpForm";
 import SignInForm from "./pages/SignIn/SignInForm";
+import ProfilePage from "./pages/ProfilePage/ProfilePage";
 
 function App() {
     const [comments, setComments] = useState([""]);
@@ -28,6 +29,7 @@ return (
         <Route path='/signup' element={<SignUpForm/>} />
         <Route path='/signin' element={<SignInForm/>} />
         <Route path='/BACKEND_DEBUG' element={<PostCommentForm postedComment={postedComment} />}/>
+        <Route path='/profile' element={<ProfilePage/>} />
     </Routes>
     </Router>
 );
