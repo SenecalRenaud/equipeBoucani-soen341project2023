@@ -41,6 +41,7 @@ export default class CommentAPIService{
         return await fetch(`http://localhost:5000/firebase-api/signup`,{
             'method':'POST',
             body:formData,
+            credentials: "include" // To get cookies in AJAX request from backend origin
         })
             //TODO do headers Content-Type: Mime types for form data ?
             //.then(response => response.json())
@@ -49,9 +50,9 @@ export default class CommentAPIService{
 
     static async UserSignIn(formData){
         return await fetch(`http://localhost:5000/firebase-api/signin`,{
-            //'mode': "no-cors",//remove this line if troublesome in environment where deployed
             'method':'POST',
             body:formData,
+            credentials: "include" // To get cookies in AJAX request from backend origin
         })
             //.then(response => response.json())
             .catch(error => console.log("API CORE EXCEPTION... " + error))

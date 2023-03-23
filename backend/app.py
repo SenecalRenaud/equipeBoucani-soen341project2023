@@ -9,7 +9,8 @@ from flask import \
     session,\
     redirect,\
     render_template,\
-    url_for
+    url_for,\
+    make_response
 
 from requests import HTTPError
 
@@ -54,8 +55,11 @@ from firebase_admin.exceptions import FirebaseError,AlreadyExistsError
 from firebase_admin._auth_utils import EmailAlreadyExistsError, EmailNotFoundError, UserNotFoundError
 
 app = Flask(__name__)
-
-cors = CORS(app)
+# TODO Might need to add flags here for CSRF cookie,credentials, server-side and request handling, security...
+cors = CORS(app,
+            supports_credentials=True # Access-Control-Allow-Credentials exposed for other servers / origins (i.e. outside backend app folder)
+                                      # Will allow AJAX/XMLHttpRequests in js client to fetch session cookies for state and user log
+            )
 
 app.config.from_object(ApplicationSessionConfig)
 
@@ -114,8 +118,27 @@ def index():
         header_content = render_template(r"header_login_or_signup.html")
 
 
-    return header_content + "<br><hr>" + render_template(r"PAGE_CONTENT.html")
+    return header_content + "<br><hr>" + render_template(r"PAGE_CONTENT.html") \
+        + "<a href='/cookies_test/'> Click here to view session and cookies test page </a>"
 
+
+@app.route("/get-cookie/")
+def get_cookie():
+    response = make_response("""Look at this cookie ! 
+                             If made from client-side, 
+                             it means The AJAX request 
+                             was not blocked by CORS or something else.
+                             """ )
+    #response.headers["Set-Cookie"]
+    response.set_cookie(key="id", value="3db4adj3d")
+                        #TODO path="/cookies_test/")
+                        #TODO domain="fake.subdomain.net")
+    print(response)
+    return response
+@app.route("/cookies_test/")
+def cookies_test():
+    print(request.cookies)
+    return "This Page has cookies"
 
 @app.route('/firebase-api/signin',methods=['POST','GET'])
 def signin():

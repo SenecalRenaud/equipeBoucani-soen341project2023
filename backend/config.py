@@ -39,7 +39,11 @@ class ApplicationSessionConfig:
 
     CORS_HEADERS = "Content-Type"
 
-    SESSION_COOKIE_SECURE = False
+    SESSION_COOKIE_SECURE = False #when True, limit the cookies to HTTPS traffic only [for production].
+    # SESSION_COOKIE_HTTPONLY=True #when True, prevents any client-side usage of the session cookie
+    # REMEMBER_COOKIE_HTTPONLY=True
+    # SESSION_COOKIE_SAMESITE="Strict"
+
     SESSION_PERMANENT = False
     SESSION_USE_SIGNER = True
 
