@@ -93,8 +93,6 @@ commentposts_schema = CommentPostSchema(many=True)
 
 @app.route("/")
 def index():
-    if _auth.current_user:
-        print("Currently logged in: " + _auth.current_user)
     if (query_val := request.args.get("goto",default=None)) in ("signin","signup"):
         return redirect(rf"/firebase-api/{query_val}")
 
@@ -119,26 +117,43 @@ def index():
 
 
     return header_content + "<br><hr>" + render_template(r"PAGE_CONTENT.html") \
-        + "<a href='/cookies_test/'> Click here to view session and cookies test page </a>"
+        + "<a href='/api/cookies_test/'> Click here to view session and cookies test page </a>"
 
 
 @app.route("/get-cookie/")
-def get_cookie():
+def get_cookie():#TODO
     response = make_response("""Look at this cookie ! 
                              If made from client-side, 
                              it means The AJAX request 
                              was not blocked by CORS or something else.
                              """ )
     #response.headers["Set-Cookie"]
-    response.set_cookie(key="id", value="3db4adj3d")
-                        #TODO path="/cookies_test/")
+    sessioncookie_value = session['user']['localId'] if 'user' in session else "anonymous"
+
+    response.set_cookie(key="user_uid", value=sessioncookie_value)
+                        #TODO path="/api/cookies_test/")
                         #TODO domain="fake.subdomain.net")
     print(response)
+    #todo make methods to clear cookies as well... on same browser iteration/session
     return response
-@app.route("/cookies_test/")
-def cookies_test():
+@app.route("/api/cookies_test/")
+def cookies_test():#TODO
     print(request.cookies)
-    return "This Page has cookies"
+    if 'user' not in session:#todo 'session' in request.cookies
+        return jsonify(msg="No user logged in found in session!")
+
+    user_auth_dict = session['user']
+
+    assert user_auth_dict['localId'] == request.cookies["user_uid"]
+
+    user_dict = firestore_db.collection(u'Users')\
+        .document(request.cookies["user_uid"]).get().to_dict()
+
+
+    if user_dict['userType'] != "ADMIN":
+        return jsonify(user_dict)
+    else:
+        return jsonify(msg=" Error ! Can not display current user because they are an ADMIN !")
 
 @app.route('/firebase-api/signin',methods=['POST','GET'])
 def signin():

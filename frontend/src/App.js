@@ -10,6 +10,7 @@ import JobPostingForm from "./pages/PostAJob/JobPostingForm";
 import PostCommentForm from "./pages/BACKEND_DEBUG/PostCommentForm";
 import SignUp from "./pages/SignUp/SignUpForm";
 import SignIn from "./pages/SignIn/SignInForm";
+import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
 
 
 function App() {
@@ -28,6 +29,7 @@ return (
         <Route path='/BACKEND_DEBUG' element={<PostCommentForm postedComment={postedComment} />}/>
         <Route path='/signup' element={<SignUp/>} />
         <Route path='/signin' element={<SignIn/>} />
+        <Route path='/SESSION_COOKIES_DEBUG' element={<SESSION_COOKIES_DEBUG/>}/>
     </Routes>
     </Router>
 );

@@ -16,6 +16,9 @@ const NavMenu = () => (
         <NavLink to="/BACKEND_DEBUG" activeStyle>
             BACKEND_CRUD_DEBUG
         </NavLink>
+            <NavLink to="/SESSION_COOKIES_DEBUG" activeStyle>
+                SESSION_COOKIES_DEBUG
+            </NavLink>
         </Nav>
   </>
 )
