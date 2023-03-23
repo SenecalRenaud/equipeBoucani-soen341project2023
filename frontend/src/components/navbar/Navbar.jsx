@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { RiMenu3Line, RiCloseLin, RiCloseLine } from 'react-icons/ri'; //might be an error here if there isnt a node_modules present... 
 import './navbar.css';
 import logo2 from '../../assets/logo2.png';
-import {Nav, NavLink} from "./NavElements";
+import {Nav, NavLink, NavLinkSignIn, NavLinkSignUp} from "./NavElements";
 
 const NavMenu = () => (
   <>
@@ -39,9 +39,12 @@ const Navbar = () => {
       </div>
 
       <div className="gpt3__navbar-sign">
-        <p>Sign in</p>
-        <button type="button">Sign up</button>
-
+          <NavLinkSignIn to="/signin">
+              Sign in
+          </NavLinkSignIn>
+          <NavLinkSignUp to="/signup">
+              Sign up
+          </NavLinkSignUp>
       </div>
       
 
