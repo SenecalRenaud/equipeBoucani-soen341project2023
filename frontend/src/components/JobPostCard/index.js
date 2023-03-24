@@ -46,12 +46,12 @@ export const SubmitCancelButton = styled.button`
     color: black;
 `;
 const JobPostCard = ({id, jobtype, title, description, location, salary, tags, date, editDate}) => {
-    const [editjobType, setJobType] = useState(jobtype);
-    const [editjobTitle, setJobTitle] = useState(title);
-    const [editlocation, setLocation] = useState(location);
-    const [editsalary, setSalary] = useState(salary);
-    const [editindustryTags, setIndustryTags] = useState(tags.split(","));
-    const [editjobDescription, setJobDescription] = useState(description);
+    const [editJobType, setJobType] = useState(jobtype);
+    const [editJobTitle, setJobTitle] = useState(title);
+    const [editLocation, setLocation] = useState(location);
+    const [editSalary, setSalary] = useState(salary);
+    const [editIndustryTags, setIndustryTags] = useState(tags.split(","));
+    const [editJobDescription, setJobDescription] = useState(description);
     const [wordCount, setWordCount] = useState(0);
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
@@ -67,8 +67,8 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
     };
 
     const addIndustryTag = (tag) => {
-        if (editindustryTags.length < 3 && tag) {
-            setIndustryTags([...editindustryTags, tag]);
+        if (editIndustryTags.length < 3 && tag) {
+            setIndustryTags([...editIndustryTags, tag]);
         }
     };
 
@@ -86,7 +86,7 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
     };
 
     const handleRemoveIndustryTag = (index) => {
-        setIndustryTags(editindustryTags.filter((_, i) => i !== index));
+        setIndustryTags(editIndustryTags.filter((_, i) => i !== index));
     };
 
     const handleJobDescriptionChange = (event) => {
@@ -103,7 +103,7 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
 
     const handleEdit = (event) => {
 
-        JobPostingAPIService.EditJobPosting(toBeEditedID, {"title" : editjobTitle, "jobtype": editjobType, "location": editlocation, "salary": editsalary, "description": editjobDescription, "tags": editindustryTags.toString()})
+        JobPostingAPIService.EditJobPosting(toBeEditedID, {"title" : editJobTitle, "jobtype": editJobType, "location": editLocation, "salary": editSalary, "description": editJobDescription, "tags": editIndustryTags.toString()})
             //.then((response) => props.postedComment(response))
             .then((any)=> window.location.reload())
             .catch(error => console.log('Following error occured after fetching from API: ',error))
@@ -121,7 +121,7 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
 
             <CardTitle>Job post ID#{id} </CardTitle>
             <CardDeleteButton onClick={() => handleDelete(id)}><FontAwesomeIcon icon={faTrashCan}/></CardDeleteButton>
-            <CardEditButton onClick={() => {setToBeEditedID(id); toggleModal(); setJobTitle(editjobTitle); setJobDescription(editjobDescription)}}><FontAwesomeIcon icon={faPen}/></CardEditButton>
+            <CardEditButton onClick={() => {setToBeEditedID(id); toggleModal(); setJobTitle(editJobTitle); setJobDescription(editJobDescription)}}><FontAwesomeIcon icon={faPen}/></CardEditButton>
 
             <CardGivenTitle >{title}</CardGivenTitle>
 
@@ -151,19 +151,19 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
                     <div className="job-type-section">
                         <h3>Job Type</h3>
                         <button type="button"
-                            className={editjobType === 'Full-Time' ? 'active' : ''}
+                            className={editJobType === 'Full-Time' ? 'active' : ''}
                             onClick={() => handleJobTypeChange('Full-Time')}
                         >
                             Full-Time
                         </button>
                         <button type="button"
-                            className={editjobType === 'Part-Time' ? 'active' : ''}
+                            className={editJobType === 'Part-Time' ? 'active' : ''}
                             onClick={() => handleJobTypeChange('Part-Time')}
                         >
                             Part-Time
                         </button>
                         <button type="button"
-                            className={editjobType === 'Time-Period' ? 'active' : ''}
+                            className={editJobType === 'Time-Period' ? 'active' : ''}
                             onClick={() => handleJobTypeChange('Time-Period')}
                         >
                             Time-Period
@@ -176,7 +176,7 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
                     name="jobTitle"
                     id="jobTitle"
                     onChange={(e) => setJobTitle(e.target.value)}
-                    value={editjobTitle}
+                    value={editJobTitle}
                 />
                 Job Location:
                 <input
@@ -184,7 +184,7 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
                     name="location"
                     id="location"
                     onChange={(e) => setLocation(e.target.value)}
-                    value={editlocation}
+                    value={editLocation}
                 />
                 <label htmlFor="salary-input">Salary</label>
                 <div className="salary-section">
@@ -194,10 +194,10 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
                         min="100"
                         max="10000"
                         step="100"
-                        value={editsalary}
+                        value={editSalary}
                         onChange={handleSalaryChange}
                     />
-                    <span className="salary-display">${editsalary}</span>
+                    <span className="salary-display">${editSalary}</span>
                 </div>
                 <label htmlFor="industry-tags-input">Industry Tags</label>
                 <div className="industry-tags-section">
@@ -214,7 +214,7 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
                         <span onClick={() => handleExampleTagClick('Travel')}>Travel</span>
                     </div>
                     <div className="industry-tags-input-wrapper">
-                        {editindustryTags.map((tag, index) => (
+                        {editIndustryTags.map((tag, index) => (
                             <div key={index} className="industry-tag">
                                 {tag}
                                 <button onClick={() => handleRemoveIndustryTag(index)}>x</button>
@@ -225,7 +225,7 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
                             type="text"
                             placeholder="Add an industry tag"
                             onKeyPress={handleIndustryTagClick}
-                            disabled={editindustryTags.length >= 3} // Add the disabled attribute here
+                            disabled={editIndustryTags.length >= 3} // Add the disabled attribute here
                         />
                     </div>
                 </div>
@@ -233,7 +233,7 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
                     Job Description:
                     <textarea
                         id="job-description-input"
-                        value={editjobDescription}
+                        value={editJobDescription}
                         onChange={handleJobDescriptionChange}
                         maxLength="200"
                         required
