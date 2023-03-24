@@ -147,6 +147,9 @@
     display: table-cell;
     vertical-align: middle;
 }
+.navbarLoggedInText p {
+    font-size: 0.5em;
+}
 
 img#navbarLoggedInPfp {
     border-radius: 50%;

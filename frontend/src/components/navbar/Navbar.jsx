@@ -6,6 +6,7 @@ import logo2 from '../../assets/logo2.png';
 import {Nav, NavLink, NavLinkSignIn, NavLinkSignUp} from "./NavElements";
 import Cookies from 'js-cookie';
 import CommentAPIService from "../../pages/BACKEND_DEBUG/CommentAPIService";
+import UserDropDownMenu from "../UserDropDownMenu/UserDropDownMenu";
 
 const NavMenu = () => (
   <>
@@ -44,21 +45,19 @@ const LoginOrSeeAccount = () => {
     // console.log(userRecordInfo)
     return (uid ?
             <>
-                <div class="loggedInUser_container"
+            <UserDropDownMenu triggerMenuMarkup={
+
+
+                <div className="loggedInUser_container"
 
                 >
-                    <div class="navbarLoggedInText">
+                    <div className="navbarLoggedInText">
                 <span id="navbarLoggedInName">
                     {window.localStorage['firstName']} {window.localStorage['lastName']}</span>
-                    <p style={{fontSize: "0.5em"}} onClick=
-                        {(e)=>
-                            // eslint-disable-next-line no-restricted-globals
-                        {if(confirm("Are you sure want to sign out? ")){
-                            CommentAPIService.UserLogout();
-                            window.location.replace('http://localhost:3000')
-                        }}}>
-                    Sign Out
-                </p>
+
+                        <p>
+                            {window.localStorage['userType']}
+                        </p>
                     </div>
                     <div>
                                         <img id="navbarLoggedInPfp"
@@ -66,6 +65,7 @@ const LoginOrSeeAccount = () => {
 
                 </div>
                     </div>
+                    }/>
                 </>
             :
             <>
@@ -91,7 +91,6 @@ const Navbar = () => {
         <div className='gpt3__navbar-links_logo'> 
           <img src={logo2} alt="logo"/>
         </div>
-
         <div className='gpt3__navbar-links_container'>
           <NavMenu />
         </div>
