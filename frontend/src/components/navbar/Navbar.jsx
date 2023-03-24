@@ -3,6 +3,7 @@ import { RiMenu3Line, RiCloseLin, RiCloseLine } from 'react-icons/ri'; //might b
 import './navbar.css';
 import logo2 from '../../assets/logo2.png';
 import {Nav, NavLink, NavLinkSignIn, NavLinkSignUp} from "./NavElements";
+import SignInForm from "../../pages/SignIn/SignInForm";
 
 const NavMenu = () => (
   <>

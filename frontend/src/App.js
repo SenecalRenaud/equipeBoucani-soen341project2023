@@ -14,6 +14,8 @@ import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
 
 
 function App() {
+
+
     const [comments, setComments] = useState([""]);
     const postedComment = (comment) =>{
     let new_comments = [...comments,comment]

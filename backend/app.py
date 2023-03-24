@@ -119,7 +119,11 @@ def index():
     return header_content + "<br><hr>" + render_template(r"PAGE_CONTENT.html") \
         + "<a href='/api/cookies_test/'> Click here to view session and cookies test page </a>"
 
+@app.route("/getall-cookies/")
+def getall_cookies():
 
+
+    return jsonify(request.cookies)
 @app.route("/get-cookie/")
 def get_cookie():#TODO
     response = make_response("""Look at this cookie ! 
@@ -130,7 +134,7 @@ def get_cookie():#TODO
     #response.headers["Set-Cookie"]
     sessioncookie_value = session['user']['localId'] if 'user' in session else "anonymous"
 
-    response.set_cookie(key="user_uid", value=sessioncookie_value)
+    response.set_cookie(key="loggedin_user_uid", value=sessioncookie_value)
                         #TODO path="/api/cookies_test/")
                         #TODO domain="fake.subdomain.net")
     print(response)
@@ -142,18 +146,24 @@ def cookies_test():#TODO
     if 'user' not in session:#todo 'session' in request.cookies
         return jsonify(msg="No user logged in found in session!")
 
-    user_auth_dict = session['user']
+    user_auth_dict = session['user'] # Firebase-auth user record, not the firestore custom one
+    print(user_auth_dict)
 
     assert user_auth_dict['localId'] == request.cookies["user_uid"]
 
     user_dict = firestore_db.collection(u'Users')\
         .document(request.cookies["user_uid"]).get().to_dict()
 
+    #todo here include UID so that auth or session cookies on client side can request user info through API ?
 
     if user_dict['userType'] != "ADMIN":
-        return jsonify(user_dict)
+        #del user_dict['pwdHash'] #bytes are not serializable + cross origin requests should have direct access to this in response
+        # return jsonify(user_dict)
+        user_auth_dict['expiresIn'] = str(3600//4)
+        return jsonify(user_auth_dict)
     else:
-        return jsonify(msg=" Error ! Can not display current user because they are an ADMIN !")
+        return jsonify(msg="Can not display current user '" + user_auth_dict['displayName']
+                           + "' because they are an ADMIN !")
 
 @app.route('/firebase-api/signin',methods=['POST','GET'])
 def signin():
@@ -175,8 +185,10 @@ def signin():
             ))
 
             session['user'] = user# ['email'] #todo: high-level identifier e.g. username goes here
-            print(session['user'], "\n\tJUST SIGNED IN !!!")
-            return redirect("/")
+
+            print(user, "\n\tJUST SIGNED IN !!!")
+            return jsonify(session['user'])
+            # return redirect("/")
         except Exception as err:
             print(err)
             return {'message': "Failed login"}, 401
@@ -184,7 +196,7 @@ def signin():
     return render_template("logintest.html")
 @app.route('/firebase-api/logout')
 def logout():
-    print(session['user'], " JUST LOGGED OUT !")
+    print(session['user'], "\n\tJUST LOGGED OUT !")
     loggedout_user = session.pop('user')
     return redirect(r'/')
 @app.route('/firebase-api/signup',methods=['POST','GET'])

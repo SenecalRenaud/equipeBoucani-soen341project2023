@@ -1,7 +1,16 @@
 import React, { useState } from 'react';
 
 const SESSION_COOKIES_DEBUG  = () => {
-    const [loggedinUser, setLoggedinUser] = useState({});
+        function getAllCookies() {
+      return fetch("http://localhost:5000/getall-cookies/", {
+        credentials: "include"
+      }).then(response => {
+        return response.json()
+      }).then(json => {
+            var htmluserinfo = document.getElementById("loggedinUserInfo")
+            htmluserinfo.innerText = JSON.stringify(json,null,'\t')
+      });
+    }
 
     function getACookie() {
       return fetch("http://localhost:5000/get-cookie/", {
@@ -24,7 +33,7 @@ const SESSION_COOKIES_DEBUG  = () => {
         {
             console.log(json);
             // TODO HERE: SET OR UNSET CLIENT-SIDE COOKIES
-            setLoggedinUser(json);
+            // setLoggedinUser(json);
             var htmluserinfo = document.getElementById("loggedinUserInfo")
             htmluserinfo.innerText = JSON.stringify(json,null,'\t')
         });
@@ -47,6 +56,14 @@ const SESSION_COOKIES_DEBUG  = () => {
                         {getACookie().then(() => getData());}}
                     >
                 FETCH
+            </button>
+            <p></p>
+            <button id="ajaxFetchCookiesButton"
+                    onClick=
+                        {(e)=>
+                        {getAllCookies()}}
+                    >
+                SHOW ALL COOKIES
             </button>
             <section style={{color: "lightblue"}}>
             <h3 > Logged In user info: </h3>

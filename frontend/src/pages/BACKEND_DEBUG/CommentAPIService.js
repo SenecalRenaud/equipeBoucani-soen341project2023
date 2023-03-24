@@ -54,7 +54,17 @@ export default class CommentAPIService{
             body:formData,
             credentials: "include" // To get cookies in AJAX request from backend origin
         })
-            //.then(response => response.json())
+            .then(response => {
+
+                if(response.ok){
+                    return response;
+                }else{
+                    console.log('no response after AJAX sign in CORS request to backend...');
+                }
+
+            })
+            .then(data => data.json())
+
             .catch(error => console.log("API CORE EXCEPTION... " + error))
     }
 }
