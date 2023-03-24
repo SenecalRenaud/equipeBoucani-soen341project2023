@@ -122,7 +122,6 @@ def index():
 @app.route("/getall-cookies/")
 def getall_cookies():
 
-
     return jsonify(request.cookies)
 @app.route("/get-cookie/")
 def get_cookie():#TODO
@@ -362,10 +361,12 @@ def get_user_details(_uid):
 
     return jsonify(user_fields)
 
+
 @app.route("/firebase-api/edit-user/<_uid>/",methods=['PATCH','POST'])
 def update_user_details(_uid):
     print("UPDATING USER!!!")
-
+    # TODO: Checked logged in user: Only Admins and the user at uuid can edit user at uuid
+    # TODO: Checked logged in user: Only Admins and the user at uuid can edit user at uuid
     _uid = _uid.strip()
     if _uid == "current" and 'user' in session:
         # print("USER IN SESSION !")
