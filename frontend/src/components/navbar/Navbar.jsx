@@ -25,36 +25,31 @@ const NavMenu = () => (
   </>
 )
 const LoginOrSeeAccount = () => {
-    const [userRecordInfo,setUserRecordInfo] = useState({});
+    // const [userRecordInfo,setUserRecordInfo] = useState({});
+
     let uid = Cookies.get('loggedin_uid');
+    // if(uid != null){
+    //     CommentAPIService.GetUserDetails(uid).then(
+    //         json =>
+    //         {
+    //             setUserRecordInfo(json)
+    //             return json;
+    //         }
+    //     )
+    // }
 
-    if(uid != null){
-        CommentAPIService.GetUserDetails(uid).then(
-            json =>
-            {
-                console.log("BBBBBBB")
-                console.log(json)
-                console.log(json.firstName)
-                setUserRecordInfo(json)
-                return json;
-            }
-        )
-    }
-
-    // var userRecordInfo;
-    // userRecordInfo = Promise.resolve(userDetailPromise).then(value => {
-    //     console.log(userDetailPromise);
-    //     userRecordInfo = value;
-    //     return value;
-    // })
-    console.log("ASDSAD")
-    console.log(userRecordInfo)
+    // console.log(userRecordInfo)
     return (uid ?
             <>
                 <div style={{color: 'white'}}>
-                <span>{userRecordInfo.firstName}</span>
-                <img src={userRecordInfo.photo_url} width="50" height="50" alt={"pfp"}/>
-            </div>
+                <span>{window.localStorage['firstName']}</span>
+                <img src={window.localStorage['photo_url']} width="50" height="50" alt={"pfp"}/>
+                <p style={{fontSize: "0.5em"}} onClick=
+                        {(e)=>
+                        {CommentAPIService.UserLogout();window.location.replace('http://localhost:3000')}}>
+                    Sign Out
+                </p>
+                </div>
                 </>
             :
             <>

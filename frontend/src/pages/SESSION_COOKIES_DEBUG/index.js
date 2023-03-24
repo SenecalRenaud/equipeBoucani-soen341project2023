@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Cookies from 'js-cookie';
+import CommentAPIService from "../BACKEND_DEBUG/CommentAPIService";
 const SESSION_COOKIES_DEBUG  = () => {
         function getAllCookies() {
       return fetch("http://localhost:5000/getall-cookies/", {
@@ -21,16 +22,6 @@ const SESSION_COOKIES_DEBUG  = () => {
       });
     }
 
-    function removeCookies() {
-        Cookies.remove('access_token');
-        Cookies.remove('refresh_token');
-        Cookies.remove('loggedin_uid');
-        fetch("http://localhost:5000/firebase-api/logout", {
-            credentials: "include"
-        }).then(response => {
-            return Promise.resolve("User logged out properly");
-        });
-    }
 
     function getData() {
       fetch("http://localhost:5000/api/cookies_test/", {
@@ -81,7 +72,7 @@ const SESSION_COOKIES_DEBUG  = () => {
             <button id="removeCookies"
                     onClick=
                         {(e)=>
-                        {removeCookies();window.location.replace('http://localhost:3000')}}
+                        {CommentAPIService.UserLogout();window.location.replace('http://localhost:3000')}}
             >
                 SignOut
             </button>

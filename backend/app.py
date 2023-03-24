@@ -173,12 +173,10 @@ def signin():
         email = request.form.get('email')
         password = request.form.get('password')
 
-
-
         try:
             user = _auth.sign_in_with_email_and_password(email,password)
-
-            pwdHash = firestore_db.collection(u'Users').document(user['localId']).get().to_dict()['pwdHash']
+            firestore_user = firestore_db.collection(u'Users').document(user['localId']).get().to_dict()
+            pwdHash = firestore_user.pop('pwdHash')
             print("Password bcrypt few-rounds salted hash matched: ",end=" ")
             print(bcrypt.check_password_hash(
                 pwdHash,password
@@ -186,8 +184,12 @@ def signin():
 
             session['user'] = user# ['email'] #todo: high-level identifier e.g. username goes here
 
+            auth_user_response = user.copy()
+            auth_user_response.update(
+                firestore_user
+            )
             print(user, "\n\tJUST SIGNED IN !!!")
-            return jsonify(session['user'])
+            return jsonify(auth_user_response)
             # return redirect("/")
         except Exception as err:
             print(err)
