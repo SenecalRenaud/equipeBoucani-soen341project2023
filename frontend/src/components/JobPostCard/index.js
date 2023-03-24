@@ -251,10 +251,10 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
         </Modal>
     </>);};
 
-const handleDelete = (comment_id) => {
+const handleDelete = (job_id) => {
     //event.preventDefault();
 
-    JobPostingAPIService.DeleteComment(comment_id)
+    JobPostingAPIService.DeleteJobPosting(job_id)
         .then((any)=> window.location.reload())
         .catch(error => console.log('Following error occured after fetching from API: ',error))
 
