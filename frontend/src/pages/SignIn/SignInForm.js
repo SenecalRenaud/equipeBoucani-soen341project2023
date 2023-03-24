@@ -2,16 +2,12 @@ import React, { useState } from 'react';
 import './SignInForm.css';
 import CommentAPIService from "../BACKEND_DEBUG/CommentAPIService";
 import {Link} from "react-router-dom";
-import { useCookies } from 'react-cookie';
+// import { useCookies } from 'react-cookie';
 import Cookies from 'js-cookie';
 const SignInForm = () => {
-    const [cookies, setCookie, removeCookie] = useCookies(['access_token', 'refresh_token','loggedin_uid']);
+    // const [cookies, setCookie, removeCookie] = useCookies(['access_token', 'refresh_token','loggedin_uid']);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
-    const getCookies = () => {
-        return cookies
-    }
 
     const handleEmailChange = (event) => {
         setEmail(event.target.value);
@@ -42,7 +38,7 @@ const SignInForm = () => {
                 // setCookie('refresh_token', auth_json.refresh_token, {path: '/', expires})
                 // setCookie('loggedin_uid', auth_json.localId, {path: '/', expires})
             })
-            //.then((any)=> window.location.replace('http://localhost:3000/signin'))
+            .then((any)=> window.location.replace('http://localhost:3000/'))
             .catch(error => console.log('Following error occured after fetching from API: ',error))
     };
 

@@ -67,4 +67,24 @@ export default class CommentAPIService{
 
             .catch(error => console.log("API CORE EXCEPTION... " + error))
     }
+
+    static async GetUserDetails(uid){
+        return await fetch("http://localhost:5000/firebase-api/get-user/"
+            + uid.toString() + "/",
+            {
+                'method': 'GET',
+            }).then(
+                response => {
+
+                if(response.ok){
+                    return response;
+                }else{
+                    console.log('no response after AJAX get user details CORS request to backend...');
+                }
+
+            }
+        ).then(
+            data => data.json()
+        )
+    }
 }

@@ -3,7 +3,8 @@ import { RiMenu3Line, RiCloseLin, RiCloseLine } from 'react-icons/ri'; //might b
 import './navbar.css';
 import logo2 from '../../assets/logo2.png';
 import {Nav, NavLink, NavLinkSignIn, NavLinkSignUp} from "./NavElements";
-import SignInForm from "../../pages/SignIn/SignInForm";
+import Cookies from 'js-cookie';
+import CommentAPIService from "../../pages/BACKEND_DEBUG/CommentAPIService";
 
 const NavMenu = () => (
   <>
@@ -23,7 +24,38 @@ const NavMenu = () => (
         </Nav>
   </>
 )
+const LoginOrSeeAccount = async () => {
 
+    var uid = Cookies.get('loggedin_uid');
+    var userRecordInfo = await CommentAPIService.GetUserDetails(uid).then(
+        json =>
+        {
+            console.log("BBBBBBB")
+            console.log(json)
+            return json;
+        }
+    )
+    console.log("ASDSAD")
+    console.log(userRecordInfo)
+    console.log(userRecordInfo['firstName'])
+    return (uid ?
+            <>
+                <span>{userRecordInfo.firstName}</span>
+                <img src={userRecordInfo.photo_url} width="50" height="50" alt={"pfp"}/>
+            </>
+            :
+            <>
+                <NavLinkSignIn to="/signin">
+                    Sign in
+                </NavLinkSignIn>
+                <NavLinkSignUp to="/signup">
+                    Sign up
+                </NavLinkSignUp>
+            </>
+
+    )
+
+}
 const Navbar = () => {
   //make it false in beggining, since it will cahnge to true when true
   const [toggleMenu, setToggleMenu] = useState(false);
@@ -43,12 +75,7 @@ const Navbar = () => {
       </div>
 
       <div className="gpt3__navbar-sign">
-          <NavLinkSignIn to="/signin">
-              Sign in
-          </NavLinkSignIn>
-          <NavLinkSignUp to="/signup">
-              Sign up
-          </NavLinkSignUp>
+        <LoginOrSeeAccount />
       </div>
       
 
@@ -62,12 +89,7 @@ const Navbar = () => {
           <NavMenu />
           </div>
           <div className="gpt3__navbar-menu_container-links-sign">
-          <NavLinkSignIn to="/signin">
-              Sign in
-          </NavLinkSignIn>
-          <NavLinkSignUp to="/signup">
-              Sign up
-          </NavLinkSignUp>
+          <LoginOrSeeAccount />
           </div>
         </div>
         )}
