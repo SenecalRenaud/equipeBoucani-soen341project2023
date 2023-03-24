@@ -46,12 +46,12 @@ export const SubmitCancelButton = styled.button`
     color: black;
 `;
 const JobPostCard = ({id, jobtype, title, description, location, salary, tags, date, editDate}) => {
-    const [editjobType, setJobType] = useState('');
-    const [editjobTitle, setJobTitle] = useState('');
-    const [editlocation, setLocation] = useState('');
-    const [editsalary, setSalary] = useState(1000);
-    const [editindustryTags, setIndustryTags] = useState([]);
-    const [editjobDescription, setJobDescription] = useState('');
+    const [editjobType, setJobType] = useState(jobtype);
+    const [editjobTitle, setJobTitle] = useState(title);
+    const [editlocation, setLocation] = useState(location);
+    const [editsalary, setSalary] = useState(salary);
+    const [editindustryTags, setIndustryTags] = useState(tags.split(","));
+    const [editjobDescription, setJobDescription] = useState(description);
     const [wordCount, setWordCount] = useState(0);
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
@@ -176,7 +176,6 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
                     name="jobTitle"
                     id="jobTitle"
                     onChange={(e) => setJobTitle(e.target.value)}
-                    placeholder={title}
                     value={editjobTitle}
                 />
                 Job Location:
@@ -185,7 +184,6 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
                     name="location"
                     id="location"
                     onChange={(e) => setLocation(e.target.value)}
-                    placeholder={location}
                     value={editlocation}
                 />
                 <label htmlFor="salary-input">Salary</label>
@@ -196,7 +194,6 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
                         min="100"
                         max="10000"
                         step="100"
-                        placeholder={salary}
                         value={editsalary}
                         onChange={handleSalaryChange}
                     />
@@ -236,7 +233,6 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
                     Job Description:
                     <textarea
                         id="job-description-input"
-                        placeholder={description}
                         value={editjobDescription}
                         onChange={handleJobDescriptionChange}
                         maxLength="200"
