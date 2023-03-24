@@ -3,7 +3,6 @@ import './JobPostingForm.css';
 import JobPostingAPIService from "./JobPostingAPIService";
 
 const JobPostingForm = (props) => {
-    let jobTypeTwo = '';
     const [jobType, setJobType] = useState('');
     const [jobTitle, setJobTitle] = useState('');
     const [location, setLocation] = useState('');
@@ -16,7 +15,6 @@ const JobPostingForm = (props) => {
 
     const handleJobTypeChange = (type) => {
         setJobType(type);
-        jobTypeTwo = type;
     };
 
     const handleJobTitleChange = (event) => {
