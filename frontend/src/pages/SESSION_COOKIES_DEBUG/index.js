@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import Cookies from 'js-cookie';
 const SESSION_COOKIES_DEBUG  = () => {
         function getAllCookies() {
       return fetch("http://localhost:5000/getall-cookies/", {
@@ -66,7 +66,7 @@ const SESSION_COOKIES_DEBUG  = () => {
                 SHOW ALL COOKIES
             </button>
             <section style={{color: "lightblue"}}>
-            <h3 > Logged In user info: </h3>
+            <h3 > Logged In user info: {Cookies.get('loggedin_uid')}</h3>
 
             <article id="loggedinUserInfo">
 

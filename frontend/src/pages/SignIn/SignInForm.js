@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import './SignInForm.css';
 import CommentAPIService from "../BACKEND_DEBUG/CommentAPIService";
 import {Link} from "react-router-dom";
-import { useCookies } from 'react-cookie'
+import { useCookies } from 'react-cookie';
+import Cookies from 'js-cookie';
 const SignInForm = () => {
     const [cookies, setCookie, removeCookie] = useCookies(['access_token', 'refresh_token','loggedin_uid']);
     const [email, setEmail] = useState('');
@@ -32,11 +33,14 @@ const SignInForm = () => {
         formData.append('password', password);
         CommentAPIService.UserSignIn(formData)
             .then(auth_json => {
-                let expires = new Date()
-                expires.setTime(expires.getTime() + (auth_json.expires_in * 250 ))
-                setCookie('access_token', auth_json.idToken, { path: '/',  expires})
-                setCookie('refresh_token', auth_json.refresh_token, {path: '/', expires})
-                setCookie('loggedin_uid', auth_json.localId, {path: '/', expires})
+                let expires = new Date();
+                expires.setTime(expires.getTime() + (auth_json.expires_in * 250 ));
+                Cookies.set('access_token', auth_json.idToken);
+                Cookies.set('refresh_token', auth_json.refresh_token);
+                Cookies.set('loggedin_uid', auth_json.localId);
+                // setCookie('access_token', auth_json.idToken, { path: '/',  expires})
+                // setCookie('refresh_token', auth_json.refresh_token, {path: '/', expires})
+                // setCookie('loggedin_uid', auth_json.localId, {path: '/', expires})
             })
             //.then((any)=> window.location.replace('http://localhost:3000/signin'))
             .catch(error => console.log('Following error occured after fetching from API: ',error))
