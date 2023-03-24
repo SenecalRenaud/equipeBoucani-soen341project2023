@@ -25,6 +25,11 @@ const SESSION_COOKIES_DEBUG  = () => {
         Cookies.remove('access_token');
         Cookies.remove('refresh_token');
         Cookies.remove('loggedin_uid');
+        fetch("http://localhost:5000/firebase-api/logout", {
+            credentials: "include"
+        }).then(response => {
+            return Promise.resolve("User logged out properly");
+        });
     }
 
     function getData() {
