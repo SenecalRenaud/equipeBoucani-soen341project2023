@@ -28,16 +28,19 @@ const LoginOrSeeAccount = () => {
     const [userRecordInfo,setUserRecordInfo] = useState({});
     let uid = Cookies.get('loggedin_uid');
 
-    CommentAPIService.GetUserDetails(uid).then(
-        json =>
-        {
-            console.log("BBBBBBB")
-            console.log(json)
-            console.log(json.firstName)
-            setUserRecordInfo(json)
-            return json;
-        }
-    )
+    if(uid != null){
+        CommentAPIService.GetUserDetails(uid).then(
+            json =>
+            {
+                console.log("BBBBBBB")
+                console.log(json)
+                console.log(json.firstName)
+                setUserRecordInfo(json)
+                return json;
+            }
+        )
+    }
+
     // var userRecordInfo;
     // userRecordInfo = Promise.resolve(userDetailPromise).then(value => {
     //     console.log(userDetailPromise);
