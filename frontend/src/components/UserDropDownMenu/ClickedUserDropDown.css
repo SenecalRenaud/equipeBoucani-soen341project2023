@@ -31,12 +31,18 @@
   border-bottom: 1px solid #dddddd;
 }
 
-.menu li a {
+.menu li > a,Link,b {
   text-decoration: none;
   color: #333333;
   padding: 15px 20px;
   display: block;
+  cursor: pointer;
 }
+.menu li:hover {
+  background-color: rgba(184, 74, 0, 0.72);
+  color: #ffffff !important;
+}
+
 .menu-trigger {
   background: #ffffff;
   border-radius: 90px;
