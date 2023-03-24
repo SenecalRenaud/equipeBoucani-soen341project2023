@@ -21,6 +21,12 @@ const SESSION_COOKIES_DEBUG  = () => {
       });
     }
 
+    function removeCookies() {
+        Cookies.remove('access_token');
+        Cookies.remove('refresh_token');
+        Cookies.remove('loggedin_uid');
+    }
+
     function getData() {
       fetch("http://localhost:5000/api/cookies_test/", {
         credentials: "include"
@@ -64,6 +70,15 @@ const SESSION_COOKIES_DEBUG  = () => {
                         {getAllCookies()}}
                     >
                 SHOW ALL COOKIES
+            </button>
+            <br/>
+            <br/>
+            <button id="removeCookies"
+                    onClick=
+                        {(e)=>
+                        {removeCookies();window.location.replace('http://localhost:3000')}}
+            >
+                SignOut
             </button>
             <section style={{color: "lightblue"}}>
             <h3 > Logged In user info: {Cookies.get('loggedin_uid')}</h3>
