@@ -44,15 +44,28 @@ const LoginOrSeeAccount = () => {
     // console.log(userRecordInfo)
     return (uid ?
             <>
-                <div style={{color: 'white'}}>
-                <span>{window.localStorage['firstName']} {window.localStorage['lastName']}</span>
-                <img src={window.localStorage['photo_url']} width="50" height="50" alt={"pfp"}/>
-                <p style={{fontSize: "0.5em"}} onClick=
+                <div class="loggedInUser_container"
+
+                >
+                    <div class="navbarLoggedInText">
+                <span id="navbarLoggedInName">
+                    {window.localStorage['firstName']} {window.localStorage['lastName']}</span>
+                    <p style={{fontSize: "0.5em"}} onClick=
                         {(e)=>
-                        {CommentAPIService.UserLogout();window.location.replace('http://localhost:3000')}}>
+                            // eslint-disable-next-line no-restricted-globals
+                        {if(confirm("Are you sure want to sign out? ")){
+                            CommentAPIService.UserLogout();
+                            window.location.replace('http://localhost:3000')
+                        }}}>
                     Sign Out
                 </p>
+                    </div>
+                    <div>
+                                        <img id="navbarLoggedInPfp"
+                        src={window.localStorage['photo_url']} width="50" height="50" alt={"pfp"}/>
+
                 </div>
+                    </div>
                 </>
             :
             <>

@@ -133,5 +133,28 @@
 
     .gpt3__navbar-menu_container-links-sign {
         display: block;
+
     }
+}
+.loggedInUser_container {
+    color: white
+ }
+.loggedInUser_container div {
+    display: table-cell;
+}
+
+.loggedInUser_container > .navbarLoggedInText,span {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+img#navbarLoggedInPfp {
+    border-radius: 50%;
+    position: relative;
+    margin-left: .75em;
+}
+
+#navbarLoggedInName {
+    margin: 0 auto;
+    text-align: left;
 }
