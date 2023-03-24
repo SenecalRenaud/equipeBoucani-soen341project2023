@@ -2,13 +2,21 @@ import React from 'react'
 import './ProfilePage.css';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faEnvelope, faPhone,faUser} from "@fortawesome/free-solid-svg-icons";
-
+import Cookies from 'js-cookie';
 import toTitleCase from '../../utils/strings_and_text_responses'
 
 const ProfilePage = () => {
     const DATETIME_OPTIONS = {hour: '2-digit',minute: '2-digit', weekday: 'short',month: 'long',day: 'numeric', year: 'numeric'}
     // String.prototype.toTitleCase = (str) => toTitleCase(str)
 
+    if (Cookies.get("loggedin_uid") == null) {
+
+        return <div style={{color: 'white',textAlign: 'center',fontSize: '6em',fontFamily: 'Impact'}}>
+            <span> Unauthorized access to profile page route: Must log into user account to view this page</span>
+            <hr/>
+            <img src="https://i.imgflip.com/5132fw.png" alt="sadge cat"/>
+        </div>
+    }
     return (
 
         <container className="daddyContainer">
