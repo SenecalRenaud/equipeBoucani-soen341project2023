@@ -2,6 +2,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 
 import datetime
+import dataclasses
+import enum
 
 from uuid import uuid1, uuid4, uuid5
 
@@ -46,19 +48,48 @@ class CommentPost(db.Model):
     #     self._editDate = _arbitraryDate
 
 
-# md.create_all()
-# eng = md.bind
-# con = eng.connect()
-# res = con.execute(data_table.insert().values(id=1))
-# s = sqlalchemy.sql.select([data_table])
-# res = con.execute(s)
-# rw = res.fetchone()
 class CommentPostSchema(ma.Schema):
     class Meta:
         fields = ('id', 'title', 'body', 'date', 'editDate')
 
     # _links = ma.Hyperlinks(
 
+from sqlalchemy import Integer,DateTime,String,Text,Column,Enum,VARCHAR
+
+class UserType(enum.Enum):
+    APPLICANT = 0
+    STUDENT = 0
+    JOBSEEKER = 0
+    EMPLOYER = 1
+    ADMIN = 2
+    @classmethod
+    def _missing_(cls, value: object):
+        try:
+            value = value.upper()
+
+            for member in cls:
+
+                if member.value == value:
+
+                    return member
+        except:
+            pass
+        return cls['APPLICANT']
+
+# class UserExtraInfo(db.Model):
+#     __tablename__ = "users_extra_info"
+#
+#     firebaseUUID = db.Column(db.VARCHAR(255),primary_key=True)
+#     userType = db.Column(db.Enum(UserType))
+#
+#     def __init__(self,firebaseUUID,userType):
+#
+#         self.firebaseUUID = firebaseUUID
+#         self.userType = userType
+#
+# class UserExtraInfoSchema(ma.Schema):
+#     class Meta:
+#         fields = ('firebaseUUID','userType')
 
 class JobPost(db.Model):
     __slots__ = ()

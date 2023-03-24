@@ -3,7 +3,9 @@ import { RiMenu3Line, RiCloseLin, RiCloseLine } from 'react-icons/ri'; //might b
 import {Link} from "react-router-dom";
 import './navbar.css';
 import logo2 from '../../assets/logo2.png';
-import {Nav, NavLink} from "./NavElements";
+import {Nav, NavLink, NavLinkSignIn, NavLinkSignUp} from "./NavElements";
+import Cookies from 'js-cookie';
+import CommentAPIService from "../../pages/BACKEND_DEBUG/CommentAPIService";
 
 const NavMenu = () => (
   <>
@@ -25,7 +27,46 @@ const NavMenu = () => (
         </Nav>
   </>
 )
+const LoginOrSeeAccount = () => {
+    // const [userRecordInfo,setUserRecordInfo] = useState({});
 
+    let uid = Cookies.get('loggedin_uid');
+    // if(uid != null){
+    //     CommentAPIService.GetUserDetails(uid).then(
+    //         json =>
+    //         {
+    //             setUserRecordInfo(json)
+    //             return json;
+    //         }
+    //     )
+    // }
+
+    // console.log(userRecordInfo)
+    return (uid ?
+            <>
+                <div style={{color: 'white'}}>
+                <span>{window.localStorage['firstName']} {window.localStorage['lastName']}</span>
+                <img src={window.localStorage['photo_url']} width="50" height="50" alt={"pfp"}/>
+                <p style={{fontSize: "0.5em"}} onClick=
+                        {(e)=>
+                        {CommentAPIService.UserLogout();window.location.replace('http://localhost:3000')}}>
+                    Sign Out
+                </p>
+                </div>
+                </>
+            :
+            <>
+                <NavLinkSignIn to="/signin">
+                    Sign in
+                </NavLinkSignIn>
+                <NavLinkSignUp to="/signup">
+                    Sign up
+                </NavLinkSignUp>
+            </>
+
+    )
+
+}
 const Navbar = () => {
   //make it false in beggining, since it will cahnge to true when true
   const [toggleMenu, setToggleMenu] = useState(false);
@@ -45,8 +86,7 @@ const Navbar = () => {
       </div>
 
       <div className="gpt3__navbar-sign">
-          <p> <Link to="/signin"> Sign in </Link></p>
-          <button type="button"><Link to="/signup"> Sign up </Link></button>
+        <LoginOrSeeAccount />
       </div>
       
 
@@ -60,8 +100,7 @@ const Navbar = () => {
           <NavMenu />
           </div>
           <div className="gpt3__navbar-menu_container-links-sign">
-		  <p> <Link to="/signin"> Sign in </Link></p>
-		  <button type="button"><Link to="/signup"> Sign up </Link></button>
+          <LoginOrSeeAccount />
           </div>
         </div>
         )}
