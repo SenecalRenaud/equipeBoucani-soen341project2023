@@ -45,7 +45,7 @@ const SignInForm = () => {
                 window.localStorage.setItem("resume_url",auth_json.resume_url)
                 window.localStorage.setItem("lastSeenEpoch",auth_json.lastSeenEpoch)
                 window.localStorage.setItem("creationEpoch",auth_json.creationEpoch)
-
+                window.localStorage.setItem("userType",auth_json.userType)
             })
             .then((any)=> window.location.replace('http://localhost:3000/'))
             .catch(error => console.log('Following error occured after fetching from API: ',error))

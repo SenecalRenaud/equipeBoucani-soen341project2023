@@ -186,7 +186,7 @@ def signin():
 
             auth_user_response = user.copy()
             userRecordInfo = _auth.get_account_info(user['idToken'])['users'][0]
-            print(auth_user_response)
+
             auth_user_response.update(
                 firestore_user
             )
@@ -196,6 +196,7 @@ def signin():
                     lastSeenEpoch = userRecordInfo['lastLoginAt']
                 )
             )
+
             print(user, "\n\tJUST SIGNED IN !!!")
             return jsonify(auth_user_response)
             # return redirect("/")

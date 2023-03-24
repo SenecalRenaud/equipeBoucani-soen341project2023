@@ -1,14 +1,13 @@
 import React from 'react'
 import './ProfilePage.css';
-import {Header} from "../../components";
-// import ProfilePic from "../../assets/Unknown_person.jpg";
-// import resume from "../../assets/resume.png"
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faEnvelope, faPhone} from "@fortawesome/free-solid-svg-icons";
+import {faEnvelope, faPhone,faUser} from "@fortawesome/free-solid-svg-icons";
+
+import toTitleCase from '../../utils/strings_and_text_responses'
 
 const ProfilePage = () => {
     const DATETIME_OPTIONS = {hour: '2-digit',minute: '2-digit', weekday: 'short',month: 'long',day: 'numeric', year: 'numeric'}
-
+    // String.prototype.toTitleCase = (str) => toTitleCase(str)
 
     return (
 
@@ -17,8 +16,11 @@ const ProfilePage = () => {
                 <img className="profile_picture" src={window.localStorage.getItem('photo_url')} alt="pfp"/>
                 <h1 className="profile-content-username"> {window.localStorage.getItem('firstName')} </h1>
                 <h1 className="profile-content-username"> {window.localStorage.getItem('lastName')} </h1>
-                <h1 className="profile-phone"><FontAwesomeIcon icon={faPhone} /> PHONE NUMBER NOT ADDED</h1>
-                <h1  className="profile-email"><FontAwesomeIcon icon={faEnvelope} />
+                <h1 className="profile-usertype">&nbsp; <FontAwesomeIcon icon={faUser}/>
+                    {toTitleCase(window.localStorage.getItem('userType'))}
+                </h1>
+                {/*<h1 className="profile-phone"><FontAwesomeIcon icon={faPhone} /> PHONE NUMBER NOT ADDED</h1>*/}
+                <h1  className="profile-email">&nbsp; <FontAwesomeIcon icon={faEnvelope} />
                     {window.localStorage.getItem('email')}
                 </h1>
                 <hr className="profile-line-seperator"></hr>
@@ -47,7 +49,9 @@ Thank you for reading and I hope to share more of my journey with you soon.</h1>
             </container>
 
             <container className="profile_container_3">
-            <img className="profile_resume" src="" alt="resume"/>
+            <iframe className="profile_resume" src={window.localStorage.getItem('resume_url')}
+                    alt="resume" style={{width:'600px', height:'500px'}} >
+                </iframe>
             </container>
         </container>
   )
