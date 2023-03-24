@@ -18,9 +18,9 @@ const NavMenu = () => (
         <NavLink to="/BACKEND_DEBUG" activeStyle>
             BACKEND_CRUD_DEBUG
         </NavLink>
-            <NavLink to="/SESSION_COOKIES_DEBUG" activeStyle>
-                SESSION_COOKIES_DEBUG
-            </NavLink>
+            {/*<NavLink to="/SESSION_COOKIES_DEBUG" activeStyle>*/}
+            {/*    SESSION_COOKIES_DEBUG*/}
+            {/*</NavLink>*/}
         </Nav>
   </>
 )
@@ -42,7 +42,7 @@ const LoginOrSeeAccount = () => {
     return (uid ?
             <>
                 <div style={{color: 'white'}}>
-                <span>{window.localStorage['firstName']}</span>
+                <span>{window.localStorage['firstName']} {window.localStorage['lastName']}</span>
                 <img src={window.localStorage['photo_url']} width="50" height="50" alt={"pfp"}/>
                 <p style={{fontSize: "0.5em"}} onClick=
                         {(e)=>
