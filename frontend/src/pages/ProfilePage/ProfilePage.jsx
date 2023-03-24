@@ -1,23 +1,35 @@
 import React from 'react'
 import './ProfilePage.css';
 import {Header} from "../../components";
-import ProfilePic from "../../assets/Unknown_person.jpg";
-import resume from "../../assets/resume.png"
+// import ProfilePic from "../../assets/Unknown_person.jpg";
+// import resume from "../../assets/resume.png"
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faEnvelope, faPhone} from "@fortawesome/free-solid-svg-icons";
 
 const ProfilePage = () => {
+    const DATETIME_OPTIONS = {hour: '2-digit',minute: '2-digit', weekday: 'short',month: 'long',day: 'numeric', year: 'numeric'}
+
+
     return (
 
         <container className="daddyContainer">
             <container className="profile_container_1">
-                <img className="profile_picture" src={ProfilePic} alt="pfp"/>
-                <h1 className="profile-content-username">Unknown User</h1>
-                <h1 className="profile-email"><FontAwesomeIcon icon={faPhone} />    +1 999 999 9999</h1>
-                <h1  className="profile-phone"><FontAwesomeIcon icon={faEnvelope} />    johndoe@gmail.com</h1>
+                <img className="profile_picture" src={window.localStorage.getItem('photo_url')} alt="pfp"/>
+                <h1 className="profile-content-username"> {window.localStorage.getItem('firstName')} </h1>
+                <h1 className="profile-content-username"> {window.localStorage.getItem('lastName')} </h1>
+                <h1 className="profile-phone"><FontAwesomeIcon icon={faPhone} /> PHONE NUMBER NOT ADDED</h1>
+                <h1  className="profile-email"><FontAwesomeIcon icon={faEnvelope} />
+                    {window.localStorage.getItem('email')}
+                </h1>
                 <hr className="profile-line-seperator"></hr>
-                <h1 className="profile-content-lastSeen">Last Seen : never</h1>
-                <h1  className="profile-content-dateAdded">Date Added : never</h1>
+                <h1 className="profile-content-lastSeen">
+                    Last logged in : {new Date(parseInt(window.localStorage.getItem('lastSeenEpoch')))
+                    .toLocaleString('us-en',DATETIME_OPTIONS)}
+                </h1>
+                <h1  className="profile-content-dateAdded">
+                    Date Added : {new Date(parseInt(window.localStorage.getItem('creationEpoch')))
+                    .toLocaleString('us-en',DATETIME_OPTIONS)}
+                </h1>
 
             </container>
 
@@ -35,7 +47,7 @@ Thank you for reading and I hope to share more of my journey with you soon.</h1>
             </container>
 
             <container className="profile_container_3">
-            <img className="profile_resume" src={resume} alt="pfp"/>
+            <img className="profile_resume" src="" alt="resume"/>
             </container>
         </container>
   )

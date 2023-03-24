@@ -185,8 +185,16 @@ def signin():
             session['user'] = user# ['email'] #todo: high-level identifier e.g. username goes here
 
             auth_user_response = user.copy()
+            userRecordInfo = _auth.get_account_info(user['idToken'])['users'][0]
+            print(auth_user_response)
             auth_user_response.update(
                 firestore_user
+            )
+            auth_user_response.update(
+                dict(
+                    creationEpoch = userRecordInfo['createdAt'],
+                    lastSeenEpoch = userRecordInfo['lastLoginAt']
+                )
             )
             print(user, "\n\tJUST SIGNED IN !!!")
             return jsonify(auth_user_response)

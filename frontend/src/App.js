@@ -9,8 +9,6 @@ import Home from './pages/Home/home';
 import JobPostingForm from "./pages/PostAJob/JobPostingForm";
 
 import PostCommentForm from "./pages/BACKEND_DEBUG/PostCommentForm";
-import SignUpForm from "./pages/SignUp/SignUpForm";
-import SignInForm from "./pages/SignIn/SignInForm";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import SignUp from "./pages/SignUp/SignUpForm";
 import SignIn from "./pages/SignIn/SignInForm";
