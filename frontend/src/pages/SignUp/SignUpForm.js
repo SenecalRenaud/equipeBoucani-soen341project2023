@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './SignUpForm.css';
+import CommentAPIService from "../BACKEND_DEBUG/CommentAPIService";
 
 const SignUpForm = () => {
     const [firstName, setFirstName] = useState('');
@@ -8,6 +9,7 @@ const SignUpForm = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [profilePicture, setProfilePicture] = useState(null);
+    const [uploadedResume, setUploadedResume] = useState(null);
     const [userType, setUserType] = useState('');
     const [previewImage, setPreviewImage] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
@@ -40,7 +42,18 @@ const SignUpForm = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
         if (validatePassword()) {
-            // TODO: Implement the sign-up logic
+            const formData = new FormData();
+            formData.append('firstName', firstName);
+            formData.append('lastName', lastName);
+            formData.append('email', email);
+            formData.append('password', password);
+            formData.append('userType', userType);
+            formData.append('profilePicture', profilePicture);
+            formData.append('uploadedResume', uploadedResume);
+
+            CommentAPIService.AddNewUser(formData)
+                //.then((any)=> window.location.replace('http://localhost:3000/signin'))
+                .catch(error => console.log('Following error occured after fetching from API: ',error))
         }
     };
 
@@ -107,6 +120,13 @@ const SignUpForm = () => {
                         <img src={previewImage} alt="Profile Preview" />
                     </div>
                 )}
+
+                <label htmlFor="resume-input">Upload Resume</label>
+                <input
+                    id="resume-input"
+                    type="file"
+                    onChange={(event) => {setUploadedResume(event.target.files[0]);} }
+                />
 
                 <label htmlFor="user-type-select">User Type</label>
                 <select

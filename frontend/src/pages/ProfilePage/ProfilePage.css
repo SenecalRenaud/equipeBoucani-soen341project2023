@@ -142,6 +142,17 @@
     margin-left:25%;
     white-space: pre;
 }
+.profile-usertype{
+    align-self: left;
+    padding-top: 5px;
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 35px;
+    letter-spacing: -0.04em;
+    margin-left:25%;
+    white-space: pre;
+}
 .profile-line-seperator{
     width: 70%;
     align-self: center;

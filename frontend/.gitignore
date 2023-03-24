@@ -2,6 +2,8 @@
 .env
 .flaskenv
 
+.firebase_config.json
+
 # dependencies
 /node_modules
 /.pnp
