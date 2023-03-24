@@ -54,7 +54,12 @@ const JobPostingForm = (props) => {
 
     const handleJobDescriptionChange = (event) => {
         const description = event.target.value;
-        if (description.length <= 200) {
+        var maxWords = 200;
+        var wordCount = description.split(/\s+/).length;
+        if (wordCount>maxWords) {
+            description.preventDefault()
+        }
+        else{
             setJobDescription(description);
             setWordCount(description.split(/\s+/).length);
         }
@@ -205,7 +210,6 @@ const JobPostingForm = (props) => {
                         id="job-description-input"
                         value={jobDescription}
                         onChange={handleJobDescriptionChange}
-                        maxLength="200"
                         required
                     />
                     <p className="word-count">{wordCount}/200 words</p>

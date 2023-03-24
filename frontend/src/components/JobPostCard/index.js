@@ -91,7 +91,12 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
 
     const handleJobDescriptionChange = (event) => {
         const description = event.target.value;
-        if (description.length <= 200) {
+        var maxWords = 200;
+        var wordCount = description.split(/\s+/).length;
+        if (wordCount>maxWords) {
+            description.preventDefault()
+        }
+        else{
             setJobDescription(description);
             setWordCount(description.split(/\s+/).length);
         }
@@ -235,7 +240,6 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
                         id="job-description-input"
                         value={editJobDescription}
                         onChange={handleJobDescriptionChange}
-                        maxLength="200"
                         required
                     />
                     <p className="word-count">{wordCount}/200 words</p>
