@@ -24,25 +24,35 @@ const NavMenu = () => (
         </Nav>
   </>
 )
-const LoginOrSeeAccount = async () => {
+const LoginOrSeeAccount = () => {
+    const [userRecordInfo,setUserRecordInfo] = useState({});
+    let uid = Cookies.get('loggedin_uid');
 
-    var uid = Cookies.get('loggedin_uid');
-    var userRecordInfo = await CommentAPIService.GetUserDetails(uid).then(
+    CommentAPIService.GetUserDetails(uid).then(
         json =>
         {
             console.log("BBBBBBB")
             console.log(json)
+            console.log(json.firstName)
+            setUserRecordInfo(json)
             return json;
         }
     )
+    // var userRecordInfo;
+    // userRecordInfo = Promise.resolve(userDetailPromise).then(value => {
+    //     console.log(userDetailPromise);
+    //     userRecordInfo = value;
+    //     return value;
+    // })
     console.log("ASDSAD")
     console.log(userRecordInfo)
-    console.log(userRecordInfo['firstName'])
     return (uid ?
             <>
+                <div style={{color: 'white'}}>
                 <span>{userRecordInfo.firstName}</span>
                 <img src={userRecordInfo.photo_url} width="50" height="50" alt={"pfp"}/>
-            </>
+            </div>
+                </>
             :
             <>
                 <NavLinkSignIn to="/signin">
