@@ -1,5 +1,5 @@
 import React from 'react'
-import './ProfilePage.css';
+import '../ProfilePage/ProfilePage.css';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faEnvelope, faPhone,faUser} from "@fortawesome/free-solid-svg-icons";
 import Cookies from 'js-cookie';
