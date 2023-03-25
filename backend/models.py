@@ -129,4 +129,4 @@ class JobPost(db.Model):
 
 class JobPostSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'type', 'title', 'location', 'salary', 'description', 'tags', 'date', 'editDate')
+        fields = ('id', 'jobtype', 'title', 'location', 'salary', 'description', 'tags', 'date', 'editDate')

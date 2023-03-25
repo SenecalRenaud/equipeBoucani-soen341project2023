@@ -13,14 +13,19 @@ import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import SignUp from "./pages/SignUp/SignUpForm";
 import SignIn from "./pages/SignIn/SignInForm";
 import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
-
+import ViewJobPosts from "./pages/JobPosts/ViewJobPosts";
 
 function App() {
     const [comments, setComments] = useState([""]);
     const postedComment = (comment) =>{
-    let new_comments = [...comments,comment]
-    setComments(new_comments)
-  }
+        let new_comments = [...comments,comment]
+        setComments(new_comments)
+    }
+    const [jobs, setJobs] = useState([""]);
+    const postedJob = (job) =>{
+        let new_jobs = [...jobs, job]
+        setJobs(new_jobs)
+    }
 return (
     <Router>
     <Navbar />
@@ -33,6 +38,7 @@ return (
         <Route path='/signup' element={<SignUp/>} />
         <Route path='/signin' element={<SignIn/>} />
         <Route path='/SESSION_COOKIES_DEBUG' element={<SESSION_COOKIES_DEBUG/>}/>
+        <Route path='/viewjobposts' element={<ViewJobPosts postedJob={postedJob} />} />
     </Routes>
     </Router>
 );

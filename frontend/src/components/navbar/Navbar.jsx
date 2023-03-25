@@ -11,19 +11,21 @@ import UserDropDownMenu from "../UserDropDownMenu/UserDropDownMenu";
 const NavMenu = () => (
   <>
         <Nav>
-		<NavLink to="/" activeStyle>
-			Home
-		</NavLink>
-		<NavLink to="/jobposting" activeStyle>
-			Post a Job
-		</NavLink>
-        <NavLink to="/BACKEND_DEBUG" activeStyle>
-            BACKEND_CRUD_DEBUG
-        </NavLink>
+		    <NavLink to="/" activeStyle>
+			    Home
+		    </NavLink>
+		    <NavLink to="/jobposting" activeStyle>
+                Post a Job
+		    </NavLink>
+            <NavLink to="/BACKEND_DEBUG" activeStyle>
+                BACKEND_CRUD_DEBUG
+            </NavLink>
+            <NavLink to="/viewjobposts" activeStyle>
+                View Job Posts
+            </NavLink>
             <NavLink to="/profile" activeStyle>
-            My Profile
-        </NavLink>
-
+                My Profile
+            </NavLink>
 
         </Nav>
   </>
