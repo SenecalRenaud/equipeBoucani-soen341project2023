@@ -21,7 +21,7 @@
     padding-top: 50px;
     padding-bottom: 50px;
 
-    height: 800px;
+    height: 900px;
 
 
 }
@@ -39,14 +39,24 @@
     padding-top: 50px;
     padding-bottom: 50px;
 
-    max-height: 800px;
+    min-height: 900px;
+
 
 }
 
 @media only screen and (max-width: 600px) {
-    .profile_container_2{
-        max-height: 2000px;
-        max-width:  450px;
+    .profile_container_2 {
+        max-width: 450px !important;
+    }
+
+    .profile_container_3 {
+        max-width: 450px !important;
+        min-width: 200px !important;
+        width:450px !important;
+    }
+
+    .profile-content-username{
+        font-size: 30px !important;
     }
 }
 
@@ -59,13 +69,14 @@
     border-radius : 10px;
     margin:25px;
 
-    max-width: 500px;
+    min-width: 500px;
     padding-top: 50px;
     padding-bottom: 50px;
 
-    max-height: 800px;
+    min-height: 900px;
 
 }
+
 
 .daddyContainer{
     display:flex;
@@ -78,12 +89,13 @@
 .profile-content-username {
 
     align-self: center;
-    padding-top: 20px;
+    padding-top: 10px;
     font-family: var(--font-family);
     font-weight: 800;
-    font-size: 42px;
-    line-height: 75px;
+    font-size: 35px;
+    line-height: 55px;
     letter-spacing: -0.04em;
+
 
 }
 
@@ -94,9 +106,10 @@
     padding-top: 20px;
     font-family: var(--font-family);
     font-weight: 800;
-    font-size: 42px;
+    font-size: 35px;
     line-height: 75px;
     letter-spacing: -0.04em;
+    color:#FF4820;
 
 }
 
@@ -108,7 +121,7 @@
     font-size: 20px;
     line-height: 35px;
     letter-spacing: -0.04em;
-    margin-left:25%;
+    margin-left:20%;
 }
 .profile-content-lastSeen{
     align-self: left;
@@ -118,7 +131,27 @@
     font-size: 20px;
     line-height: 35px;
     letter-spacing: -0.04em;
-    margin-left:25%;
+    margin-left:20%;
+}
+.profile-content-dateAdded_title{
+    align-self: left;
+    padding-top: 5px;
+    font-family: var(--font-family);
+    font-weight: 6  00;
+    font-size: 20px;
+    line-height: 35px;
+    letter-spacing: -0.04em;
+    margin-left:15%;
+}
+.profile-content-lastSeen_title{
+    align-self: left;
+    padding-top: 5px;
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 35px;
+    letter-spacing: -0.04em;
+    margin-left:15%;
 }
 .profile-email{
     align-self: left;
