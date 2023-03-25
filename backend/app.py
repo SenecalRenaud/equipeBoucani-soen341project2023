@@ -11,6 +11,7 @@ from flask import \
     render_template,\
     url_for,\
     make_response
+from flask_mail import Mail, Message
 
 from requests import HTTPError
 
@@ -24,6 +25,7 @@ from flask_cors import CORS,cross_origin #?  (for cross origin requests)
 from flask_bcrypt import Bcrypt #? (keys and password hashing engine)
 # from flask_session import Session // TODO: Assert Accept certain MIME Types/Subtypes
 
+from models import CommentPost, CommentPostSchema, JobPost, JobPostSchema
 
 import logging
 import os
@@ -70,14 +72,25 @@ db.init_app(app)
 
 ma.init_app(app)
 
+mail = Mail(app)
+mail.init_app(app)
+
 with app.app_context():
     db.create_all()
 
+# TODO Separate once database has scaled... For now, single modules are convenient
 
+commentpost_schema = CommentPostSchema()
+commentposts_schema = CommentPostSchema(many=True)
+
+jobpost_schema = JobPostSchema()
+jobposts_schema = JobPostSchema(many=True)
 
 #TODO Might remove logger once the web app has scaled more
 logger = logging.getLogger('tdm')
 logger.setLevel(logging.INFO)
+
+
 # logger.addHandler(handler
 @app.after_request
 def after_request(response):
@@ -125,9 +138,9 @@ def getall_cookies():
     return jsonify(request.cookies)
 @app.route("/get-cookie/")
 def get_cookie():#TODO
-    response = make_response("""Look at this cookie ! 
-                             If made from client-side, 
-                             it means The AJAX request 
+    response = make_response("""Look at this cookie !
+                             If made from client-side,
+                             it means The AJAX request
                              was not blocked by CORS or something else.
                              """ )
     #response.headers["Set-Cookie"]
@@ -534,6 +547,98 @@ def delete_commentpost(_id):
     db.session.commit()
 
     return commentpost_schema.jsonify(commentpost)
+
+
+@app.route("/addjob", methods=['POST'])
+@cross_origin()
+def addJobPost():
+    jobtype, title, location, salary, description, tags = request.json['jobtype'], request.json['title'], request.json[
+        'location'], request.json['salary'], request.json['description'], request.json['tags']
+
+    jobpost = JobPost(jobtype, title, location, salary, description, tags)
+    db.session.add(jobpost)
+    db.session.commit()
+
+    return jobpost_schema.jsonify(jobpost)
+
+
+@app.route("/getjob/<_id>/", methods=['GET'])
+def get_jobpost(_id):
+    jobpost = JobPost.query.get(_id)
+    return jobpost_schema.jsonify(jobpost)
+
+
+@app.route('/getjob', methods=['GET'])  # methods = [list http reqs methods]
+def get_all_jobposts():
+    """
+    GET request to view all table entries directly from 'many' mode sql schema
+    :return: json response
+    Antoine Cantin@ChiefsBestPal
+    """
+
+    all_jobposts = JobPost.query.all()
+    results_arr = jobposts_schema.dump(all_jobposts)
+    print(results_arr)
+    if request.args.get('mapAsFields') == 'true':
+        print("Mapped fields into dict instead of array of obj!")
+        response_fieldsdict = dict(map(lambda kv: (kv[0], [kv[1]]), results_arr[0].items()))
+
+        for k, v in itertools.chain.from_iterable(map(operator.methodcaller('items'), results_arr[1:])):
+            if response_fieldsdict.setdefault(k, None):
+                response_fieldsdict[k].append(v)
+        assert all(len(listed_fields_v) == len(results_arr) for listed_fields_v in response_fieldsdict.values())
+        return jsonify(response_fieldsdict)
+
+    return jsonify(results_arr)  # **{'Hello' : 'World'})
+
+
+@app.route("/updatejob/<_id>/", methods=['PUT'])
+def update_jobpost(_id):
+    jobpost = JobPost.query.get(_id)
+
+    if 'jobtype' in request.json:
+        jobpost.jobtype = request.json['jobtype']
+    if 'title' in request.json:
+        jobpost.title = request.json['title']
+    if 'location' in request.json:
+        jobpost.location = request.json['location']
+    if 'salary' in request.json:
+        jobpost.salary = request.json['salary']
+    if 'tags' in request.json:
+        jobpost.tags = request.json['tags']
+    if 'description' in request.json:
+        jobpost.description = request.json['description']
+
+    jobpost.editDate = datetime.datetime.now()
+
+    db.session.commit()
+
+    return jobpost_schema.jsonify(jobpost)
+
+
+@app.route("/deletejob/<_id>/", methods=['DELETE'])
+def delete_jobpost(_id):
+    jobpost = JobPost.query.get(_id)
+
+    db.session.delete(jobpost)
+
+    db.session.commit()
+
+    return jobpost_schema.jsonify(jobpost)
+
+
+@app.route("/sendmail")
+def flask_mail_send_test():
+    try:
+        msg = Message("Flask-Mail Test message",
+                      sender="equipeboucani@gmail.com",
+                      recipients=["ozan.alptekin2002@gmail.com"])
+        msg.body = "This is a test message from flask mail"
+        mail.send(msg)
+        return "Sent"
+    except Exception as e:
+        return str(e)
+
 
 if __name__ == '__main__':
 
