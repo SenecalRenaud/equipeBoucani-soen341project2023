@@ -78,7 +78,7 @@ const JobPostingForm = (props) => {
 
 
         JobPostingAPIService.AddJobPosting({"jobtype" : jobType, "title" : jobTitle, "location" : location, "salary" : salary, "tags" : industryTags.toString(), "description" : jobDescription})
-            .then((response) => props.postedComment(response))
+            .then((response) => props.postedJob(response))
                 .then((any)=> window.location.reload())
             .catch(error => console.log('Following error occurred after fetching from API: ',error))
 
