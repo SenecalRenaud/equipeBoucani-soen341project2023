@@ -12,7 +12,8 @@ const USER_TYPE_BIT = {
   'ADMIN' : 0b0011
 }
 
-function UserRelationPermsFSM(user1,user2){
+
+export default function UserRelationPermsFSM(user1,user2){
     /*
   @author ANTOINE C.:
   FINITE STATE MACHINE AND
@@ -21,25 +22,25 @@ function UserRelationPermsFSM(user1,user2){
    */
 
   const logged_in_usermail = window.localStorage.getItem("email")
-  if (user2.email == logged_in_usermail)
+  if (user2.email === logged_in_usermail)
     [user1,user2] = [user2,user1];
-  else if (user1.email != logged_in_usermail)
+  else if (user1.email !== logged_in_usermail)
     throw new Error("One of the two users interacted should be the one logged in the current session!");
 
-  let isSelf = parseInt(user1.email == user2.email) << 4
+  let isSelf = +(user1.email === user2.email) << 4
   let ub1 = USER_TYPE_BIT[user1.userType]
   let ub2 = USER_TYPE_BIT[user2.userType] << 2
-
 
   switch (isSelf | ub2 | ub1) {
 
     case 0b00101: //Applicant views other Applicant
       return <></>
     case 0b10101: //Applicant views itself
-      return <>
+        console.log("AAAAAAAA")
+      return <div>
         <li> <Link to="/current/applications"> My Applications </Link> </li>
         <li> <Link to="/current/interviews"> My Interviews </Link> </li>
-      </>
+    </div>
     case 0b01001: //Applicant views Employer
         //TODO : Might want to encrypt uid here if could be dangerous to leak it / or risk it being hacked
       return <>

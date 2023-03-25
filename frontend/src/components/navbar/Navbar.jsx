@@ -65,7 +65,7 @@ const LoginOrSeeAccount = () => {
 
                 </div>
                     </div>
-                    }/>
+                    } otherUserUid={uid} />
                 </>
             :
             <>

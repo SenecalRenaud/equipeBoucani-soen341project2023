@@ -46,6 +46,10 @@ const SignInForm = () => {
                 window.localStorage.setItem("lastSeenEpoch",auth_json.lastSeenEpoch)
                 window.localStorage.setItem("creationEpoch",auth_json.creationEpoch)
                 window.localStorage.setItem("userType",auth_json.userType)
+                window.localStorage.setItem("uid",auth_json.localId)
+                    //TODO CryptoJs. auth_json.uid
+
+
             })
             .then((any)=> window.location.replace('http://localhost:3000/'))
             .catch(error => console.log('Following error occured after fetching from API: ',error))
