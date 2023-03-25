@@ -357,6 +357,7 @@ def get_user_details(_uid):
             uid = _uid
         ) # JS Epoch format... for some datetime modules, may need to divide by 1000, etc..
     )
+    #TODO: ADD A CRYPT SALT AND/OR IV FOR UUID ENCRYPTION ALG TO BE USED WITH CRYPTO JS
     del user_fields['pwdHash'] #do not need/want pass bcrypt hash bytes-string in requests
 
     return jsonify(user_fields)
