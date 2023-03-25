@@ -17,19 +17,26 @@ const ProfilePage = () => {
             <img src="https://i.imgflip.com/5132fw.png" alt="sadge cat"/>
         </div>
     }
+
+    function checkIfItemExists(item){
+        if(item != null){
+            return item;
+        }
+        return "no user logged in"
+    }
     return (
 
         <container className="daddyContainer">
             <container className="profile_container_1">
-                <img className="profile_picture" src={window.localStorage.getItem('photo_url')} alt="pfp"/>
-                <h1 className="profile-content-username"> {window.localStorage.getItem('firstName')} </h1>
-                <h1 className="profile-content-username"> {window.localStorage.getItem('lastName')} </h1>
+                <img className="profile_picture" src={checkIfItemExists(window.localStorage.getItem('photo_url'))} alt="pfp"/>
+                <h1 className="profile-content-username"> {checkIfItemExists(window.localStorage.getItem('firstName'))} </h1>
+                <h1 className="profile-content-username"> {checkIfItemExists(window.localStorage.getItem('lastName'))} </h1>
                 <h1 className="profile-usertype">&nbsp; <FontAwesomeIcon icon={faUser}/>
-                    {toTitleCase(window.localStorage.getItem('userType'))}
+                    {toTitleCase(checkIfItemExists(window.localStorage.getItem('userType')))}
                 </h1>
                 {/*<h1 className="profile-phone"><FontAwesomeIcon icon={faPhone} /> PHONE NUMBER NOT ADDED</h1>*/}
                 <h1  className="profile-email">&nbsp; <FontAwesomeIcon icon={faEnvelope} />
-                    {window.localStorage.getItem('email')}
+                    {checkIfItemExists(window.localStorage.getItem('email'))}
                 </h1>
                 <hr className="profile-line-seperator"></hr>
                 <h1 className="profile-content-lastSeen">
@@ -37,8 +44,8 @@ const ProfilePage = () => {
                     .toLocaleString('us-en',DATETIME_OPTIONS)}
                 </h1>
                 <h1  className="profile-content-dateAdded">
-                    Date Added : {new Date(parseInt(window.localStorage.getItem('creationEpoch')))
-                    .toLocaleString('us-en',DATETIME_OPTIONS)}
+                    Date Added : {checkIfItemExists(new Date(parseInt(window.localStorage.getItem('creationEpoch')))
+                    .toLocaleString('us-en',DATETIME_OPTIONS))}
                 </h1>
 
             </container>

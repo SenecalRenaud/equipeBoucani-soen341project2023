@@ -8,15 +8,16 @@ import CommentAPIService from "../../pages/BACKEND_DEBUG/CommentAPIService";
 
 const UserDropDownMenu = ({triggerMenuMarkup,userEmail}) => {
     const dropDownRef = useRef(null);
-    const [isToggled, setIsToggled] = useDetectOutClickOrEsc(dropDownRef,true);
+    const [isToggled, setIsToggled] = useDetectOutClickOrEsc(dropDownRef,false);
 
     const onClick = (e) => {
         setIsToggled(!isToggled);
     };
-      const userType = window.localStorage.getItem('userType').toUpperCase().trim();
-      const isAnotherUser = (userEmail != window.localStorage.getItem('email'))
-      let userTypeBasedOption = <> SEE THE FINITE STATE MACHINE IN MenuItem.js</>; //TODO !!!!!!!!!!
-
+    if(window.localStorage.getItem('userType') != null){
+        const userType = window.localStorage.getItem('userType').toUpperCase().trim();
+        const isAnotherUser = (userEmail != window.localStorage.getItem('email'))
+        let userTypeBasedOption = <> SEE THE FINITE STATE MACHINE IN MenuItem.js</>; //TODO !!!!!!!!!!
+    }
     //   if (userType != "APPLICANT" ){
     //    userTypeBasedOption += <>
     //     <li> My Applications </li>
