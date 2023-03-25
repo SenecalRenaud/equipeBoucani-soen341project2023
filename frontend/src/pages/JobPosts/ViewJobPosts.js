@@ -18,7 +18,7 @@ function ViewJobPosts (props)   {
     return (
         <div className="post-comment-container">
             <header className="Debug-header">
-                <h1> JobPost CRUD test frontend by Ozan </h1>
+                <h1> JobPost CRUD Debug Ozan Branch Migrating From Antoine COmmentPostBranch </h1>
             </header>
             <h1>Job Posts</h1>
             <div className="job-posts">

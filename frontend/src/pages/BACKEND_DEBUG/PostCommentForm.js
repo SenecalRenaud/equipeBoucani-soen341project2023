@@ -89,8 +89,8 @@ function PostCommentForm  (props)  {
     <div className="post-comment-container">
 
         <header className="Debug-header">
-        <h1> Flask and React integration </h1>
-            <h3> temporary format. <span style={{color: 'red'}}> DO NOT EDIT</span>.</h3>
+        <h1> Postings  </h1>
+            <h3> Antoine C. V2 Stable   <span style={{color: 'red'}}> </span></h3>
         </header>
         <div style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignContent: 'flex-start',alignItems: 'stretch'}}>
             <section style={{display: 'flex', justifyContent:'space-between',alignItems: 'stretch', margin: '1em 0.2em'}}>
@@ -108,10 +108,10 @@ function PostCommentForm  (props)  {
                     />
 
             </section>
-
-            <span style={{fontSize: '.6em' , marginTop: "-1rem"}}>
-                {"\n\r Found "} <b id="searchResultCount">{(data.id ? data.id.length : 0)}</b> {" results."}
+           <span style={{display: 'inline-block' ,fontSize: '.9em' , marginTop: "-1rem"}}>
+                 <b id="searchResultCount"> Found {(data.id ? data.id.length : 0)} results.</b>
             </span>
+
             <hr  style={{
     color: '#000000',
     backgroundColor: '#000000',
@@ -123,7 +123,7 @@ function PostCommentForm  (props)  {
 
         </div>
         </div>
-        <h3> Post a new comment </h3>
+        <h3> Post a new job </h3>
         <form onSubmit={handleSubmit}>
             <label htmlFor="comment_title">Title </label>
             <input type="text" id="comment_title" name="comment_title"
