@@ -1,0 +1,212 @@
+.profile_picture{
+    height: 400px;
+    width: 350px;
+    border-radius:10px;
+    align-self: center;
+    margin-left: 25px;
+    margin-right: 25px;
+
+}
+
+.profile_container_1{
+    display:flex;
+    flex-direction: column;
+    align-self: center;
+
+    background-color:white;
+    border-radius : 10px;
+    margin:25px;
+
+    max-width: 500px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+
+    height: 900px;
+
+
+}
+
+.profile_container_2{
+    display:flex;
+    flex-direction: column;
+    align-self: center;
+
+    background-color:white;
+    border-radius : 10px;
+    margin:25px;
+
+    max-width: 500px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+
+    min-height: 900px;
+
+
+}
+
+@media only screen and (max-width: 600px) {
+    .profile_container_2 {
+        max-width: 450px !important;
+    }
+
+    .profile_container_3 {
+        max-width: 450px !important;
+        min-width: 200px !important;
+        width:450px !important;
+    }
+
+    .profile-content-username{
+        font-size: 30px !important;
+    }
+}
+
+.profile_container_3{
+    display:flex;
+    flex-direction: column;
+    align-self: center;
+
+    background-color:white;
+    border-radius : 10px;
+    margin:25px;
+
+    min-width: 500px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+
+    min-height: 900px;
+
+}
+
+
+.daddyContainer{
+    display:flex;
+    flex-direction: row;
+    flex-wrap:wrap;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.profile-content-username {
+
+    align-self: center;
+    padding-top: 10px;
+    font-family: var(--font-family);
+    font-weight: 800;
+    font-size: 35px;
+    line-height: 55px;
+    letter-spacing: -0.04em;
+
+
+}
+
+.profile-content-title {
+    padding-left: 85px;
+    padding-right: 85px;
+    align-self: center;
+    padding-top: 20px;
+    font-family: var(--font-family);
+    font-weight: 800;
+    font-size: 35px;
+    line-height: 75px;
+    letter-spacing: -0.04em;
+    color:#FF4820;
+
+}
+
+.profile-content-dateAdded{
+    align-self: left;
+    padding-top: 5px;
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 35px;
+    letter-spacing: -0.04em;
+    margin-left:20%;
+}
+.profile-content-lastSeen{
+    align-self: left;
+    padding-top: 5px;
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 35px;
+    letter-spacing: -0.04em;
+    margin-left:20%;
+}
+.profile-content-dateAdded_title{
+    align-self: left;
+    padding-top: 5px;
+    font-family: var(--font-family);
+    font-weight: 6  00;
+    font-size: 20px;
+    line-height: 35px;
+    letter-spacing: -0.04em;
+    margin-left:15%;
+}
+.profile-content-lastSeen_title{
+    align-self: left;
+    padding-top: 5px;
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 35px;
+    letter-spacing: -0.04em;
+    margin-left:15%;
+}
+.profile-email{
+    align-self: left;
+    padding-top: 5px;
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 35px;
+    letter-spacing: -0.04em;
+    margin-left:25%;
+    white-space: pre;
+}
+.profile-phone{
+    align-self: left;
+    padding-top: 5px;
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 35px;
+    letter-spacing: -0.04em;
+    margin-left:25%;
+    white-space: pre;
+}
+.profile-usertype{
+    align-self: left;
+    padding-top: 5px;
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 35px;
+    letter-spacing: -0.04em;
+    margin-left:25%;
+    white-space: pre;
+}
+.profile-line-seperator{
+    width: 70%;
+    align-self: center;
+    padding-bottom: 2px;
+    padding-top: 2px;
+    background-color:#040C18;
+    border: 0px;
+    border-radius:5px;
+    margin-top:3px;
+    margin-bottom: 3px;
+}
+
+.profile-content-introduction{
+    align-self: left;
+    padding-top: 5px;
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 35px;
+    letter-spacing: -0.06em;
+    margin-left: 25px;
+    margin-right: 25px;
+
+}
