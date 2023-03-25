@@ -11,6 +11,7 @@ from flask import \
     render_template,\
     url_for,\
     make_response
+from flask_mail import Mail, Message
 
 from requests import HTTPError
 
@@ -24,6 +25,7 @@ from flask_cors import CORS,cross_origin #?  (for cross origin requests)
 from flask_bcrypt import Bcrypt #? (keys and password hashing engine)
 # from flask_session import Session // TODO: Assert Accept certain MIME Types/Subtypes
 
+from models import CommentPost, CommentPostSchema, JobPost, JobPostSchema
 
 import logging
 import os
