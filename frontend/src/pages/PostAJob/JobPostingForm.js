@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import './JobPostingForm.css';
 import JobPostingAPIService from "./JobPostingAPIService";
 
@@ -99,6 +99,18 @@ const JobPostingForm = (props) => {
             ...(jobType === 'Time-Period' && { startDate, endDate }),
         };
     };
+
+    if (window.localStorage.getItem("userType") !== "EMPLOYER"){
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        useEffect(
+            () =>
+            {
+                alert("Only employers are allowed to post jobs ! Redirecting ... ")
+                window.location.replace('http://localhost:3000')
+            }
+            ,[]
+        )
+    }
 
     return (
         <div className="job-position-container">
