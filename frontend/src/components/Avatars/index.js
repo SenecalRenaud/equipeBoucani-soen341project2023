@@ -29,7 +29,7 @@ const AvatarLabel = styled.div`
       div {
         border: 3px solid lightseagreen;
       }
-      * {
+      p {
         color: lightseagreen
       }
       

@@ -1,13 +1,16 @@
 .menu-container {
   position: relative;
+  width: 100%;
 }
 .menu {
   background: #ffffff;
   border-radius: 8px;
   position: absolute;
-  top: 60px;
-  right: 0;
-  width: 300px;
+  /*top: 80px;*/
+  /*right: 0;*/
+  /*width: 500px;*/
+  width: min(17em,140%); /* Important line for different type of component to use the menu */
+
   box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
   opacity: 0;
   visibility: hidden;
@@ -61,13 +64,13 @@
   box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
 }
 
-.menu-trigger span {
+.menu-trigger span, .menu-trigger p {
   font-weight: 700;
   vertical-align: middle;
   font-size: 14px;
   margin: 0 10px;
 }
 
-.menu-trigger img {
+.menu-trigger img, .menu-trigger div {
   border-radius: 90px;
 }

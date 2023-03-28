@@ -38,6 +38,7 @@ const SignInForm = () => {
                 // setCookie('refresh_token', auth_json.refresh_token, {path: '/', expires})
                 // setCookie('loggedin_uid', auth_json.localId, {path: '/', expires})
                 console.log(auth_json)
+
                 window.localStorage.setItem("firstName",auth_json.firstName)
                 window.localStorage.setItem("lastName",auth_json.lastName)
                 window.localStorage.setItem("email",auth_json.email)
