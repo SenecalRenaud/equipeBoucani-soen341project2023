@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Cookies from 'js-cookie';
 import CommentAPIService from "../BACKEND_DEBUG/CommentAPIService";
+import {UserAvatarWithText} from "../../components/Avatars";
+import UserDropDownMenu from "../../components/UserDropDownMenu/UserDropDownMenu";
+
 const SESSION_COOKIES_DEBUG  = () => {
         function getAllCookies() {
       return fetch("http://localhost:5000/getall-cookies/", {
@@ -40,6 +43,18 @@ const SESSION_COOKIES_DEBUG  = () => {
             htmluserinfo.innerText = JSON.stringify(json,null,'\t')
         });
     }
+    const [user,setUser] = useState([{}]);
+    const fetchUserData = () => {
+            //document.forms[0].elements["inputUserId"].value
+            return CommentAPIService.GetUserDetails(
+                document.getElementById("inputUserId").value
+            ).then(
+                (data) => {
+                    console.log(data)
+                    setUser(data)
+                }
+            )
+    }
 
     return (
         <div>
@@ -52,6 +67,27 @@ const SESSION_COOKIES_DEBUG  = () => {
                 creating vulnerabilities with localStorage since everything
                 dangerous would still be in backend
             </p>
+
+
+                <textarea name="inputUserId" id="inputUserId"></textarea>
+                <button onClick={fetchUserData}>Try to find user!</button>
+
+
+
+            <article id="displayedUserAvatar">
+                {
+
+                    UserAvatarWithText(user,0)
+                }
+                {
+                                        <UserDropDownMenu
+                    triggerMenuMarkup={UserAvatarWithText(user,0)}
+                    triggeredUserUid={user.uid}
+                    />
+                }
+            </article>
+
+
             <button id="ajaxFetchCookiesButton"
                     onClick=
                         {(e)=>

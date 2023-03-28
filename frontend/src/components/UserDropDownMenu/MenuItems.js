@@ -83,7 +83,9 @@ export default function UserRelationPermsFSM(user1,user2){
       <li> <Link to={"/admin_commandpanel"}> Admin Command Panel </Link></li>
       </div>
     default:
-      throw new Error("Unknown bitflag: Interaction not stated.")
+      return <div>
+        <li> <b>Invalid/Unaccessible User ! </b>  </li>
+      </div>
 
   }
 
@@ -91,18 +93,3 @@ export default function UserRelationPermsFSM(user1,user2){
 
 
 }
-
-// export const menuItems = [
-//   {
-//     title: 'Home',
-//     url: '/',
-//   },
-//   {
-//     title: 'Contact Us',
-//     url: '/contactus',
-//   },
-//   {
-//     title: 'About',
-//     url: '/about',
-//   },
-// ];
