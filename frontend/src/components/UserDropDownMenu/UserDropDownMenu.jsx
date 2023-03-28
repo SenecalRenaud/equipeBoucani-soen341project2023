@@ -40,7 +40,13 @@ const UserDropDownMenu = ({triggerMenuMarkup,triggeredUserUid}) => {
 
     let user = UserRESTAPI.parseCurrentUserObjFromCookies()
     
-
+    if (!UserRESTAPI.checkIfObjectIsValidUser(user)) {
+        user['uid'] = "qwertyuiopasdfghjklzxcvbnm12"
+        user['userType'] = "APPLICANT"
+        user['email'] = "anonymous@user.boucani"
+        user['firstName'] = "Anonymous"
+        user['lastName'] = "User"
+    }
     let permissionBasedMenuOptionsMarkup = UserRelationPermsFSM(user,otherUser);
 
     let isNotUndetermined = !!user.email && !!otherUser.email;
