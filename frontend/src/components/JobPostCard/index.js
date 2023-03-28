@@ -1,9 +1,8 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect,useState } from "react";
 import styled from "styled-components";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { faTrashCan,faPen } from '@fortawesome/free-solid-svg-icons';
 import JobPostingAPIService from "../../pages/PostAJob/JobPostingAPIService";
-//import React, { useState } from "react";
 import Modal from "react-modal";
 import UserDropDownMenu from "../UserDropDownMenu/UserDropDownMenu";
 import {UserAvatarWithText} from "../Avatars";
@@ -139,7 +138,6 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
         setIndustryTags([])
         setJobDescription('')
     };
-
     return (<>
         <CardArticle>
             {
@@ -152,7 +150,9 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
             <CardTitle>Job post ID#{id} </CardTitle>
             {
                 //TODO: Non encrypt means vulnerable to attacks and unauth changes
-                window.localStorage.getItem("uid") === employerUid &&
+                (window.localStorage.getItem("uid") === employerUid
+                    || window.localStorage.getItem("userType") === "ADMIN")
+                &&
                 <section>
                   <CardDeleteButton onClick={() => handleDelete(id)}><FontAwesomeIcon icon={faTrashCan}/></CardDeleteButton>
                 <CardEditButton onClick={() => {setToBeEditedID(id); toggleModal(); setJobTitle(editJobTitle); setJobDescription(editJobDescription)}}><FontAwesomeIcon icon={faPen}/></CardEditButton>

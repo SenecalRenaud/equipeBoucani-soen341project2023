@@ -16,7 +16,7 @@ export default class CommentAPIService{
     }
 
     static async DeleteComment(comment_id){
-        return await fetch(`http://localhost:5000/delete/` + comment_id + '/',{
+        return await fetch(`http://localhost:5000/delete/${comment_id}/`,{
             'method':'DELETE',
             headers : {
                 'Content-Type':'application/json',
@@ -27,7 +27,7 @@ export default class CommentAPIService{
     }
 
     static async UpdateCommentPut(comment_id, request_body){
-        return await fetch(`http://localhost:5000/update/` + comment_id + '/',{
+        return await fetch(`http://localhost:5000/update/${comment_id}/`,{
             //'mode': "no-cors",//remove this line if troublesome in environment where deployed
             'method':'PUT',
             headers : {
@@ -97,8 +97,8 @@ export default class CommentAPIService{
 
 
     static async GetUserDetails(uid){
-        return await fetch("http://localhost:5000/firebase-api/get-user/"
-            + uid.toString() + "/",
+        return await fetch(
+            `http://localhost:5000/firebase-api/get-user/${uid.toString()}/`,
             {
                 'method': 'GET',
             }).then(
