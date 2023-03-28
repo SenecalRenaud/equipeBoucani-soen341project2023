@@ -14,6 +14,8 @@ const SignUpForm = () => {
     const [previewImage, setPreviewImage] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
 
+    const [resumeType,setResumeType] = useState('Resume')
+
     const handleProfilePictureChange = (event) => {
         setProfilePicture(event.target.files[0]);
         if (event.target.files[0]) {
@@ -121,7 +123,7 @@ const SignUpForm = () => {
                     </div>
                 )}
 
-                <label htmlFor="resume-input">Upload Resume</label>
+                <label htmlFor="resume-input">Upload {resumeType}</label>
                 <input
                     id="resume-input"
                     type="file"
@@ -132,11 +134,25 @@ const SignUpForm = () => {
                 <select
                     id="user-type-select"
                     value={userType}
-                    onChange={(event) => setUserType(event.target.value)}
+                    onChange={(event) => {
+                        setUserType(event.target.value)
+                        switch (event.target.value) {
+                            case "Employer":
+                                setResumeType("Company's Resume")
+                                break;
+                            case "Admin":
+                                setResumeType("Administration request document")
+                                break;
+                            case "Applicant":
+                            default:
+                                setResumeType("Resume")
+                        }
+                    }
+                }
                     required
                 >
                     <option value="">Select a user type</option>
-                    <option value="Student">Student</option>
+                    <option value="Applicant">Student/Applicant</option>
                     <option value="Employer">Employer</option>
                     <option value="Admin">Admin</option>
                 </select>
