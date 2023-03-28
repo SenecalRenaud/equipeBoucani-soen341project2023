@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { faTrashCan,faPen } from '@fortawesome/free-solid-svg-icons';
 import JobPostingAPIService from "../../pages/PostAJob/JobPostingAPIService";
 //import React, { useState } from "react";
 import Modal from "react-modal";
+import UserDropDownMenu from "../UserDropDownMenu/UserDropDownMenu";
+import {UserAvatarWithText} from "../Avatars";
+import CommentAPIService from "../../pages/BACKEND_DEBUG/CommentAPIService";
 export const CardTitle = styled.h1`
     font-size: 2em;
 `;
@@ -26,6 +29,7 @@ export const CardDeleteButton = styled.button`
     margin-right: 3.5em;
     font-size: 2ch;
     background: none;
+    color: red;
     
     
 `;
@@ -45,7 +49,7 @@ export const SubmitCancelButton = styled.button`
     width: 5em;
     color: black;
 `;
-const JobPostCard = ({id, jobtype, title, description, location, salary, tags, date, editDate}) => {
+const JobPostCard = ({id, jobtype, title, description, location, salary, tags, date, editDate,employerUid}) => {
     const [editJobType, setJobType] = useState(jobtype);
     const [editJobTitle, setJobTitle] = useState(title);
     const [editLocation, setLocation] = useState(location);
@@ -57,6 +61,22 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
     const [endDate, setEndDate] = useState('');
     const [toBeEditedID, setToBeEditedID] = useState("");
     const [isOpen, setIsOpen] = useState(false);
+
+    const [employerUser,setEmployerUser] = useState([{}])
+
+    useEffect(
+        ()=> {
+            CommentAPIService.GetUserDetails(
+                employerUid
+            ).then(
+                (data) => {
+                    setEmployerUser(data)
+                }
+            )
+        },
+        [employerUid] //effect hook only called on mount since empty dependencies array
+    )
+
 
     const handleJobTypeChange = (type) => {
         setJobType(type);
@@ -91,7 +111,7 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
 
     const handleJobDescriptionChange = (event) => {
         const description = event.target.value;
-        var maxWords = 200;
+        var maxWords = 350;
         var wordCount = description.split(/\s+/).length;
         if (wordCount>maxWords) {
             description.preventDefault()
@@ -119,14 +139,26 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
         setIndustryTags([])
         setJobDescription('')
     };
+
     return (<>
         <CardArticle>
-
-
+            {
+                                        <UserDropDownMenu
+                    triggerMenuMarkup={UserAvatarWithText(employerUser,0)}
+                    triggeredUserUid={employerUid}
+                    />
+                }
 
             <CardTitle>Job post ID#{id} </CardTitle>
-            <CardDeleteButton onClick={() => handleDelete(id)}><FontAwesomeIcon icon={faTrashCan}/></CardDeleteButton>
-            <CardEditButton onClick={() => {setToBeEditedID(id); toggleModal(); setJobTitle(editJobTitle); setJobDescription(editJobDescription)}}><FontAwesomeIcon icon={faPen}/></CardEditButton>
+            {
+                //TODO: Non encrypt means vulnerable to attacks and unauth changes
+                window.localStorage.getItem("uid") === employerUid &&
+                <section>
+                  <CardDeleteButton onClick={() => handleDelete(id)}><FontAwesomeIcon icon={faTrashCan}/></CardDeleteButton>
+                <CardEditButton onClick={() => {setToBeEditedID(id); toggleModal(); setJobTitle(editJobTitle); setJobDescription(editJobDescription)}}><FontAwesomeIcon icon={faPen}/></CardEditButton>
+            </section>
+            }
+
 
             <CardGivenTitle >{title}</CardGivenTitle>
 
@@ -242,7 +274,7 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
                         onChange={handleJobDescriptionChange}
                         required
                     />
-                    <p className="word-count">{wordCount}/200 words</p>
+                    <p className="word-count">{wordCount}/350 words</p>
                 </label>
                 <SubmitCancelButton type="submit">Submit</SubmitCancelButton>
                 <SubmitCancelButton onClick={() => toggleModal()}>Cancel</SubmitCancelButton>

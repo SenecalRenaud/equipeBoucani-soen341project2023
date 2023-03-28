@@ -54,7 +54,7 @@ const JobPostingForm = (props) => {
 
     const handleJobDescriptionChange = (event) => {
         const description = event.target.value;
-        var maxWords = 200;
+        var maxWords = 350;
         var wordCount = description.split(/\s+/).length;
         if (wordCount>maxWords) {
             description.preventDefault()
@@ -77,7 +77,10 @@ const JobPostingForm = (props) => {
         event.preventDefault();
 
 
-        JobPostingAPIService.AddJobPosting({"jobtype" : jobType, "title" : jobTitle, "location" : location, "salary" : salary, "tags" : industryTags.toString(), "description" : jobDescription})
+        JobPostingAPIService.AddJobPosting({"jobtype" : jobType, "title" : jobTitle, "location" : location, "salary" : salary, "tags" : industryTags.toString(), "description" : jobDescription,
+
+            'employerUid': window.localStorage.getItem("uid") // TODO ... salted AES-encrypt ?...
+        })
             .then((response) => props.postedJob(response))
                 .then((any)=> window.location.reload())
             .catch(error => console.log('Following error occurred after fetching from API: ',error))
@@ -224,7 +227,7 @@ const JobPostingForm = (props) => {
                         onChange={handleJobDescriptionChange}
                         required
                     />
-                    <p className="word-count">{wordCount}/200 words</p>
+                    <p className="word-count">{wordCount}/350 words</p>
                     <div className="apply-button-container">
                         <button className="apply-button">Submit</button>
                     </div>
