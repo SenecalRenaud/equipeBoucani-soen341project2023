@@ -24,8 +24,8 @@ export default function UserRelationPermsFSM(user1,user2){
   const logged_in_usermail = window.localStorage.getItem("email")
   if (user2.email === logged_in_usermail)
     [user1,user2] = [user2,user1];
-  else if (user1.email !== logged_in_usermail)
-    throw new Error("One of the two users interacted should be the one logged in the current session!");
+  // else if (user1.email !== logged_in_usermail)
+  //   throw new Error("One of the two users interacted should be the one logged in the current session!");
 
   let isSelf = +(user1.email === user2.email) << 4
   let ub1 = USER_TYPE_BIT[user1.userType]

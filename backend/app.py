@@ -552,10 +552,10 @@ def delete_commentpost(_id):
 @app.route("/addjob", methods=['POST'])
 @cross_origin()
 def addJobPost():
-    jobtype, title, location, salary, description, tags = request.json['jobtype'], request.json['title'], request.json[
-        'location'], request.json['salary'], request.json['description'], request.json['tags']
+    jobtype, title, location, salary, description, tags,employerUid = request.json['jobtype'], request.json['title'], request.json[
+        'location'], request.json['salary'], request.json['description'], request.json['tags'],request.json['employerUid']
 
-    jobpost = JobPost(jobtype, title, location, salary, description, tags)
+    jobpost = JobPost(jobtype, title, location, salary, description, tags,employerUid)
     db.session.add(jobpost)
     db.session.commit()
 
@@ -608,6 +608,8 @@ def update_jobpost(_id):
         jobpost.tags = request.json['tags']
     if 'description' in request.json:
         jobpost.description = request.json['description']
+    if 'employerUid' in request.json:
+        jobpost.employerUid = request.json['employerUid']
 
     jobpost.editDate = datetime.datetime.now()
 
