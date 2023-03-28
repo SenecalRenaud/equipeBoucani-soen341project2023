@@ -1,11 +1,13 @@
 .menu-container {
   position: relative;
   width: 100%;
+
 }
 .menu {
   background: #ffffff;
   border-radius: 8px;
   position: absolute;
+
   /*top: 80px;*/
   /*right: 0;*/
   /*width: 500px;*/
@@ -53,6 +55,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   padding: 4px 6px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   border: none;
@@ -65,12 +68,16 @@
 }
 
 .menu-trigger span, .menu-trigger p {
+
   font-weight: 700;
   vertical-align: middle;
   font-size: 14px;
   margin: 0 10px;
+  align-self: center;
 }
 
 .menu-trigger img, .menu-trigger div {
   border-radius: 90px;
+  align-self: center;
+
 }

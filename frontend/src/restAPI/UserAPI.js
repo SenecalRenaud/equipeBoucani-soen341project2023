@@ -1,6 +1,19 @@
 import CommentAPIService from "../pages/BACKEND_DEBUG/CommentAPIService";
 
+    const USER_FIELDS = [
+    "firstName",
+    "lastName",
+    "email",
+    "photo_url",
+    "resume_url",
+    "lastSeenEpoch",
+    "creationEpoch",
+    "userType",
+    "uid"
+]
+
 export default class UserRESTAPI  {
+
     //TODO: MOVE SOME THINGS FROM COMMENT POST API TO HERE
     //get UserNameSpace
     static parseCurrentUserObjFromCookies() {
@@ -23,5 +36,14 @@ export default class UserRESTAPI  {
                 user_json => callback(user_json)
             )
     }
+    static checkIfObjectIsValidUser(obj) {
+        for (let property of USER_FIELDS){
+            if (!obj.hasOwnProperty(property)){
+                return false;
+            }
+        }
+        return true;
+    }
+
 }
 

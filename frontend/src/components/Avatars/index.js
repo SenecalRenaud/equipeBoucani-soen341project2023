@@ -7,9 +7,13 @@ import { StylesProvider, useTheme } from "@material-ui/core/styles";
 
 const AvatarContainer = styled.div`
   display: flex;
-  margin-bottom: 14px;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: center;
+  background: #e0e8ef;
+
   & > * {
-    margin: 4px;
+    margin: 2px;
   }
 
 `;
@@ -24,6 +28,7 @@ const AvatarContainer = styled.div`
 const AvatarLabel = styled.div`
   display: flex;
   align-items: center;
+  
     &:hover {
       cursor: pointer;
       div {

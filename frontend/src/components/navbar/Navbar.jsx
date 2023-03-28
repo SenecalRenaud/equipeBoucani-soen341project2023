@@ -22,7 +22,7 @@ const NavMenu = () => (
 		    </NavLink>
             }
             <NavLink to="/BACKEND_DEBUG" activeStyle>
-                BACKEND_CRUD_DEBUG
+                [BACKEND CRUDV2 &emsp;DEBUG ANTOINE]
             </NavLink>
 
             <NavLink to="/viewjobposts" activeStyle>
