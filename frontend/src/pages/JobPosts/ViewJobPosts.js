@@ -22,8 +22,9 @@ function ViewJobPosts (props)   {
             setEr(true);
         })
     },[])
-    if (er){
-        if (errorString === "SyntaxError: Unexpected token 'P', \"Proxy erro\"... is not valid JSON"){
+    if (er || typeof data.id === 'undefined'){ // Json request body not loaded properly if not job post ID
+        if (errorString.startsWith("SyntaxError")// || errorString === "SyntaxError: Unexpected token 'P', \"Proxy error\"... is not valid JSON"
+        ){
             return (
                 <div className="post-comment-container">
                     <header className="Debug-header">
@@ -31,7 +32,7 @@ function ViewJobPosts (props)   {
                     </header>
                     <h1>Job Posts</h1>
                     <div className="job-posts">
-                        <p align="center">Your API/backend server is not launched. Please launch the server to use this page.</p>
+                        <p align="center" style={{color: "#FF5733"}}>Your API/backend server is not launched. Please ask an admin to launch the server to use this page.</p>
                     </div>
                 </div>
             );
@@ -43,7 +44,8 @@ function ViewJobPosts (props)   {
                         <h1> JobPost CRUD Debug Ozan Branch Migrating From Antoine CommentPostBranch </h1>
                     </header>
                     <h1>Job Posts</h1>
-                    <h2 align="center">No posts in the job_post table.</h2>
+                    <hr/>
+                    <h3 align="center" style={{color: "#8B8000"}}>No posts in the job_post table.</h3>
                 </div>
             );
         }
@@ -56,7 +58,8 @@ function ViewJobPosts (props)   {
                 </header>
                 <h1>Job Posts</h1>
                 <div className="job-posts">
-                    {typeof data.id === 'undefined' ? <p>Loading... (Don't forget to launch the API/backend server!)</p> : data.id.map((id, i) => (
+                    { data.id &&
+                        data.id.map((id, i) => (
                         <JobPostCard
                             key={i}
                             jobtype={data.jobtype[i]}

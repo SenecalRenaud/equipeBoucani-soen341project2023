@@ -479,7 +479,7 @@ def get_all_commentposts():
     all_commentposts = CommentPost.query.all()
     results_arr = commentposts_schema.dump(all_commentposts)
     print(results_arr)
-    if request.args.get('mapAsFields') == 'true':
+    if any(filter(None,results_arr)) and request.args.get('mapAsFields') == 'true':
         print("Mapped fields into dict instead of array of obj!")
         response_fieldsdict = dict(map(lambda kv: (kv[0], [kv[1]]), results_arr[0].items()))
 
@@ -578,8 +578,8 @@ def get_all_jobposts():
 
     all_jobposts = JobPost.query.all()
     results_arr = jobposts_schema.dump(all_jobposts)
-    print(results_arr)
-    if request.args.get('mapAsFields') == 'true':
+
+    if any(filter(None,results_arr)) and request.args.get('mapAsFields') == 'true':
         print("Mapped fields into dict instead of array of obj!")
         response_fieldsdict = dict(map(lambda kv: (kv[0], [kv[1]]), results_arr[0].items()))
 
