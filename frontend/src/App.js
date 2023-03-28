@@ -41,11 +41,11 @@ return (
         <Route exact path='/'  element={<Home />} />
         <Route path='/jobposting' element={<JobPostingForm/>} />
         <Route path='/BACKEND_DEBUG' element={<PostCommentForm postedComment={postedComment} />}/>
-        <Route path='/profile' element={<ProfilePage/>} />
         <Route path='/signup' element={<SignUp/>} />
         <Route path='/signin' element={<SignIn/>} />
         <Route path='/viewjobposts' element={<ViewJobPosts postedJob={postedJob} />} />
 
+        <Route exact path='/profile/:uid' element={<ProfilePage/>} />
         {/*<Route path='/SESSION_COOKIES_DEBUG' element={<SESSION_COOKIES_DEBUG/>}/>*/}
 
     </Routes>
