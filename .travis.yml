@@ -1,1 +1,21 @@
+dist: focal
+sudo: true
+language: node_js
+node_js:
+  - 18
+install:
+  - "npm ci"
+services: mysql
 
+before_install:
+  - sudo mysql -e 'DROP DATABASE IF EXISTS flask_test_mysql_db'
+  - sudo mysql -e "CREATE DATABASE IF NOT EXISTS flask_test_mysql_db"
+  - sudo mysql -u root --default-character-set=utf8 flask_test_mysql_db < backend/db_schemas_for_test/comment_post.sql
+
+
+jobs:
+  include:
+    - language: python
+      python: 3.9
+      before_script:
+        - "pip install -r requirements.txt"
