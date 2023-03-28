@@ -71,6 +71,7 @@ function ViewJobPosts (props)   {
                             id={id}
                             date={new Date(Date.parse(data.date[i])).toLocaleString()}
                             editDate={new Date(Date.parse(data.editDate[i])).toLocaleString()}
+                            employerUid={data.employerUid[i]}
                         />
                     ))}
                 </div>
