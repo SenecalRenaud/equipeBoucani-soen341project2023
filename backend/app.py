@@ -221,7 +221,15 @@ def signin():
 def logout():
     print(session['user'], "\n\tJUST LOGGED OUT !")
     loggedout_user = session.pop('user')
-    return redirect(r'/')
+    response = make_response(f"Log out : {json.dumps(loggedout_user)} . " + \
+                             "Delete token cookies so frontend knows user is not authentificated or authorized anymore")
+
+    #TODO CHange once securit with idToken and refresh token has been done !!!
+    for tokenAuthCookieToRemove in ["loggedin_uid","access_token","refresh_token"]:
+        if tokenAuthCookieToRemove in request.cookies:
+            response.set_cookie(tokenAuthCookieToRemove,'',expires=0) # auto deletion
+
+    return response #redirect(r'/')
 @app.route('/firebase-api/signup',methods=['POST','GET'])
 def signup():
     if request.method == "POST":

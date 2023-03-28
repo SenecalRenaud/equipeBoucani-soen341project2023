@@ -120,11 +120,15 @@ export default class CommentAPIService{
         Cookies.remove('access_token');
         Cookies.remove('refresh_token');
         Cookies.remove('loggedin_uid');
+
+        window.localStorage.clear()
+
+
         fetch("http://localhost:5000/firebase-api/logout", {
             credentials: "include"
         }).then(response => {
             return Promise.resolve("User logged out properly");
         });
-        window.localStorage.clear()
+
 }
 }

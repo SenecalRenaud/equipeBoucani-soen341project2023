@@ -12,8 +12,10 @@ import PostCommentForm from "./pages/BACKEND_DEBUG/PostCommentForm";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import SignUp from "./pages/SignUp/SignUpForm";
 import SignIn from "./pages/SignIn/SignInForm";
-import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
+// import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
 import ViewJobPosts from "./pages/JobPosts/ViewJobPosts";
+import CommentAPIService from "./pages/BACKEND_DEBUG/CommentAPIService";
+import Cookies from 'js-cookie';
 
 function App() {
     const [comments, setComments] = useState([""]);
@@ -29,7 +31,12 @@ function App() {
 return (
     <Router>
     <Navbar />
+        {
+            Cookies.get("loggedin_uid") == null &&
+                CommentAPIService.UserLogout()
 
+        }
+        {console.log("Loaded App.js")}
     <Routes>
         <Route exact path='/'  element={<Home />} />
         <Route path='/jobposting' element={<JobPostingForm/>} />
@@ -37,8 +44,10 @@ return (
         <Route path='/profile' element={<ProfilePage/>} />
         <Route path='/signup' element={<SignUp/>} />
         <Route path='/signin' element={<SignIn/>} />
-        <Route path='/SESSION_COOKIES_DEBUG' element={<SESSION_COOKIES_DEBUG/>}/>
         <Route path='/viewjobposts' element={<ViewJobPosts postedJob={postedJob} />} />
+
+        {/*<Route path='/SESSION_COOKIES_DEBUG' element={<SESSION_COOKIES_DEBUG/>}/>*/}
+
     </Routes>
     </Router>
 );
