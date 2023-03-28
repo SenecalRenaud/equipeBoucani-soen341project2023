@@ -66,9 +66,35 @@ export default class CommentAPIService{
 
             })
             .then(data => data.json())
+            .then(auth_json => {
+                let expires = new Date();
+                expires.setTime(expires.getTime() + (auth_json.expires_in * 250 ));
+                Cookies.set('access_token', auth_json.idToken);
+                Cookies.set('refresh_token', auth_json.refresh_token);
+                Cookies.set('loggedin_uid', auth_json.localId);
+                // setCookie('access_token', auth_json.idToken, { path: '/',  expires})
+                // setCookie('refresh_token', auth_json.refresh_token, {path: '/', expires})
+                // setCookie('loggedin_uid', auth_json.localId, {path: '/', expires})
+                console.log(auth_json)
 
-            .catch(error => console.log("API CORE EXCEPTION... " + error))
-    }
+                window.localStorage.setItem("firstName",auth_json.firstName)
+                window.localStorage.setItem("lastName",auth_json.lastName)
+                window.localStorage.setItem("email",auth_json.email)
+                window.localStorage.setItem("photo_url",auth_json.photo_url)
+                window.localStorage.setItem("resume_url",auth_json.resume_url)
+                window.localStorage.setItem("lastSeenEpoch",auth_json.lastSeenEpoch)
+                window.localStorage.setItem("creationEpoch",auth_json.creationEpoch)
+                window.localStorage.setItem("userType",auth_json.userType)
+                window.localStorage.setItem("uid",auth_json.localId)
+                    //TODO CryptoJs. auth_json.uid
+
+
+            })
+            .then((any)=> window.location.replace('http://localhost:3000/'))
+            .catch(error => console.log('Following error occured after fetching from API: ',error))
+
+    };
+
 
     static async GetUserDetails(uid){
         return await fetch("http://localhost:5000/firebase-api/get-user/"

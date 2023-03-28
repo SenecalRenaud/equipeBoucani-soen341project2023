@@ -54,8 +54,8 @@ const SignUpForm = () => {
             formData.append('uploadedResume', uploadedResume);
 
             CommentAPIService.AddNewUser(formData)
-                //.then((any)=> window.location.replace('http://localhost:3000/signin'))
-                .catch(error => console.log('Following error occured after fetching from API: ',error))
+
+            CommentAPIService.UserSignIn(formData)
         }
     };
 
