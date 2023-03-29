@@ -13,7 +13,7 @@ def test_multiple_browsers():
 
     driver = webdriver.Chrome(chrome_options=options)
 
-    driver.get("localhost:3000")
+    driver.get("http://127.0.0.1:3000")
 
     title = driver.title
     print(title)
