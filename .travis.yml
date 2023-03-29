@@ -17,9 +17,11 @@ before_install:
   - sudo mysql -u root --default-character-set=utf8 flask_test_mysql_db < backend/db_schemas_for_test/comment_post.sql
 before_script:
   - "npm run build --prefix ./frontend"
+  - "sleep 10"
 
 script:
   - "npm start --prefix ./frontend"
+  - "sleep 10"
 
 jobs:
   include:
