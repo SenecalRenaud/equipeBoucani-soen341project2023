@@ -1,5 +1,5 @@
+os: linux
 dist: focal
-sudo: true
 language: node_js
 node_js:
   - 18
