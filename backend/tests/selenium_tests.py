@@ -7,6 +7,7 @@ def test_multiple_browsers():
     # Chrome
 
     options = Options()
+    options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
 
