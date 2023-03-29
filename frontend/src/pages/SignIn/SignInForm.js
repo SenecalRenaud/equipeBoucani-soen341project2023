@@ -22,7 +22,6 @@ const SignInForm = () => {
         // removeCookie('access_token')
         // removeCookie('refresh_token')
         // removeCookie('loggedin_uid') .hasOwnProperty('loggedin_uid') to check if user logged in.
-        console.log('Email:', email, 'Password:', password); //TODO REMOVE ASAP WHEN DEBUGGING DONE
 
         const formData = new FormData();
         formData.append('email', email);

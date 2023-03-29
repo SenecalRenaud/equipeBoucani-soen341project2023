@@ -32,7 +32,7 @@ return (
     <Router>
     <Navbar />
         {
-            Cookies.get("loggedin_uid") == null &&
+            Cookies.get("BACKEND_SESSION_ENDED") != null &&
                 CommentAPIService.UserLogout()
 
         }

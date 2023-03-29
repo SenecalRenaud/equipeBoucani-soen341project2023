@@ -45,9 +45,8 @@ const LoginOrSeeAccount = () => {
     //         }
     //     )
     // }
-
     // console.log(userRecordInfo)
-    return (uid ?
+    return (uid !== undefined && uid ?
             <>
             <UserDropDownMenu triggerMenuMarkup={
 
@@ -106,21 +105,29 @@ const Navbar = () => {
       </div>
       
 
-      <div className='gpt3__navbar-menu'>
+
       {toggleMenu
-          ? <RiCloseLine color="#fff" size={27} onClick={() => setToggleMenu(false)} />
-          : <RiMenu3Line color="#fff" size={27} onClick={() => setToggleMenu(true)} />}
-          {toggleMenu && (
-        <div className="gpt3__navbar-menu_container scale-up-center">
-          <div className="gpt3__navbar-menu_container-links">
-          <NavMenu />
+          ?
+          <div className='gpt3__navbar-menu'>
+          <RiCloseLine color="#fff" size={27} onClick={() => setToggleMenu(false)} />
+            <div className="gpt3__navbar-menu_container scale-up-center">
+              <div className="gpt3__navbar-menu_container-links">
+                <NavMenu />
+              </div>
+              <div className="gpt3__navbar-menu_container-links-sign">
+                <LoginOrSeeAccount />
+              </div>
+            </div>
           </div>
-          <div className="gpt3__navbar-menu_container-links-sign">
-          <LoginOrSeeAccount />
+          :
+          <div className='gpt3__navbar-menu'>
+          <RiMenu3Line color="#fff" size={27} onClick={() => setToggleMenu(true)} />
           </div>
-        </div>
-        )}
-      </div>
+          }
+        {/*  {toggleMenu && (*/}
+
+        {/*)}*/}
+
       
       
     </div>

@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect, useCallback} from 'react'
+import React, {useState, useRef, useEffect, useCallback, useMemo} from 'react'
 import {useDetectOutClickOrEsc} from "../../hooks/outside-clickorescape.hook";
 import "./ClickedUserDropDown.css"
 import {Link} from "react-router-dom";
@@ -8,6 +8,9 @@ import UserRelationPermsFSM from "./MenuItems"
 
 
 const UserDropDownMenu = ({triggerMenuMarkup,triggeredUserUid}) => {
+
+    const counter = useRef(0);
+
     const dropDownRef = useRef(null);
     const [isToggled, setIsToggled] = useDetectOutClickOrEsc(dropDownRef,false);
     const [otherUser,setOtherUser] = useState([{}])
@@ -15,6 +18,7 @@ const UserDropDownMenu = ({triggerMenuMarkup,triggeredUserUid}) => {
 
     const handleClick = useCallback( //memoizes on load the hook based on state, better sync click
         () => {
+            // console.log("AAAAAAAAA")
             setIsToggled(!isToggled);
         },
         [isToggled, setIsToggled]
@@ -47,11 +51,14 @@ const UserDropDownMenu = ({triggerMenuMarkup,triggeredUserUid}) => {
         user['firstName'] = "Anonymous"
         user['lastName'] = "User"
     }
-    let permissionBasedMenuOptionsMarkup = UserRelationPermsFSM(user,otherUser);
+
+    const permissionBasedMenuOptionsMarkup = useMemo(() =>
+        UserRelationPermsFSM(user,otherUser), [user,otherUser]);
 
     let isNotUndetermined = !!user.email && !!otherUser.email;
 
-    console.log(permissionBasedMenuOptionsMarkup)
+    console.log(`${user.firstName}->${otherUser.firstName} dropdownMenu.jsx count: ${counter.current++}`)
+    // console.log(permissionBasedMenuOptionsMarkup)
 
       return (
         <div className="menu-container">
