@@ -4,7 +4,7 @@ language: node_js
 node_js:
   - 18
 install:
-  - "npm install --prefix ./frontend/package_lock.json"
+  - "npm install --prefix ./frontend/package_lock.json" #some comment
 services: mysql
 
 before_install:
