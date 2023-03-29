@@ -7,6 +7,7 @@ import Modal from "react-modal";
 import UserDropDownMenu from "../UserDropDownMenu/UserDropDownMenu";
 import {UserAvatarWithText} from "../Avatars";
 import CommentAPIService from "../../pages/BACKEND_DEBUG/CommentAPIService";
+import UserRESTAPI from "../../restAPI/UserAPI";
 export const CardTitle = styled.h1`
     font-size: 2em;
 `;
@@ -48,6 +49,68 @@ export const SubmitCancelButton = styled.button`
     width: 5em;
     color: black;
 `;
+
+export const CardApplyButton = styled.button`
+  & {
+    box-shadow: 5px 6px 1px -1px #d98c73;
+    background: linear-gradient(to bottom, #ff7b08 5%, #bc3315 100%);
+    background-color: #ff7b08;
+    border-radius: 3px;
+    float: right;
+    border: 1px solid #942911;
+    display: inline-block;
+    cursor: pointer;
+    color: #ffffff;font-size: 16px;
+    font-style: italic;
+    padding: 15px 24px;
+    text-decoration: none;
+    text-shadow: 0px 1px 9px #854629;
+  }
+
+  &:hover {
+    background: linear-gradient(to bottom, #bc3315 5%, #ff7b08 100%);
+    background-color: #bc3315;
+  }
+
+  &:active {
+    position: relative;
+    top: 1px;
+  }
+
+`;
+
+export const CardCommentButton = styled.button`
+  & {
+    box-shadow: inset 5px 6px 1px -1px #ba7059;
+    background-color: #de8042;
+    border-radius: 3px;
+    border: 1px solid #ffffff;
+    display: inline-block;
+    cursor: pointer;
+    float: right;
+    color: #ffffff;
+    font-family: Arial;
+    font-size: 16px;
+    font-style: italic;
+    padding: 15px 24px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    text-decoration: none;
+    text-shadow: 0px 1px 9px #854629;
+  }
+
+  &:hover {
+    background-color: #db9183;
+  }
+
+  &:active {
+    position: relative;
+    top: 1px;
+  }
+
+
+`;
+
 const JobPostCard = ({id, jobtype, title, description, location, salary, tags, date, editDate,employerUid}) => {
     const [editJobType, setJobType] = useState(jobtype);
     const [editJobTitle, setJobTitle] = useState(title);
@@ -177,6 +240,12 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
             <CardText></CardText>
             <CardDate>{editDate !== "Invalid Date" ? "Date Edited: " + editDate : ""}
             </CardDate>
+            <CardCommentButton> Leave a comment </CardCommentButton>
+            {
+                //TODO: Make checks to see if already in applied list !
+                (window.localStorage.getItem("userType") === "APPLICANT") &&
+                <CardApplyButton  onClick={(e) => {alert("TODO: Implement Application system !")}}>  Apply </CardApplyButton>
+            }
 
 
         </CardArticle>

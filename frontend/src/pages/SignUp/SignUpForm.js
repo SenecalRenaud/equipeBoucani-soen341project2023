@@ -54,8 +54,11 @@ const SignUpForm = () => {
             formData.append('uploadedResume', uploadedResume);
 
             CommentAPIService.AddNewUser(formData)
+            .then(r => 
+                CommentAPIService.UserSignIn(formData)
+            )
 
-            CommentAPIService.UserSignIn(formData)
+            
         }
     };
 
