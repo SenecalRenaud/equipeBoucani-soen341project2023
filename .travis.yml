@@ -4,7 +4,7 @@ language: node_js
 node_js:
   - 18
 install:
-  - "npm ci --prefix ./frontend/package_lock.json"
+  - "npm ci --global"
 services: mysql
 
 before_install:
