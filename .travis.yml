@@ -25,4 +25,4 @@ jobs:
         - "pip install -r ./backend/requirements.txt"
         - "chmod 0777 ./backend/tests/selenium_tests.py"
       script:
-        - "backend/tests/selenium_tests.py"
+        - "python backend/tests/selenium_tests.py"
