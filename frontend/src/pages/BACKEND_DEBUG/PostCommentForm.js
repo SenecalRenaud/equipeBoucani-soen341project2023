@@ -22,7 +22,7 @@ function PostCommentForm  (props)  {
   let [data,setData] = useState([{}]);
   let [defaultData,setDefaultData] = useState([{}]);
 
-    useEffect(() => { //TODO anonymous function fetch data... make async await maybe ?
+    useEffect(() => {
         fetch("/get?mapAsFields=true").then(
             response => response.json()
         ).then(
