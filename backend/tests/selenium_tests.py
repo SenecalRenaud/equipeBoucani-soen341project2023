@@ -1,10 +1,15 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
 
 
 def test_multiple_browsers():
     # Chrome
-    driver = webdriver.Chrome()
+
+    options = Options()
+    options.add_argument('--no-sandbox')
+
+    driver = webdriver.Chrome(chrome_options=options)
 
     driver.get("http://127.0.0.1:3000/")
 
