@@ -20,3 +20,5 @@ jobs:
       python: 3.9
       before_script:
         - "pip install -r ./backend/requirements.txt"
+      script:
+        - "./backend/tests/selenium_tests.py"
