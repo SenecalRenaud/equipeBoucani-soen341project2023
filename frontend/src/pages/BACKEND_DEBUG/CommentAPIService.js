@@ -75,7 +75,7 @@ export default class CommentAPIService{
                 let expires = new Date();
                 expires.setTime(expires.getTime() + (auth_json.expires_in * 250 ));
                 Cookies.set('access_token', auth_json.idToken);
-                Cookies.set('refresh_token', auth_json.refresh_token);
+                Cookies.set('refresh_token', auth_json.refreshToken);
                 Cookies.set('loggedin_uid', auth_json.localId);
                 // setCookie('access_token', auth_json.idToken, { path: '/',  expires})
                 // setCookie('refresh_token', auth_json.refresh_token, {path: '/', expires})
@@ -106,6 +106,9 @@ export default class CommentAPIService{
             `http://localhost:5000/firebase-api/get-user/${uid.toString()}/`,
             {
                 'method': 'GET',
+        //                  headers : {
+        // //         'Content-Type':'application/json',
+        // //     }
             }).then(
                 response => {
 
@@ -121,24 +124,29 @@ export default class CommentAPIService{
             data => data.json()
         )
     }
-    static UserLogout(){
+    static UserLogout({frontend_logout_only=false} ={}){
 
-
-        Cookies.remove('BACKEND_SESSION_ENDED')
-
-        window.localStorage.clear()
-
-
-        fetch("http://localhost:5000/firebase-api/logout", {
-            credentials: "include"
-        }).then(response => {
-            return Promise.resolve("User logged out properly");
-        });
+        // Cookies.remove('BACKEND_SESSION_ENDED')
 
         // Backend should have dealt with them, used to ensure if synchronization errors...
         Cookies.remove('access_token');
         Cookies.remove('refresh_token');
         Cookies.remove('loggedin_uid');
 
-}
+        window.localStorage.clear()
+
+        if(!frontend_logout_only) {
+            fetch("http://localhost:5000/firebase-api/logout", {
+                credentials: "include"
+            }).then(response => {
+                return Promise.resolve("User logged out properly");
+            });
+        }
+
+
+
+
+
+
+    }
 }

@@ -29,7 +29,7 @@ from models import CommentPost, CommentPostSchema, JobPost, JobPostSchema
 
 import logging
 import os
-import re
+from functools import partial,reduce
 import itertools
 import operator
 import json
@@ -137,7 +137,7 @@ def getall_cookies():
 
     return jsonify(request.cookies)
 @app.route("/get-cookie/")
-def get_cookie():#TODO
+def get_cookie():
     response = make_response("""Look at this cookie !
                              If made from client-side,
                              it means The AJAX request
@@ -147,15 +147,14 @@ def get_cookie():#TODO
     sessioncookie_value = session['user']['localId'] if 'user' in session else "anonymous"
 
     response.set_cookie(key="loggedin_user_uid", value=sessioncookie_value)
-                        #TODO path="/api/cookies_test/")
-                        #TODO domain="fake.subdomain.net")
+                        # path="/api/cookies_test/")
+                        # domain="fake.subdomain.net")
     print(response)
-    #todo make methods to clear cookies as well... on same browser iteration/session
     return response
 @app.route("/api/cookies_test/")
-def cookies_test():#TODO
+def cookies_test():
     print(request.cookies)
-    if 'user' not in session:#todo 'session' in request.cookies
+    if 'user' not in session:
         return jsonify(msg="No user logged in found in session!")
 
     user_auth_dict = session['user'] # Firebase-auth user record, not the firestore custom one
@@ -166,7 +165,6 @@ def cookies_test():#TODO
     user_dict = firestore_db.collection(u'Users')\
         .document(request.cookies["user_uid"]).get().to_dict()
 
-    #todo here include UID so that auth or session cookies on client side can request user info through API ?
 
     if user_dict['userType'] != "ADMIN":
         #del user_dict['pwdHash'] #bytes are not serializable + cross origin requests should have direct access to this in response
@@ -227,21 +225,25 @@ def signin():
 
 @app.route('/firebase-api/logout')
 def logout():
-    if 'user' not in session and 'BACKEND_SESSION_ENDED' in request.cookies:
-        response = make_response("Backend session has terminated, frontend needs to clear necessary storage or remaining cookies...")
-        response.set_cookie("BACKEND_SESSION_ENDED",'true',expires=1800)
-        return response
-
-    print(session['user'], "\n\tJUST LOGGED OUT !")
-    loggedout_user = session.pop('user')
-    response = make_response(f"Log out : {json.dumps(loggedout_user)} . " + \
-                             "Delete token cookies so frontend knows user is not authentificated or authorized anymore")
+    # if 'user' not in session and 'BACKEND_SESSION_ENDED' not in request.cookies:
+    #     response = make_response("Backend session has terminated, frontend needs to clear necessary storage or remaining cookies...")
+    #     response.set_cookie("BACKEND_SESSION_ENDED",'true',expires=1800)
+    #     return response
+    if 'user' not in session:
+        response =  make_response("No user to logout in the backend!")
+    else:
+        print(session['user'], "\n\tJUST LOGGED OUT !")
+        loggedout_user = session.pop('user')
+        response = make_response(f"Log out : {json.dumps(loggedout_user)} . " + \
+                                 "Delete token cookies so frontend knows user is not authentificated or authorized anymore")
 
     #TODO CHange once securit with idToken and refresh token has been done !!!
-    for tokenAuthCookieToRemove in ["loggedin_uid","access_token","refresh_token"]:
-        if tokenAuthCookieToRemove in request.cookies:
-            response.set_cookie(tokenAuthCookieToRemove,'',expires=0) # auto deletion
-    response.set_cookie("BACKEND_SESSION_ENDED",'true',expires=1800)
+    userCookiesHashset = {"loggedin_uid","access_token","refresh_token"}
+
+    for tokenAuthCookieToRemove in set(request.cookies.keys()) & userCookiesHashset:
+        #response.set_cookie(tokenAuthCookieToRemove,'',expires=0) # auto deletion
+        response.delete_cookie(tokenAuthCookieToRemove)
+    # response.set_cookie("BACKEND_SESSION_ENDED",'true',expires=1800)
     return response #redirect(r'/')
 @app.route('/firebase-api/signup',methods=['POST','GET'])
 def signup():
@@ -370,10 +372,13 @@ def account_profile_view():
 @cross_origin()
 def get_user_details(_uid):
     _uid = _uid.strip()
-    if _uid == "current" and 'user' in session:
-        # print("USER IN SESSION !")
-        user_recordinfo = _auth.get_account_info(session['user']['idToken'])['users'][0]
-        _uid = user_recordinfo['localId']
+    if _uid == "current":
+        if 'user' in session:
+            user_recordinfo = _auth.get_account_info(session['user']['idToken'])['users'][0]
+            _uid = user_recordinfo['localId']
+        else:
+            return {}
+
     # print(_uid)
     # print(session)
     doc_ref = firestore_db.collection(u'Users').document(_uid)

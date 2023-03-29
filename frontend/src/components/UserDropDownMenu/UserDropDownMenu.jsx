@@ -42,15 +42,15 @@ const UserDropDownMenu = ({triggerMenuMarkup,triggeredUserUid}) => {
     //
     // }
 
-    let user = UserRESTAPI.parseCurrentUserObjFromCookies()
+    let user = UserRESTAPI.parseCurrentUserObjFromFrontendCache()
     
-    if (!UserRESTAPI.checkIfObjectIsValidUser(user)) {
-        user['uid'] = "qwertyuiopasdfghjklzxcvbnm12"
-        user['userType'] = "APPLICANT"
-        user['email'] = "anonymous@user.boucani"
-        user['firstName'] = "Anonymous"
-        user['lastName'] = "User"
-    }
+    // if (!UserRESTAPI.checkIfObjectIsValidUser(user)) {
+    //     user['uid'] = "qwertyuiopasdfghjklzxcvbnm12"
+    //     user['userType'] = "APPLICANT"
+    //     user['email'] = "anonymous@user.boucani"
+    //     user['firstName'] = "Anonymous"
+    //     user['lastName'] = "User"
+    // }
 
     const permissionBasedMenuOptionsMarkup = useMemo(() =>
         UserRelationPermsFSM(user,otherUser), [user,otherUser]);
