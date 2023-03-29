@@ -15,10 +15,10 @@ before_install:
   - sudo mysql -e 'DROP DATABASE IF EXISTS flask_test_mysql_db'
   - sudo mysql -e "CREATE DATABASE IF NOT EXISTS flask_test_mysql_db"
   - sudo mysql -u root --default-character-set=utf8 flask_test_mysql_db < backend/db_schemas_for_test/comment_post.sql
-  - "npm run build"
+  - "npm run build --prefix ./frontend"
 
 script:
-  - "npm start"
+  - "npm start --prefix ./frontend"
 
 jobs:
   include:
