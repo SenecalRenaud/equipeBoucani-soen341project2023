@@ -61,12 +61,17 @@ export default class CommentAPIService{
                 if(response.ok){
                     return response;
                 }else{
-                    console.log('no response after AJAX sign in CORS request to backend...');
+                    console.log('BAD SIGNIN RESPONSE AFTER AJAX FETCH !');
+                    response.json().then(data => {
+                        throw new Error(data.message)
+                    }
+                    ).catch(err => alert(err))
                 }
 
             })
             .then(data => data.json())
             .then(auth_json => {
+
                 let expires = new Date();
                 expires.setTime(expires.getTime() + (auth_json.expires_in * 250 ));
                 Cookies.set('access_token', auth_json.idToken);
@@ -117,9 +122,9 @@ export default class CommentAPIService{
         )
     }
     static UserLogout(){
-        Cookies.remove('access_token');
-        Cookies.remove('refresh_token');
-        Cookies.remove('loggedin_uid');
+
+
+        Cookies.remove('BACKEND_SESSION_ENDED')
 
         window.localStorage.clear()
 
@@ -129,6 +134,11 @@ export default class CommentAPIService{
         }).then(response => {
             return Promise.resolve("User logged out properly");
         });
+
+        // Backend should have dealt with them, used to ensure if synchronization errors...
+        Cookies.remove('access_token');
+        Cookies.remove('refresh_token');
+        Cookies.remove('loggedin_uid');
 
 }
 }

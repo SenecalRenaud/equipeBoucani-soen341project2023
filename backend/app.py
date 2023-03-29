@@ -212,13 +212,26 @@ def signin():
             print(user, "\n\tJUST SIGNED IN !!!")
             return jsonify(auth_user_response)
             # return redirect("/")
-        except Exception as err:
-            print(err)
-            return {'message': "Failed login"}, 401
+        except HTTPError as err:
+            # print(err.__context__.args)
+            parsedHttpErr = json.loads(err.args[1])
 
+            login_err_resp = make_response(parsedHttpErr['error'],401)
+            login_err_resp.status = parsedHttpErr['error']['message']
+            # login_err_resp.access_control_allow_credentials = True
+            print(login_err_resp.json,401)
+            return login_err_resp.json,401
+        except Exception as gen_err:
+            return {'message': str(gen_err)}
     return render_template("logintest.html")
+
 @app.route('/firebase-api/logout')
 def logout():
+    if 'user' not in session and 'BACKEND_SESSION_ENDED' in request.cookies:
+        response = make_response("Backend session has terminated, frontend needs to clear necessary storage or remaining cookies...")
+        response.set_cookie("BACKEND_SESSION_ENDED",'true',expires=1800)
+        return response
+
     print(session['user'], "\n\tJUST LOGGED OUT !")
     loggedout_user = session.pop('user')
     response = make_response(f"Log out : {json.dumps(loggedout_user)} . " + \
@@ -228,7 +241,7 @@ def logout():
     for tokenAuthCookieToRemove in ["loggedin_uid","access_token","refresh_token"]:
         if tokenAuthCookieToRemove in request.cookies:
             response.set_cookie(tokenAuthCookieToRemove,'',expires=0) # auto deletion
-
+    response.set_cookie("BACKEND_SESSION_ENDED",'true',expires=1800)
     return response #redirect(r'/')
 @app.route('/firebase-api/signup',methods=['POST','GET'])
 def signup():
@@ -476,6 +489,10 @@ def update_user_details(_uid):
         print({'message': f'Sucessfully updated user profile {_uid}'}, 200)
     return redirect("/firebase-api/userprofile")
 
+#
+# =================== COMMENTPOSTS ===================
+#
+
 @app.route('/get', methods=['GET'])
 def get_all_commentposts():
     """
@@ -556,25 +573,9 @@ def delete_commentpost(_id):
 
     return commentpost_schema.jsonify(commentpost)
 
-
-@app.route("/addjob", methods=['POST'])
-@cross_origin()
-def addJobPost():
-    jobtype, title, location, salary, description, tags,employerUid = request.json['jobtype'], request.json['title'], request.json[
-        'location'], request.json['salary'], request.json['description'], request.json['tags'],request.json['employerUid']
-
-    jobpost = JobPost(jobtype, title, location, salary, description, tags,employerUid)
-    db.session.add(jobpost)
-    db.session.commit()
-
-    return jobpost_schema.jsonify(jobpost)
-
-
-@app.route("/getjob/<_id>/", methods=['GET'])
-def get_jobpost(_id):
-    jobpost = JobPost.query.get(_id)
-    return jobpost_schema.jsonify(jobpost)
-
+#
+# =================== JOBPOSTS ===================
+#
 
 @app.route('/getjob', methods=['GET'])  # methods = [list http reqs methods]
 def get_all_jobposts():
@@ -598,6 +599,25 @@ def get_all_jobposts():
         return jsonify(response_fieldsdict)
 
     return jsonify(results_arr)  # **{'Hello' : 'World'})
+
+
+@app.route("/getjob/<_id>/", methods=['GET'])
+def get_jobpost(_id):
+    jobpost = JobPost.query.get(_id)
+    return jobpost_schema.jsonify(jobpost)
+
+@app.route("/addjob", methods=['POST'])
+@cross_origin()
+def addJobPost():
+    jobtype, title, location, salary, description, tags,employerUid = request.json['jobtype'], request.json['title'], request.json[
+        'location'], request.json['salary'], request.json['description'], request.json['tags'],request.json['employerUid']
+
+    jobpost = JobPost(jobtype, title, location, salary, description, tags,employerUid)
+    db.session.add(jobpost)
+    db.session.commit()
+
+    return jobpost_schema.jsonify(jobpost)
+
 
 
 @app.route("/updatejob/<_id>/", methods=['PUT'])
@@ -636,7 +656,10 @@ def delete_jobpost(_id):
 
     return jobpost_schema.jsonify(jobpost)
 
-
+#
+# =================== FLASK MAIL TESTS ===================
+#
+#TODO Unit tests might be needed for the notification system(s) soon.
 @app.route("/sendmail")
 def flask_mail_send_test():
     try:
