@@ -16,6 +16,7 @@ def test_multiple_browsers():
     driver.get("localhost:3000")
 
     title = driver.title
+    print(title)
     assert title == "React App", "Title is incorrect"
 
     driver.implicitly_wait(0.5)
