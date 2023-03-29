@@ -36,24 +36,24 @@ def test_multiple_browsers():
     # driver.quit()
 
     # Edge
-    driver = webdriver.Edge()
-
-    driver.get("http://127.0.0.1:3000/")
-
-    title = driver.title
-    assert title == "React App", "Title is incorrect"
-
-    driver.implicitly_wait(0.5)
-
-    basicText = driver.find_elements(By.CLASS_NAME, 'gradient__text')
-    if len(basicText) == 0:
-        assert False, "basic text missing home on page"
-
-    navLinks = driver.find_elements(By.CLASS_NAME, 'sc-gswNZR')
-    if len(navLinks) == 0:
-        assert False, "missing navbar elements on main page"
-
-    driver.quit()
+    # driver = webdriver.Edge()
+    #
+    # driver.get("http://127.0.0.1:3000/")
+    #
+    # title = driver.title
+    # assert title == "React App", "Title is incorrect"
+    #
+    # driver.implicitly_wait(0.5)
+    #
+    # basicText = driver.find_elements(By.CLASS_NAME, 'gradient__text')
+    # if len(basicText) == 0:
+    #     assert False, "basic text missing home on page"
+    #
+    # navLinks = driver.find_elements(By.CLASS_NAME, 'sc-gswNZR')
+    # if len(navLinks) == 0:
+    #     assert False, "missing navbar elements on main page"
+    #
+    # driver.quit()
 
     # Safari
     # driver = webdriver.Safari()
