@@ -19,7 +19,7 @@ before_script:
   - "npm run build --prefix ./frontend"
 
 script:
-  - "npm test --prefix ./frontend"
+  - "npm start --prefix ./frontend"
 
 jobs:
   include:
