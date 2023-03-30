@@ -21,6 +21,7 @@ const ProfilePage = () => {
 
 
       useEffect(() => {
+          // console.log("GET USER DETAILS FROM SERVER SIDE !")
           CommentAPIService.GetUserDetails(url_params.uid)//TODO Slugify for prettier URL ...
         .then(json => setUserProfileData(json));
   }, [url_params.uid]);

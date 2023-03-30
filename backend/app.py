@@ -30,9 +30,12 @@ from models import CommentPost, CommentPostSchema, JobPost, JobPostSchema
 import logging
 import os
 from functools import partial,reduce
+import random
 import itertools
 import operator
 import json
+import string
+import re
 
 #*******************************
 from config import ApplicationSessionConfig #env vars + Session configs
@@ -368,17 +371,38 @@ def account_profile_view():
 
     return render_template("profiletest.html",**context)
 
+# @app.route('/api/authenticate', methods=['POST'])
+# def authenticate():
+#     id_token = request.json['idToken']
+#     refresh_token = request.json['refreshToken']
+#     # Verify the ID token
+#     decoded_token = auth.verify_id_token(id_token)
+#     # Authenticate the user with the refresh token
+#     session_cookie = auth.create_session_cookie(refresh_token)
+#     response = jsonify({'sessionCookie': session_cookie})
+#     # Set the session cookie as an HTTP-only cookie
+#     response.set_cookie('session', session_cookie.decode("utf-8"),
+#                         httponly=True, secure=True)
+#     return response
+
 @app.route("/firebase-api/get-user/<_uid>/")
 @cross_origin()
 def get_user_details(_uid):
     _uid = _uid.strip()
+
     if _uid == "current":
         if 'user' in session:
+
             user_recordinfo = _auth.get_account_info(session['user']['idToken'])['users'][0]
             _uid = user_recordinfo['localId']
         else:
             return {}
 
+    print(session)
+    if 'user' in session:
+        id_token = session['user']['idToken']
+        decoded_token = auth.verify_id_token(id_token)
+        print(decoded_token)
     # print(_uid)
     # print(session)
     doc_ref = firestore_db.collection(u'Users').document(_uid)
@@ -614,8 +638,15 @@ def get_jobpost(_id):
 @app.route("/addjob", methods=['POST'])
 @cross_origin()
 def addJobPost():
+
     jobtype, title, location, salary, description, tags,employerUid = request.json['jobtype'], request.json['title'], request.json[
         'location'], request.json['salary'], request.json['description'], request.json['tags'],request.json['employerUid']
+
+    if request.args.get("random-fields"):
+        title = ''.join(random.choice(string.digits + string.ascii_letters) for _ in range(11))
+        salary = random.randint(500,12000)
+        description = ''.join(random.choice(string.printable) for _ in range(140))
+
 
     jobpost = JobPost(jobtype, title, location, salary, description, tags,employerUid)
     db.session.add(jobpost)
@@ -679,15 +710,6 @@ def flask_mail_send_test():
 
 
 if __name__ == '__main__':
-
-    # auth.update_user("VXmMwunX4eSDGNCVOt4m6nsR0R03",
-    #                  photo_url="https://storage.googleapis.com/boucani-webappv2.appspot.com/profilePictures/tumblr_static_filename.gif")
-    #
-    # auth.update_user("B39a36hOG9cSJJwaXGF1WS6J54x2",
-    #                  photo_url="https://storage.googleapis.com/boucani-webappv2.appspot.com/profilePictures/1OR7Jtk.png")
-    #
-    # auth.update_user("p8PSJ2iforSkT9szSg0lvGDCyyy2",
-    #                  photo_url="https://storage.googleapis.com/boucani-webappv2.appspot.com/profilePictures/OG_Spider_Man_2.jpg")
 
     port = int(os.environ.get('PORT', 5000))
     app.run(debug=True)

@@ -46,6 +46,42 @@ mainStorageBucket = storage.bucket(name=os.environ['FIREBASE_STORAGE_BUCKET'])
 
 firestore_db = adminsdk_firestore.client()
 
+# def authenticate_user(email="", password=""):
+    # user = auth.get_user_by_email(email)
+    # print(vars(user))
+    #
+    #
+    # uid = "HxlC0GZ2wuYHm7QRTXmE9GUDn402"
+    # custom_claims = {"admin": True}  # Optional custom claims
+    #
+    # strtoken = _auth.create_custom_token(uid,custom_claims,1)
+    # signedIn_user = _auth.sign_in_with_custom_token(strtoken)
+    # print(strtoken)
+    # # signedIn_user = _auth.sign_in_with_email_and_password(email, password)
+    # print(signedIn_user)
+    #
+    # print(_auth.get_account_info(signedIn_user))
+
+    # Generate an ID token
+    # id_token_encoded : bytes = auth.create_custom_token(uid, custom_claims)
+    # id_token : str = id_token_encoded.decode("utf-8")
+    #
+    # pyrebaseUserRecord = _auth.get_account_info(id_token)
+    # print(json.dumps(pyrebaseUserRecord))
+    # print(pyrebaseUserRecord)
+    # print(dict(**pyrebaseUserRecord))
+    # print(auth.verify_id_token(id_token_encoded))
+    # Generate a refresh token
+    # refresh_token = auth.generate_refresh_token(uid)
+    ##  print(_auth.refresh(refresh_token))
+
+
+    # #auth.create_session_cookie()
+    # #print(auth.verify_session_cookie())
+
+    # return None
+    # return id_token, refresh_token
+
 if __name__ == '__main__':
     doc_ref = firestore_db.collection(u'test_users').document(u'datafile1')
     doc_ref.set({
