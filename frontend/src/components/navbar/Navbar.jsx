@@ -10,22 +10,23 @@ import UserDropDownMenu from "../UserDropDownMenu/UserDropDownMenu";
 import JobPostingForm from "../../pages/PostAJob/JobPostingForm";
 
 const NavMenu = () => (
+    //can use activestyle={{}}
   <>
         <Nav>
-		    <NavLink to="/" activeStyle>
+		    <NavLink to="/">
 			    Home
 		    </NavLink>
             {
             window.localStorage.getItem("userType") === "EMPLOYER" &&
-            		    <NavLink to="/jobposting" activeStyle>
+            		    <NavLink to="/jobposting" >
                 Post a Job
 		    </NavLink>
             }
-            <NavLink to="/BACKEND_DEBUG" activeStyle>
+            <NavLink to="/BACKEND_DEBUG" >
                 [BACKEND CRUDV2 &emsp;DEBUG ANTOINE]
             </NavLink>
 
-            <NavLink to="/viewjobposts" activeStyle>
+            <NavLink to="/viewjobposts">
                 View Job Posts
             </NavLink>
 

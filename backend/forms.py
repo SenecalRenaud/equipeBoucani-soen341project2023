@@ -3,7 +3,7 @@
 #todo from wtfforms.validators import ... , and also import regex
 
 from functools import wraps
-from flask import g, request, redirect, url_for,jsonify
+from flask import g, request, redirect, url_for
 
 def login_required(f):
     @wraps(f)

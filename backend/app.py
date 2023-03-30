@@ -23,7 +23,7 @@ from werkzeug.utils import secure_filename
 
 from flask_cors import CORS,cross_origin #?  (for cross origin requests)
 from flask_bcrypt import Bcrypt #? (keys and password hashing engine)
-# from flask_session import Session // TODO: Assert Accept certain MIME Types/Subtypes
+# from flask_session import Session # TODO: Assert Accept certain MIME Types/Subtypes
 
 from models import CommentPost, CommentPostSchema, JobPost, JobPostSchema
 
@@ -60,16 +60,18 @@ from firebase_admin.exceptions import FirebaseError,AlreadyExistsError
 from firebase_admin._auth_utils import EmailAlreadyExistsError, EmailNotFoundError, UserNotFoundError
 
 app = Flask(__name__)
+
+app.config.from_object(ApplicationSessionConfig)
+
+#Session(app)
+
 # TODO Might need to add flags here for CSRF cookie,credentials, server-side and request handling, security...
 cors = CORS(app,
             supports_credentials=True # Access-Control-Allow-Credentials exposed for other servers / origins (i.e. outside backend app folder)
                                       # Will allow AJAX/XMLHttpRequests in js client to fetch session cookies for state and user log
             )
 
-app.config.from_object(ApplicationSessionConfig)
-
 bcrypt = Bcrypt(app)
-# Session(app)
 
 db.init_app(app)
 
@@ -89,17 +91,21 @@ commentposts_schema = CommentPostSchema(many=True)
 jobpost_schema = JobPostSchema()
 jobposts_schema = JobPostSchema(many=True)
 
-#TODO Might remove logger once the web app has scaled more
-logger = logging.getLogger('tdm')
-logger.setLevel(logging.INFO)
+
+app.logger = logging.getLogger("myapp")
+app.logger.setLevel(logging.ERROR)
+#app.logger.addHandler(.....)
+
+logging.getLogger('werkzeug').setLevel(logging.WARNING)
+
+print("\033[32;7;1m FLASK APP HAS STARTED ! \033[0m")
 
 
-# logger.addHandler(handler
-@app.after_request
-def after_request(response):
-    timestamp = strftime('[%Y-%b-%d %H:%M]')
-    logger.error('%s %s %s %s %s %s', timestamp, request.remote_addr, request.method, request.scheme, request.full_path, response.status)
-    return response
+# @app.after_request
+# def after_request(response):
+#     timestamp = strftime('[%Y-%b-%d %H:%M]')
+#     app.logger.error('%s %s %s %s %s %s', timestamp, request.remote_addr, request.method, request.scheme, request.full_path, response.status)
+#     return response
 
 #TODO Seperate once database has scaled... For now, single modules are convenient
 from models import *
@@ -233,6 +239,7 @@ def logout():
     #     response.set_cookie("BACKEND_SESSION_ENDED",'true',expires=1800)
     #     return response
     if 'user' not in session:
+        print("No user to logout in the backend!")
         response =  make_response("No user to logout in the backend!")
     else:
         print(session['user'], "\n\tJUST LOGGED OUT !")
@@ -241,7 +248,7 @@ def logout():
                                  "Delete token cookies so frontend knows user is not authentificated or authorized anymore")
 
     #TODO CHange once securit with idToken and refresh token has been done !!!
-    userCookiesHashset = {"loggedin_uid","access_token","refresh_token"}
+    userCookiesHashset = {"loggedin_uid","access_token","refresh_token","session"}
 
     for tokenAuthCookieToRemove in set(request.cookies.keys()) & userCookiesHashset:
         #response.set_cookie(tokenAuthCookieToRemove,'',expires=0) # auto deletion
@@ -381,7 +388,7 @@ def account_profile_view():
 #     session_cookie = auth.create_session_cookie(refresh_token)
 #     response = jsonify({'sessionCookie': session_cookie})
 #     # Set the session cookie as an HTTP-only cookie
-#     response.set_cookie('session', session_cookie.decode("utf-8"),
+#     response.set_cookie('session2', session_cookie.decode("utf-8"),
 #                         httponly=True, secure=True)
 #     return response
 
@@ -392,17 +399,16 @@ def get_user_details(_uid):
 
     if _uid == "current":
         if 'user' in session:
-
             user_recordinfo = _auth.get_account_info(session['user']['idToken'])['users'][0]
             _uid = user_recordinfo['localId']
         else:
             return {}
 
-    print(session)
-    if 'user' in session:
-        id_token = session['user']['idToken']
-        decoded_token = auth.verify_id_token(id_token)
-        print(decoded_token)
+
+    # if 'user' in session:
+    #     id_token = session['user']['idToken']
+    #     decoded_token = auth.verify_id_token(id_token)
+    #     print(decoded_token)
     # print(_uid)
     # print(session)
     doc_ref = firestore_db.collection(u'Users').document(_uid)

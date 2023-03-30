@@ -103,7 +103,7 @@ export default class CommentAPIService{
 
     static async GetUserDetails(uid){
         return await fetch(
-            `http://localhost:5000/firebase-api/get-user/${uid.toString()}/`,
+            `/firebase-api/get-user/${uid.toString()}/`,
             {
                 'method': 'GET',
         //                  headers : {
@@ -122,27 +122,35 @@ export default class CommentAPIService{
 
         ).then(
             data => data.json()
+        ).catch(err =>
+            console.log("SOME ERROR OCCURED WHILE FETCHING USER DATA: ", err)
         )
     }
     static UserLogout({frontend_logout_only=false} ={}){
 
-        // Cookies.remove('BACKEND_SESSION_ENDED')
+        window.localStorage.clear()
 
+        if(!frontend_logout_only) {
+
+            fetch(`/firebase-api/logout`, { // if fails... try: http://localhost:5000?goto=logout
+
+            }).then(response => {
+                console.log(response)
+                return Promise.resolve("User logged out properly");
+            }).catch(
+                err => {
+
+                    console.log("FAILED TO LOGOUT ON ONE OF THE SERVERS !")
+                    console.error(err)
+                    console.log(err)
+                }
+            );
+        }
         // Backend should have dealt with them, used to ensure if synchronization errors...
         Cookies.remove('access_token');
         Cookies.remove('refresh_token');
         Cookies.remove('loggedin_uid');
-
-        window.localStorage.clear()
-
-        if(!frontend_logout_only) {
-            fetch("http://localhost:5000/firebase-api/logout", {
-                credentials: "include"
-            }).then(response => {
-                return Promise.resolve("User logged out properly");
-            });
-        }
-
+        Cookies.remove('session');
 
 
 

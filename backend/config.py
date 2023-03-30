@@ -34,15 +34,16 @@ RDBMS_ALCHEMY_HNAME,DB_NAME,DB_USER,DB_PASS,DB_HOST,DB_PORT = \
 class ApplicationSessionConfig:
     SECRET_KEY = os.environ["SECRET_KEY"] # should set flask.Flask.secret_key
     SESSION_TYPE = 'filesystem'
+    SESSION_FILE_DIR = "local_flask_sessions" #If you change this name, add to .gitignore (NOTE: still low security threat)
 
     TEMP_UPLOAD_PATH = "uploads_cache"
 
     CORS_HEADERS = "Content-Type"
 
     SESSION_COOKIE_SECURE = False #when True, limit the cookies to HTTPS traffic only [for production].
-    # SESSION_COOKIE_HTTPONLY=True #when True, prevents any client-side usage of the session cookie
+    SESSION_COOKIE_HTTPONLY=False #when True, prevents any client-side usage of the session cookie
     # REMEMBER_COOKIE_HTTPONLY=True
-    # SESSION_COOKIE_SAMESITE="Strict"
+    SESSION_COOKIE_SAMESITE="None" #else, "Strict"
 
     SESSION_PERMANENT = False
     SESSION_USE_SIGNER = True
