@@ -25,7 +25,7 @@ from flask_cors import CORS,cross_origin #?  (for cross origin requests)
 from flask_bcrypt import Bcrypt #? (keys and password hashing engine)
 # from flask_session import Session # TODO: Assert Accept certain MIME Types/Subtypes
 
-from models import CommentPost, CommentPostSchema, JobPost, JobPostSchema
+from flask_wtf.csrf import CSRFProtect
 
 import logging
 import os
@@ -40,6 +40,7 @@ import re
 #*******************************
 from config import ApplicationSessionConfig #env vars + Session configs
 from models import db,ma # SQLAlchemyInterface and MarshmallowSchema objects  to integrate
+from models import CommentPost, CommentPostSchema, JobPost, JobPostSchema
 
 from authentification import fb_config,\
     fb_adminsdk_cred,\
@@ -71,6 +72,7 @@ cors = CORS(app,
                                       # Will allow AJAX/XMLHttpRequests in js client to fetch session cookies for state and user log
             )
 
+
 bcrypt = Bcrypt(app)
 
 db.init_app(app)
@@ -79,6 +81,10 @@ ma.init_app(app)
 
 mail = Mail(app)
 mail.init_app(app)
+
+#todo csrf = CSRFProtect()
+#todo csrf.init_app(app)
+
 
 with app.app_context():
     db.create_all()
@@ -193,15 +199,40 @@ def signin():
         password = request.form.get('password')
 
         try:
+
+
+            # From auth... validity of idToken unchecked however.
+            user = auth.get_user_by_email(email)
+
+            # From Firestore
+            firestore_user = firestore_db.collection(u'Users').document(user.uid).get().to_dict()
+
+            # Can be validated through decoded id tokens. Ensures safe role assignment.
+            auth.set_custom_user_claims(user.uid,
+                                {
+                                    firestore_user['userType'].lower(): True
+                                }
+            )
+
             user = _auth.sign_in_with_email_and_password(email,password)
-            firestore_user = firestore_db.collection(u'Users').document(user['localId']).get().to_dict()
+
+            #TODO decoded_claims = auth.verify_id_token(id_token)
+            # # Only process if the user signed in within the last 5 minutes.
+            # if time.time() - decoded_claims['auth_time'] < 5 * 60:
+            #
+            # expires_in = datetime.timedelta(days=5)
+            # session_cookie = auth.create_session_cookie(id_token, expires_in=expires_in)
+            # expires = datetime.datetime.now() + expires_in
+            # response.set_cookie(
+            #     'session', session_cookie, expires=expires, httponly=True, secure=True)
+
             pwdHash = firestore_user.pop('pwdHash')
             print("Password bcrypt few-rounds salted hash matched: ",end=" ")
             print(bcrypt.check_password_hash(
                 pwdHash,password
             ))
 
-            session['user'] = user# ['email'] #todo: high-level identifier e.g. username goes here
+            session['user'] = user
 
             auth_user_response = user.copy()
             userRecordInfo = _auth.get_account_info(user['idToken'])['users'][0]
@@ -215,6 +246,7 @@ def signin():
                     lastSeenEpoch = userRecordInfo['lastLoginAt']
                 )
             )
+
 
             print(user, "\n\tJUST SIGNED IN !!!")
             return jsonify(auth_user_response)
@@ -234,10 +266,7 @@ def signin():
 
 @app.route('/firebase-api/logout')
 def logout():
-    # if 'user' not in session and 'BACKEND_SESSION_ENDED' not in request.cookies:
-    #     response = make_response("Backend session has terminated, frontend needs to clear necessary storage or remaining cookies...")
-    #     response.set_cookie("BACKEND_SESSION_ENDED",'true',expires=1800)
-    #     return response
+
     if 'user' not in session:
         print("No user to logout in the backend!")
         response =  make_response("No user to logout in the backend!")
@@ -247,13 +276,20 @@ def logout():
         response = make_response(f"Log out : {json.dumps(loggedout_user)} . " + \
                                  "Delete token cookies so frontend knows user is not authentificated or authorized anymore")
 
-    #TODO CHange once securit with idToken and refresh token has been done !!!
-    userCookiesHashset = {"loggedin_uid","access_token","refresh_token","session"}
+    if (session_cookie := request.cookies.get('session',None)):
+        # print(type(session_cookie))
+        # decoded_customclaims = auth.verify_session_cookie(session_cookie)
+        # auth.revoke_refresh_tokens(decoded_customclaims['sub']) #Log out user's all other sessions with active idTokens
+
+        response.set_cookie('session',expires=0) # Kill session cookie !
+
+
+    #TODO CHange once securit with idToken and refresh token has been done !!! Important tokens are in cookies only for DEBUG !
+    userCookiesHashset = {"loggedin_uid","access_token","refresh_token"}
 
     for tokenAuthCookieToRemove in set(request.cookies.keys()) & userCookiesHashset:
-        #response.set_cookie(tokenAuthCookieToRemove,'',expires=0) # auto deletion
         response.delete_cookie(tokenAuthCookieToRemove)
-    # response.set_cookie("BACKEND_SESSION_ENDED",'true',expires=1800)
+
     return response #redirect(r'/')
 @app.route('/firebase-api/signup',methods=['POST','GET'])
 def signup():
@@ -332,6 +368,12 @@ def signup():
             # userextrainfo = UserExtraInfo(user.uid,UserType[userTypeVal])
             # db.session.add(userextrainfo)
             # db.session.commit()
+            # Can be validated through decoded id tokens. Ensures safe role assignment.
+            auth.set_custom_user_claims(user.uid,
+                                {
+                                    user_infofields['userType'].lower(): True
+                                }
+                        )
 
             print( {'message': f'Successfully created user {user.uid}'},200)
             session['user'] = _auth.sign_in_with_email_and_password(email, password)
@@ -378,19 +420,34 @@ def account_profile_view():
 
     return render_template("profiletest.html",**context)
 
-# @app.route('/api/authenticate', methods=['POST'])
-# def authenticate():
-#     id_token = request.json['idToken']
-#     refresh_token = request.json['refreshToken']
-#     # Verify the ID token
-#     decoded_token = auth.verify_id_token(id_token)
-#     # Authenticate the user with the refresh token
-#     session_cookie = auth.create_session_cookie(refresh_token)
-#     response = jsonify({'sessionCookie': session_cookie})
-#     # Set the session cookie as an HTTP-only cookie
-#     response.set_cookie('session2', session_cookie.decode("utf-8"),
-#                         httponly=True, secure=True)
-#     return response
+@app.route('/firebase-api/authenticate', methods=['POST','GET'])
+@cross_origin()
+def authenticate():
+    # id_token = request.json['idToken']
+    # refresh_token = request.json['refreshToken']
+    # print(request.json,end="\n\n\r")
+    print(request.headers,end="\n\n\r")
+
+    if request.environ.get('HTTP_X_FORWARDED_FOR') is None:
+        print(request.environ['REMOTE_ADDR'])
+        return jsonify({'ip': request.environ['REMOTE_ADDR']}), 200
+    else:
+        print(request.environ['HTTP_X_FORWARDED_FOR'])
+        return jsonify({'ip': request.environ['HTTP_X_FORWARDED_FOR']}), 200
+
+
+    # Verify the ID token
+    # decoded_token = auth.verify_id_token(id_token)
+    # # Authenticate the user with the refresh token
+    # session_cookie = auth.create_session_cookie(refresh_token)
+    # response = jsonify({'sessionCookie': session_cookie})
+    # # Set the session cookie as an HTTP-only cookie
+    # response.set_cookie('session2', session_cookie.decode("utf-8"),
+    #                     httponly=True, secure=True)
+    #TODO auth.set_custom_user_claims()
+
+
+    #return response
 
 @app.route("/firebase-api/get-user/<_uid>/")
 @cross_origin()
