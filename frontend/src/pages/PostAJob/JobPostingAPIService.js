@@ -36,4 +36,15 @@ export default class JobPostingAPIService{
             .then(response => response.json())
             .catch(error => console.log("API CORE EXCEPTION... " + error))
     }
+
+    static async sendNotification(job_title, email, applicant_name){
+        return await fetch('http://localhost:5000/sendmail/' + email + '/' + job_title + '/' + applicant_name + '/', {
+            headers : {
+                'Content-Type':'application/json',
+            },
+        })
+            .then(response => response.json())
+            .catch(error => console.log("API CORE EXCEPTION... " + error))
+    }
 }
+

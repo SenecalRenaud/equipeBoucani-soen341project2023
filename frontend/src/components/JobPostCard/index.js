@@ -8,6 +8,7 @@ import UserDropDownMenu from "../UserDropDownMenu/UserDropDownMenu";
 import {UserAvatarWithText} from "../Avatars";
 import CommentAPIService from "../../pages/BACKEND_DEBUG/CommentAPIService";
 import UserRESTAPI from "../../restAPI/UserAPI";
+import {useParams} from "react-router-dom";
 export const CardTitle = styled.h1`
     font-size: 2em;
 `;
@@ -111,7 +112,7 @@ export const CardCommentButton = styled.button`
 
 `;
 
-const JobPostCard = ({id, jobtype, title, description, location, salary, tags, date, editDate,employerUid}) => {
+const JobPostCard = ({id, jobtype, title, description, location, salary, tags, date, editDate, employerUid}) => {
     const [editJobType, setJobType] = useState(jobtype);
     const [editJobTitle, setJobTitle] = useState(title);
     const [editLocation, setLocation] = useState(location);
@@ -201,6 +202,14 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
         setIndustryTags([])
         setJobDescription('')
     };
+
+    const HandleApply = (event) => {
+        const applicantName = window.localStorage.firstName + window.localStorage.lastName;
+        JobPostingAPIService.sendNotification(title, employerUser.email, applicantName)
+            .then((any)=> window.location.reload())
+            .catch(error => console.log('Following error occured after fetching from API: ',error))
+    }
+
     return (<>
         <CardArticle>
             {
@@ -244,7 +253,7 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
             {
                 //TODO: Make checks to see if already in applied list !
                 (window.localStorage.getItem("userType") === "APPLICANT") &&
-                <CardApplyButton  onClick={(e) => {alert("TODO: Implement Application system !")}}>  Apply </CardApplyButton>
+                <CardApplyButton type="button" onClick={(e) => {HandleApply(id, employerUid)}}>  Apply </CardApplyButton>
             }
 
 
