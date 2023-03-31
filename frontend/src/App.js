@@ -17,6 +17,7 @@ import ViewJobPosts from "./pages/JobPosts/ViewJobPosts";
 import CommentAPIService from "./pages/BACKEND_DEBUG/CommentAPIService";
 import Cookies from 'js-cookie';
 import UserRESTAPI from "./restAPI/UserAPI";
+import LoggedInUserProvider from "./context/LoggedInUserProvider";
 
 function App() {
     const [comments, setComments] = useState([""]);
@@ -65,9 +66,12 @@ function App() {
       let userLoggedInFrontendAuth;
       try {
           userLoggedInFrontendAuth = UserRESTAPI.parseCurrentUserObjFromFrontendCache()
+          console.log(UserRESTAPI.parseCurrentUserObjFromFrontendCache())
+          console.log(window.localStorage)
           if(Object.keys(userLoggedInFrontendAuth).length === 0)
               throw new Error("Incomplete (or empty) frontend session cache for logged in user descriptor")
       } catch( frontendCachedUserIncompleteError ) {
+          console.log(frontendCachedUserIncompleteError)
           console.log("AAAAAAAAAAAA")
           alert("BOUCANI SECURITY: Some Local User Descriptor / Cache  manual alterations were detected. \n\r\tImmediate logout. \n\r\t Status: 401")
           CommentAPIService.UserLogout() // Completely logout server and client side
@@ -88,6 +92,7 @@ function App() {
     )
 
 return (
+    <LoggedInUserProvider>
     <Router>
     <Navbar />
 
@@ -106,6 +111,7 @@ return (
 
     </Routes>
     </Router>
+    </LoggedInUserProvider>
 );
 }
 

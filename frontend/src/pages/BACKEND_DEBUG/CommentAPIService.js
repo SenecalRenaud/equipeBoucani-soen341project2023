@@ -72,8 +72,8 @@ export default class CommentAPIService{
             .then(data => data.json())
             .then(auth_json => {
 
-                let expires = new Date();
-                expires.setTime(expires.getTime() + (auth_json.expires_in * 250 ));
+                // let expires = new Date();
+                // expires.setTime(expires.getTime() + (auth_json.expires_in * 250 ));
                 Cookies.set('access_token', auth_json.idToken);
                 Cookies.set('refresh_token', auth_json.refreshToken);
                 Cookies.set('loggedin_uid', auth_json.localId);
@@ -93,9 +93,13 @@ export default class CommentAPIService{
                 window.localStorage.setItem("uid",auth_json.localId)
                     //TODO CryptoJs. auth_json.uid
 
-
+                return auth_json
             })
-            .then((any)=> window.location.replace('http://localhost:3000/'))
+            .then((auth_json)=> {
+                    window.location.replace('http://localhost:3000/')
+                    return auth_json
+                }
+            )
             .catch(error => console.log('Following error occured after fetching from API: ',error))
 
     };

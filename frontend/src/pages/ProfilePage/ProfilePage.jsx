@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import './ProfilePage.css';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faEnvelope, faPhone,faUser} from "@fortawesome/free-solid-svg-icons";
@@ -7,22 +7,24 @@ import toTitleCase from '../../utils/strings_and_text_responses'
 import {useParams} from "react-router-dom";
 import CommentAPIService from "../BACKEND_DEBUG/CommentAPIService";
 
+// import {LoggedInUserContext} from "../../context/LoggedInUserContext";
+
 //TODO: useLocation() to do page view count inside a useEffect(,deps:[location])
 
 
-//TODO: Create a createContext() for user viewing and use useContext() hooks
 const ProfilePage = () => {
+    const [userProfileData,setUserProfileData] = useState({});
     const url_params = useParams(); //Todo CryptoJS.AES.decrypt(ciphertext.toString(), 'secret key 123') decode bytes
 
-    const [userProfileData, setUserProfileData] = useState({});
+    //Antoine context load, avoids useless props-based reloads of components
+    // const {loggedInUser} = useContext(LoggedInUserContext);
 
     const DATETIME_OPTIONS = {hour: '2-digit',minute: '2-digit', weekday: 'short',month: 'long',day: 'numeric', year: 'numeric'}
     // String.prototype.toTitleCase = (str) => toTitleCase(str)
 
-
       useEffect(() => {
           // console.log("GET USER DETAILS FROM SERVER SIDE !")
-          CommentAPIService.GetUserDetails(url_params.uid)//TODO Slugify for prettier URL ...
+          CommentAPIService.GetUserDetails(url_params.uid)//Could Slugify for prettier URL ...
         .then(json => setUserProfileData(json));
   }, [url_params.uid]);
 

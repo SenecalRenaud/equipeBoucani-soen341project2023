@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React, {useContext, useState} from 'react';
 import './SignInForm.css';
 import CommentAPIService from "../BACKEND_DEBUG/CommentAPIService";
 import {Link} from "react-router-dom";
 // import { useCookies } from 'react-cookie';
-import Cookies from 'js-cookie';
+import {LoggedInUserContext} from "../../context/LoggedInUserContext";
 const SignInForm = () => {
-    // const [cookies, setCookie, removeCookie] = useCookies(['access_token', 'refresh_token','loggedin_uid']);
+
+    // Antoine's single Context x Reducer user stateful information storage ! Efficient!
+    // If certain information are accessed often, one could redesign into small contexts
+    // for improved relative performance.
+    const { loggedInUser, setLoggedInUser, clearLoggedInUser } = useContext(LoggedInUserContext)
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -27,7 +32,16 @@ const SignInForm = () => {
         formData.append('email', email);
         formData.append('password', password);
 
-        CommentAPIService.UserSignIn(formData)
+        CommentAPIService.UserSignIn(formData).then(
+            auth_json => {
+                auth_json.uid = auth_json.localId
+                delete auth_json.localId
+                setLoggedInUser(auth_json)
+            }
+
+        )
+
+
     }
 
     return (
