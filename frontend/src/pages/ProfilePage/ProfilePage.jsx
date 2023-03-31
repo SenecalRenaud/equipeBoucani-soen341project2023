@@ -7,37 +7,43 @@ import toTitleCase from '../../utils/strings_and_text_responses'
 
 const ProfilePage = () => {
     const DATETIME_OPTIONS = {hour: '2-digit',minute: '2-digit', weekday: 'short',month: 'long',day: 'numeric', year: 'numeric'}
-    // String.prototype.toTitleCase = (str) => toTitleCase(str)
+    String.prototype.toTitleCase = (str) => toTitleCase(str)
 
-    if (Cookies.get("loggedin_uid") == null) {
-
-        return <div style={{color: 'white',textAlign: 'center',fontSize: '6em',fontFamily: 'Impact'}}>
-            <span> Unauthorized access to profile page route: Must log into user account to view this page</span>
-            <hr/>
-            <img src="https://i.imgflip.com/5132fw.png" alt="sadge cat"/>
-        </div>
-    }
+    // if (Cookies.get("loggedin_uid") == null) {
+    //
+    //     return <div style={{color: 'white',textAlign: 'center',fontSize: '6em',fontFamily: 'Impact'}}>
+    //         <span> Unauthorized access to profile page route: Must log into user account to view this page</span>
+    //         <hr/>
+    //         <img src="https://i.imgflip.com/5132fw.png" alt="sadge cat"/>
+    //     </div>
+    // }
     return (
 
         <container className="daddyContainer">
             <container className="profile_container_1">
-                <img className="profile_picture" src={window.localStorage.getItem('photo_url')} alt="pfp"/>
-                <h1 className="profile-content-username"> {window.localStorage.getItem('firstName')} </h1>
-                <h1 className="profile-content-username"> {window.localStorage.getItem('lastName')} </h1>
+                <img className="profile_picture" src="https://storage.googleapis.com/boucani-webappv2.appspot.com/profilePictures/julius-caesar.jpg" alt="pfp"/>
+                <h1 className="profile-content-username"> Julius-askjdhaksjhdkjh </h1>
+                <h1 className="profile-content-username"> Ceasar </h1>
                 <h1 className="profile-usertype">&nbsp; <FontAwesomeIcon icon={faUser}/>
-                    {toTitleCase(window.localStorage.getItem('userType'))}
+                    ADMIN
                 </h1>
                 {/*<h1 className="profile-phone"><FontAwesomeIcon icon={faPhone} /> PHONE NUMBER NOT ADDED</h1>*/}
                 <h1  className="profile-email">&nbsp; <FontAwesomeIcon icon={faEnvelope} />
-                    {window.localStorage.getItem('email')}
+                    julius.doesjuuls@hotmail.it
                 </h1>
                 <hr className="profile-line-seperator"></hr>
+                <h1 className="profile-content-lastSeen_title">
+                    Last logged in :
+                </h1>
                 <h1 className="profile-content-lastSeen">
-                    Last logged in : {new Date(parseInt(window.localStorage.getItem('lastSeenEpoch')))
+                    {new Date(parseInt(1679678786417))
                     .toLocaleString('us-en',DATETIME_OPTIONS)}
                 </h1>
+                <h1  className="profile-content-dateAdded_title">
+                    Date Added :
+                </h1>
                 <h1  className="profile-content-dateAdded">
-                    Date Added : {new Date(parseInt(window.localStorage.getItem('creationEpoch')))
+                     {new Date(parseInt(1679604942173))
                     .toLocaleString('us-en',DATETIME_OPTIONS)}
                 </h1>
 
@@ -57,8 +63,8 @@ Thank you for reading and I hope to share more of my journey with you soon.</h1>
             </container>
 
             <container className="profile_container_3">
-            <iframe className="profile_resume" src={window.localStorage.getItem('resume_url')}
-                    alt="resume" style={{width:'600px', height:'500px'}} >
+            <iframe className="profile_resume" src={"https://storage.googleapis.com/boucani-webappv2.appspot.com/resumes/Doc1.pdf"}
+                    alt="resume" style={{width:'100%', height:'800px',overflow: 'hidden'}} >
                 </iframe>
             </container>
         </container>
