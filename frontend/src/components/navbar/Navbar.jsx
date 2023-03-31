@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useRef, useState} from 'react'
 import { RiMenu3Line, RiCloseLin, RiCloseLine } from 'react-icons/ri'; //might be an error here if there isnt a node_modules present...
 import {Link, Route} from "react-router-dom";
 import './navbar.css';
@@ -8,6 +8,7 @@ import Cookies from 'js-cookie';
 import CommentAPIService from "../../pages/BACKEND_DEBUG/CommentAPIService";
 import UserDropDownMenu from "../UserDropDownMenu/UserDropDownMenu";
 import JobPostingForm from "../../pages/PostAJob/JobPostingForm";
+import {useDetectOutClickOrEsc} from "../../hooks/outside-clickorescape.hook";
 
 const NavMenu = () => (
     //can use activestyle={{}}
@@ -29,6 +30,27 @@ const NavMenu = () => (
             <NavLink to="/viewjobposts">
                 View Job Posts
             </NavLink>
+
+            <button onClick={(event => {
+                fetch(`https://geolocation-db.com/json/`//`http://localhost:5000/firebase-api/authenticate`
+                    // ,
+                    // {
+                    //     method: 'POST',
+                    //     headers: {
+                    //         'Content-Type':'application/json'
+                    //     },
+                    //     body: JSON.stringify({
+                    //         'idToken': Cookies.get('access_token'),
+                    //         'refreshToken' : Cookies.get('refresh_token')
+                    //     }
+                    //     )
+                    // }
+                    ).then(response => response.json())
+                    .then(data => console.log("AUTHENTICATE DATA", data.IPv4))
+                    .catch(err => console.log("AUTHENTICATE ERROR: ",err))
+            })}>
+                CHECK AUTHENTICATION
+            </button>
 
         </Nav>
   </>
@@ -86,7 +108,8 @@ const LoginOrSeeAccount = () => {
 }
 const Navbar = () => {
   //make it false in beggining, since it will cahnge to true when true
-  const [toggleMenu, setToggleMenu] = useState(false);
+  const minimizedMenuRef = useRef(null);
+  const [toggleMenu, setToggleMenu] = useDetectOutClickOrEsc(minimizedMenuRef,false);
   return (
     <div className='gpt3__navbar'>
 
@@ -109,7 +132,7 @@ const Navbar = () => {
 
       {toggleMenu
           ?
-          <div className='gpt3__navbar-menu'>
+          <div ref={minimizedMenuRef} className='gpt3__navbar-menu'>
           <RiCloseLine color="#fff" size={27} onClick={() => setToggleMenu(false)} />
             <div className="gpt3__navbar-menu_container scale-up-center">
               <div className="gpt3__navbar-menu_container-links">
