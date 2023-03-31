@@ -32,22 +32,27 @@ const NavMenu = () => (
             </NavLink>
 
             <button onClick={(event => {
-                fetch(`https://geolocation-db.com/json/`//`http://localhost:5000/firebase-api/authenticate`
-                    // ,
-                    // {
-                    //     method: 'POST',
-                    //     headers: {
-                    //         'Content-Type':'application/json'
-                    //     },
-                    //     body: JSON.stringify({
-                    //         'idToken': Cookies.get('access_token'),
-                    //         'refreshToken' : Cookies.get('refresh_token')
-                    //     }
-                    //     )
-                    // }
+                fetch(`https://geolocation-db.com/json/`
+
                     ).then(response => response.json())
                     .then(data => console.log("AUTHENTICATE DATA", data.IPv4))
                     .catch(err => console.log("AUTHENTICATE ERROR: ",err))
+
+                fetch(`http://localhost:5000/firebase-api/authenticate`
+                                        ,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type':'application/json',
+                            'Authorization':`Bearer ${Cookies.get('access_token')}`
+                        },
+                        body: JSON.stringify({
+                            'idToken': Cookies.get('access_token'),
+                            'refreshToken' : Cookies.get('refresh_token')
+                        }
+                        )
+                    }
+                    )
             })}>
                 CHECK AUTHENTICATION
             </button>

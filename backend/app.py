@@ -10,7 +10,8 @@ from flask import \
     redirect,\
     render_template,\
     url_for,\
-    make_response
+    make_response,\
+    flash
 from flask_mail import Mail, Message
 
 from requests import HTTPError
@@ -37,7 +38,9 @@ import json
 import string
 import re
 
+
 #*******************************
+from forms import authorized,login_required
 from config import ApplicationSessionConfig #env vars + Session configs
 from models import db,ma # SQLAlchemyInterface and MarshmallowSchema objects  to integrate
 from models import CommentPost, CommentPostSchema, JobPost, JobPostSchema
@@ -88,6 +91,9 @@ mail.init_app(app)
 
 with app.app_context():
     db.create_all()
+
+
+
 
 # TODO Separate once database has scaled... For now, single modules are convenient
 
@@ -420,12 +426,13 @@ def account_profile_view():
 
     return render_template("profiletest.html",**context)
 
-@app.route('/firebase-api/authenticate', methods=['POST','GET'])
+
+@app.route('/firebase-api/authenticate', methods=['POST'])
 @cross_origin()
+@authorized(admin=True)
 def authenticate():
-    # id_token = request.json['idToken']
-    # refresh_token = request.json['refreshToken']
-    # print(request.json,end="\n\n\r")
+    print("GOT AUTHORIZED !")
+
     print(request.headers,end="\n\n\r")
 
     if request.environ.get('HTTP_X_FORWARDED_FOR') is None:
@@ -444,7 +451,7 @@ def authenticate():
     # # Set the session cookie as an HTTP-only cookie
     # response.set_cookie('session2', session_cookie.decode("utf-8"),
     #                     httponly=True, secure=True)
-    #TODO auth.set_custom_user_claims()
+    # #auth.set_custom_user_claims()
 
 
     #return response
@@ -700,6 +707,7 @@ def get_jobpost(_id):
 
 @app.route("/addjob", methods=['POST'])
 @cross_origin()
+@authorized(employer=True)
 def addJobPost():
 
     jobtype, title, location, salary, description, tags,employerUid = request.json['jobtype'], request.json['title'], request.json[
@@ -720,6 +728,7 @@ def addJobPost():
 
 
 @app.route("/updatejob/<_id>/", methods=['PUT'])
+@authorized(employer=True,admin=True)
 def update_jobpost(_id):
     jobpost = JobPost.query.get(_id)
 
@@ -746,6 +755,7 @@ def update_jobpost(_id):
 
 
 @app.route("/deletejob/<_id>/", methods=['DELETE'])
+@authorized(employer=True,admin=True)
 def delete_jobpost(_id):
     jobpost = JobPost.query.get(_id)
 
