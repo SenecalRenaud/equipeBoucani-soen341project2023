@@ -705,7 +705,7 @@ def get_jobpost(_id):
     jobpost = JobPost.query.get(_id)
     return jobpost_schema.jsonify(jobpost)
 
-@app.route("/addjob", methods=['POST'])
+@app.route("/addjob", methods=['POST'],endpoint='addJobPost')
 @cross_origin()
 @authorized(employer=True)
 def addJobPost():
@@ -727,7 +727,7 @@ def addJobPost():
 
 
 
-@app.route("/updatejob/<_id>/", methods=['PUT'])
+@app.route("/updatejob/<_id>/", methods=['PUT'],endpoint='update_jobpost')
 @authorized(employer=True,admin=True)
 def update_jobpost(_id):
     jobpost = JobPost.query.get(_id)
@@ -754,7 +754,7 @@ def update_jobpost(_id):
     return jobpost_schema.jsonify(jobpost)
 
 
-@app.route("/deletejob/<_id>/", methods=['DELETE'])
+@app.route("/deletejob/<_id>/", methods=['DELETE'],endpoint='delete_jobpost')
 @authorized(employer=True,admin=True)
 def delete_jobpost(_id):
     jobpost = JobPost.query.get(_id)
