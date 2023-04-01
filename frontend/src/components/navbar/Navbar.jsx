@@ -9,21 +9,24 @@ import CommentAPIService from "../../pages/BACKEND_DEBUG/CommentAPIService";
 import UserDropDownMenu from "../UserDropDownMenu/UserDropDownMenu";
 import JobPostingForm from "../../pages/PostAJob/JobPostingForm";
 import {useDetectOutClickOrEsc} from "../../hooks/outside-clickorescape.hook";
+import {useUserContext} from "../../context/UserContext";
 
-const NavMenu = () => (
+const NavMenu = () => {
+    const {state} = useUserContext();
+
     //can use activestyle={{}}
-  <>
+    return (<>
         <Nav>
-		    <NavLink to="/">
-			    Home
-		    </NavLink>
+            <NavLink to="/">
+                Home
+            </NavLink>
             {
-            window.localStorage.getItem("userType") === "EMPLOYER" &&
-            		    <NavLink to="/jobposting" >
-                Post a Job
-		    </NavLink>
+                window.localStorage.getItem("userType") === "EMPLOYER" &&
+                <NavLink to="/jobposting">
+                    Post a Job
+                </NavLink>
             }
-            <NavLink to="/BACKEND_DEBUG" >
+            <NavLink to="/BACKEND_DEBUG">
                 [BACKEND CRUDV2 &emsp;DEBUG ANTOINE]
             </NavLink>
 
@@ -33,35 +36,38 @@ const NavMenu = () => (
 
             <button onClick={(event => {
                 fetch(`https://geolocation-db.com/json/`
-
-                    ).then(response => response.json())
+                ).then(response => response.json())
                     .then(data => console.log("AUTHENTICATE DATA", data.IPv4))
-                    .catch(err => console.log("AUTHENTICATE ERROR: ",err))
+                    .catch(err => console.log("AUTHENTICATE ERROR: ", err))
 
                 fetch(`http://localhost:5000/firebase-api/authenticate`
-                                        ,
+                    ,
                     {
                         method: 'POST',
                         headers: {
-                            'Content-Type':'application/json',
-                            'Authorization':`Bearer ${Cookies.get('access_token')}`
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${Cookies.get('access_token')}`
                         },
                         body: JSON.stringify({
-                            'idToken': Cookies.get('access_token'),
-                            'refreshToken' : Cookies.get('refresh_token')
-                        }
+                                'idToken': Cookies.get('access_token'),
+                                'refreshToken': Cookies.get('refresh_token')
+                            }
                         )
                     }
-                    )
+                )
             })}>
                 CHECK AUTHENTICATION
             </button>
+            <button onClick={(event => console.log(state))}>
+                TEST REDUCERCONTEXT STATE
+            </button>
 
         </Nav>
-  </>
-)
+    </>)
+}
 const LoginOrSeeAccount = () => {
     // const [userRecordInfo,setUserRecordInfo] = useState({});
+
 
     let uid = Cookies.get('loggedin_uid');
     // if(uid != null){
