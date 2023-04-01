@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 export default class JobPostingAPIService{
 
     static async AddJobPosting(request_body){
@@ -6,6 +7,7 @@ export default class JobPostingAPIService{
             'method':'POST',
             headers : {
                 'Content-Type':'application/json',
+                'Authorization': `Bearer ${Cookies.get('access_token')}`
             },
             body:JSON.stringify(request_body)
         })
@@ -18,6 +20,7 @@ export default class JobPostingAPIService{
             'method':'DELETE',
             headers : {
                 'Content-Type':'application/json',
+                'Authorization': `Bearer ${Cookies.get('access_token')}`
             },
         })
             .then(response => response.json())
@@ -30,6 +33,7 @@ export default class JobPostingAPIService{
             'method':'PUT',
             headers : {
                 'Content-Type':'application/json',
+                'Authorization': `Bearer ${Cookies.get('access_token')}`
             },
             body:JSON.stringify(request_body)
         })
