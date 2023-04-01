@@ -692,7 +692,7 @@ def flask_mail_send_test(email, job_title, applicant_name):
         msg = Message("Flask-Mail Test message",
                       sender="equipeboucani@gmail.com",
                       recipients=[email])
-        msg.body = applicant_name + " has applied to your job posting with the id " + job_title + "!"
+        msg.body = applicant_name + " has applied to your job posting for " + job_title + "!"
         mail.send(msg)
         return "Sent"
     except Exception as e:

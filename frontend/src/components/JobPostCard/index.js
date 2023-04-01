@@ -204,7 +204,7 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
     };
 
     const HandleApply = (event) => {
-        const applicantName = window.localStorage.firstName + window.localStorage.lastName;
+        const applicantName = window.localStorage.firstName + " " + window.localStorage.lastName;
         JobPostingAPIService.sendNotification(title, employerUser.email, applicantName)
             .then((any)=> window.location.reload())
             .catch(error => console.log('Following error occured after fetching from API: ',error))

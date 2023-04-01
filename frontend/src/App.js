@@ -17,6 +17,7 @@ import ViewJobPosts from "./pages/JobPosts/ViewJobPosts";
 import CommentAPIService from "./pages/BACKEND_DEBUG/CommentAPIService";
 import Cookies from 'js-cookie';
 import UserRESTAPI from "./restAPI/UserAPI";
+import MyJobPosts from "./pages/JobPosts/MyJobPosts";
 
 function App() {
     const [comments, setComments] = useState([""]);
@@ -100,6 +101,7 @@ return (
         <Route path='/viewjobposts' element={<ViewJobPosts postedJob={postedJob} />} />
 
         <Route exact path='/profile/:uid' element={<ProfilePage/>} />
+        <Route exact path='current/jobpostings' element={<MyJobPosts postedJob={postedJob} />}/>
         {/*<Route path='/SESSION_COOKIES_DEBUG' element={<SESSION_COOKIES_DEBUG/>}/>*/}
 
     </Routes>
