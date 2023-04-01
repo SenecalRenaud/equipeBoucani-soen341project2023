@@ -17,9 +17,12 @@ import ViewJobPosts from "./pages/JobPosts/ViewJobPosts";
 import CommentAPIService from "./pages/BACKEND_DEBUG/CommentAPIService";
 import Cookies from 'js-cookie';
 import UserRESTAPI from "./restAPI/UserAPI";
-import LoggedInUserProvider from "./context/LoggedInUserProvider";
+import JobPostingAPIService from "./pages/PostAJob/JobPostingAPIService";
+import {useUserContext} from "./context/UserContext";
 
 function App() {
+    const {state,dispatch} = useUserContext();
+
     const [comments, setComments] = useState([""]);
     const postedComment = (comment) =>{
         let new_comments = [...comments,comment]
@@ -41,13 +44,14 @@ function App() {
          */
       const userLoggedInBackendSession = await UserRESTAPI.fetchCurrentUserLoggedInBackendSession();
       // UserRESTAPI.userLoggedInBackendSession = userLoggedInBackendSession;
-
+      console.log(dispatch)
 
       if (Object.keys(userLoggedInBackendSession).length === 0
       && !UserRESTAPI.checkIfAllUserFrontendCacheAvailable()
       && !UserRESTAPI.checkIfAllUserCookiesAvailable()){ // No user logged in backend session
             console.log("CCCCCCCCCCCCC")
-          CommentAPIService.UserLogout({frontend_logout_only : true}) //Clean up frontend auth only
+          CommentAPIService.UserLogout(dispatch,
+              {frontend_logout_only : true}) //Clean up frontend auth only
 
           return;
       }
@@ -56,7 +60,7 @@ function App() {
           console.log(Object.keys(userLoggedInBackendSession).length === 0)
 
           alert("BOUCANI SECURITY: Some User Auth / Token Cookies manual alterations were detected. \n\r\tImmediate logout. \n\r\t Status: 401")
-          CommentAPIService.UserLogout() // Completely logout server and client side
+          CommentAPIService.UserLogout(dispatch) // Completely logout server and client side
           window.location.replace('http://localhost:3000')
           return;
       }
@@ -67,20 +71,21 @@ function App() {
       try {
           userLoggedInFrontendAuth = UserRESTAPI.parseCurrentUserObjFromFrontendCache()
           console.log(UserRESTAPI.parseCurrentUserObjFromFrontendCache())
-          console.log(window.localStorage)
           if(Object.keys(userLoggedInFrontendAuth).length === 0)
               throw new Error("Incomplete (or empty) frontend session cache for logged in user descriptor")
       } catch( frontendCachedUserIncompleteError ) {
           console.log(frontendCachedUserIncompleteError)
           console.log("AAAAAAAAAAAA")
           alert("BOUCANI SECURITY: Some Local User Descriptor / Cache  manual alterations were detected. \n\r\tImmediate logout. \n\r\t Status: 401")
-          CommentAPIService.UserLogout() // Completely logout server and client side
+          CommentAPIService.UserLogout(dispatch) // Completely logout server and client side
           window.location.replace('http://localhost:3000')
           return;
 
       }
         console.log("DDDDDDDDDDDDD")
       if (Object.keys(userLoggedInBackendSession).length !== 0){
+          console.log("REDUCER STATE: ")
+          console.log(state)
             await UserRESTAPI.updateCachedFrontendUserFromBackendSession(
             {userObj: userLoggedInBackendSession}
       )
@@ -90,9 +95,8 @@ function App() {
         }
         ,[]
     )
-
+    //NOTE: </UserContextProvider> is wrapped in the App's index.js ...
 return (
-    <LoggedInUserProvider>
     <Router>
     <Navbar />
 
@@ -111,21 +115,8 @@ return (
 
     </Routes>
     </Router>
-    </LoggedInUserProvider>
+
 );
 }
 
 export default App;
-
-// <img src={logo} className="App-logo" alt="logo" />
-// <p>
-//   Edit <code>src/App.js</code> and save to reload.
-// </p>
-// <a
-//   className="App-link"
-//   href="https://reactjs.org"
-//   target="_blank"
-//   rel="noopener noreferrer"
-// >
-//   Learn React
-// </a>
