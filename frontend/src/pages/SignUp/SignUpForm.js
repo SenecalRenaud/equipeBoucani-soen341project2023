@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './SignUpForm.css';
 import CommentAPIService from "../BACKEND_DEBUG/CommentAPIService";
+import {useUserContext} from "../../context/UserContext";
 
 const SignUpForm = () => {
     const [firstName, setFirstName] = useState('');
@@ -15,6 +16,8 @@ const SignUpForm = () => {
     const [errorMessage, setErrorMessage] = useState('');
 
     const [resumeType,setResumeType] = useState('Resume')
+
+    const { dispatch } = useUserContext();
 
     const handleProfilePictureChange = (event) => {
         setProfilePicture(event.target.files[0]);
@@ -55,7 +58,7 @@ const SignUpForm = () => {
 
             CommentAPIService.AddNewUser(formData)
             .then(r => 
-                CommentAPIService.UserSignIn(formData)
+                CommentAPIService.UserSignIn(dispatch,formData)//dispatch i.e. reducerDispatch
             )
 
             
@@ -65,7 +68,11 @@ const SignUpForm = () => {
     return (
         <div className="sign-up-container">
             <h1>Sign Up</h1>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={
+                (event) =>
+                    handleSubmit(event)
+            }
+                >
                 <label htmlFor="first-name-input">First Name</label>
                 <input
                     id="first-name-input"

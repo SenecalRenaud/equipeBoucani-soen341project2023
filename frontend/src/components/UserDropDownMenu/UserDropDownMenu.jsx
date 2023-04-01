@@ -5,11 +5,14 @@ import {Link} from "react-router-dom";
 import CommentAPIService from "../../pages/BACKEND_DEBUG/CommentAPIService";
 import UserRESTAPI from "../../restAPI/UserAPI";
 import UserRelationPermsFSM from "./MenuItems"
+import {useUserContext} from "../../context/UserContext";
 
 
 const UserDropDownMenu = ({triggerMenuMarkup,triggeredUserUid}) => {
 
-    const counter = useRef(0);
+    const {state} = useUserContext();
+
+    //const counter = useRef(0);
 
     const dropDownRef = useRef(null);
     const [isToggled, setIsToggled] = useDetectOutClickOrEsc(dropDownRef,false);
@@ -36,15 +39,10 @@ const UserDropDownMenu = ({triggerMenuMarkup,triggeredUserUid}) => {
         },
         [triggeredUserUid] //effect hook only called on mount since empty dependencies array
     )
-    // if(window.localStorage.getItem('userType') != null){
-    //     const userType = window.localStorage.getItem('userType').toUpperCase().trim();
-    //     const isAnotherUser = (userEmail != window.localStorage.getItem('email'))
-    //
-    // }
-
+    console.log(state.userData)
     let user = UserRESTAPI.parseCurrentUserObjFromFrontendCache()
     
-    // if (!UserRESTAPI.checkIfObjectIsValidUser(user)) {
+    // if (!state.isAuthenticated) {//!UserRESTAPI.checkIfObjectIsValidUser(user)
     //     user['uid'] = "qwertyuiopasdfghjklzxcvbnm12"
     //     user['userType'] = "APPLICANT"
     //     user['email'] = "anonymous@user.boucani"
@@ -86,6 +84,8 @@ const UserDropDownMenu = ({triggerMenuMarkup,triggeredUserUid}) => {
       );
 }
 const LogOutTab = ({condition}) => {
+    const {dispatch} = useUserContext();
+
     return condition && (
         <>
  <li> <hr/> <hr/> </li>
@@ -94,7 +94,7 @@ const LogOutTab = ({condition}) => {
           {(e)=>
               // eslint-disable-next-line no-restricted-globals
           {if(confirm("Are you sure want to sign out? ")){
-              CommentAPIService.UserLogout();
+              CommentAPIService.UserLogout(dispatch);
               window.location.replace('http://localhost:3000')
           }}}
       > Log out </b>
