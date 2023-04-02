@@ -1,6 +1,5 @@
-import {React, createContext, useReducer, useContext} from "react"
-import {UserReducer,initialState} from "./UserReducer";
-
+import {React, createContext, useReducer, useContext, useMemo} from "react"
+import {UserReducer,defaultState} from "./UserReducer";
 
 
 export const UserContext = createContext()
@@ -14,7 +13,13 @@ export function useUserContext() {
 }
 
 export const UserContextProvider = ({ children }) => {
-   const [state, dispatch] = useReducer(UserReducer, initialState);
+   const [state, dispatch] = useReducer(UserReducer, defaultState);
+
+
+   const contextValue = useMemo(() => {
+      return { state, dispatch };
+   }, [state, dispatch]);
+
 
   //  function setLoggedInUser (userData) {
   //   dispatch({ type: 'SET_USER', payload: userData });
@@ -23,9 +28,8 @@ export const UserContextProvider = ({ children }) => {
   //  function clearLoggedInUser() {
   //   dispatch({ type: 'CLEAR_USER' });
   // }
-
   return ( //value={{ loggedInUser, setLoggedInUser, clearLoggedInUser }}>
-    <UserContext.Provider value={{state, dispatch}} >
+    <UserContext.Provider value={contextValue} >
       {children}
     </UserContext.Provider>
   );
