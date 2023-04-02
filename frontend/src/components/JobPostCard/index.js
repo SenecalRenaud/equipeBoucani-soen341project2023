@@ -8,6 +8,9 @@ import UserDropDownMenu from "../UserDropDownMenu/UserDropDownMenu";
 import {UserAvatarWithText} from "../Avatars";
 import CommentAPIService from "../../pages/BACKEND_DEBUG/CommentAPIService";
 import UserRESTAPI from "../../restAPI/UserAPI";
+import Cookies from 'js-cookie'
+import {useUserContext} from "../../context/UserContext";
+
 export const CardTitle = styled.h1`
     font-size: 2em;
 `;
@@ -112,6 +115,9 @@ export const CardCommentButton = styled.button`
 `;
 
 const JobPostCard = ({id, jobtype, title, description, location, salary, tags, date, editDate,employerUid}) => {
+
+    const {state} = useUserContext();
+
     const [editJobType, setJobType] = useState(jobtype);
     const [editJobTitle, setJobTitle] = useState(title);
     const [editLocation, setLocation] = useState(location);
@@ -190,7 +196,9 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
 
     const handleEdit = (event) => {
 
-        JobPostingAPIService.EditJobPosting(toBeEditedID, {"title" : editJobTitle, "jobtype": editJobType, "location": editLocation, "salary": editSalary, "description": editJobDescription, "tags": editIndustryTags.toString()})
+        JobPostingAPIService.EditJobPosting(toBeEditedID,
+            {"title" : editJobTitle, "jobtype": editJobType, "location": editLocation, "salary": editSalary, "description": editJobDescription, "tags": editIndustryTags.toString()}
+        )
             //.then((response) => props.postedComment(response))
             .then((any)=> window.location.reload())
             .catch(error => console.log('Following error occured after fetching from API: ',error))
@@ -212,9 +220,9 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
 
             <CardTitle>Job post ID#{id} </CardTitle>
             {
-                //TODO: Non encrypt means vulnerable to attacks and unauth changes
-                (window.localStorage.getItem("uid") === employerUid
-                    || window.localStorage.getItem("userType") === "ADMIN")
+
+                (state.userData && (state.userData.uid === employerUid
+                                    || state.userData.userType === "ADMIN"))
                 &&
                 <section>
                   <CardDeleteButton onClick={() => handleDelete(id)}><FontAwesomeIcon icon={faTrashCan}/></CardDeleteButton>
@@ -243,7 +251,7 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
             <CardCommentButton> Leave a comment </CardCommentButton>
             {
                 //TODO: Make checks to see if already in applied list !
-                (window.localStorage.getItem("userType") === "APPLICANT") &&
+                (state.userData && state.userData.userType === "APPLICANT") &&
                 <CardApplyButton  onClick={(e) => {alert("TODO: Implement Application system !")}}>  Apply </CardApplyButton>
             }
 

@@ -1,8 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import './JobPostingForm.css';
 import JobPostingAPIService from "./JobPostingAPIService";
-
+import jwtDecode from "jwt-decode";
+import Cookies from "js-cookie";
 const JobPostingForm = (props) => {
+
+    const decoded_token_claims = jwtDecode(Cookies.get("access_token"));
+
     const [jobType, setJobType] = useState('');
     const [jobTitle, setJobTitle] = useState('');
     const [location, setLocation] = useState('');
@@ -79,7 +83,7 @@ const JobPostingForm = (props) => {
 
         JobPostingAPIService.AddJobPosting({"jobtype" : jobType, "title" : jobTitle, "location" : location, "salary" : salary, "tags" : industryTags.toString(), "description" : jobDescription,
 
-            'employerUid': window.localStorage.getItem("uid") // TODO ... salted AES-encrypt ?...
+            'employerUid': decoded_token_claims.user_id
         })
             .then((response) => props.postedJob(response))
                 .then((any)=> window.location.reload())
@@ -103,7 +107,7 @@ const JobPostingForm = (props) => {
         };
     };
 
-    if (window.localStorage.getItem("userType") !== "EMPLOYER"){
+    if (!decoded_token_claims.employer){
         // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffect(
             () =>

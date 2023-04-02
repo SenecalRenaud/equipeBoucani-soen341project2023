@@ -5,11 +5,13 @@ import './navbar.css';
 import logo2 from '../../assets/logo2.png';
 import {Nav, NavLink, NavLinkSignIn, NavLinkSignUp} from "./NavElements";
 import Cookies from 'js-cookie';
+import jwtDecode from 'jwt-decode'
 import CommentAPIService from "../../pages/BACKEND_DEBUG/CommentAPIService";
 import UserDropDownMenu from "../UserDropDownMenu/UserDropDownMenu";
 import JobPostingForm from "../../pages/PostAJob/JobPostingForm";
 import {useDetectOutClickOrEsc} from "../../hooks/outside-clickorescape.hook";
 import {useUserContext} from "../../context/UserContext";
+
 
 const NavMenu = () => {
     const {state} = useUserContext();
@@ -21,7 +23,7 @@ const NavMenu = () => {
                 Home
             </NavLink>
             {
-                window.localStorage.getItem("userType") === "EMPLOYER" &&
+                (state.userData && state.userData.userType === "EMPLOYER") &&
                 <NavLink to="/jobposting">
                     Post a Job
                 </NavLink>
@@ -56,10 +58,18 @@ const NavMenu = () => {
                     }
                 )
             })}>
-                CHECK AUTHENTICATION
+                LOG IPV4
             </button>
             <button onClick={(event => console.log(state))}>
                 TEST REDUCERCONTEXT STATE
+            </button>
+            <button onClick={(event =>
+                {
+
+                    console.log(jwtDecode(Cookies.get("access_token")))
+                }
+            )}>
+                DECODE JWT TOKEN
             </button>
 
         </Nav>
@@ -67,9 +77,14 @@ const NavMenu = () => {
 }
 const LoginOrSeeAccount = () => {
     // const [userRecordInfo,setUserRecordInfo] = useState({});
+    const {state} = useUserContext();
 
-
-    let uid = Cookies.get('loggedin_uid');
+    let uid;
+    try {
+        uid = jwtDecode(Cookies.get("access_token")).user_id
+    }catch {
+        uid = undefined;
+    }
     // if(uid != null){
     //     CommentAPIService.GetUserDetails(uid).then(
     //         json =>
@@ -80,7 +95,7 @@ const LoginOrSeeAccount = () => {
     //     )
     // }
     // console.log(userRecordInfo)
-    return (uid !== undefined && uid ?
+    return (uid !== undefined && uid && state.userData ?
             <>
             <UserDropDownMenu triggerMenuMarkup={
 
@@ -90,15 +105,15 @@ const LoginOrSeeAccount = () => {
                 >
                     <div className="navbarLoggedInText">
                 <span id="navbarLoggedInName">
-                    {window.localStorage['firstName']} {window.localStorage['lastName']}</span>
+                    {state.userData.firstName} {state.userData.lastName}</span>
 
                         <p>
-                            {window.localStorage['userType']}
+                            {state.userData.userType}
                         </p>
                     </div>
                     <div>
                                         <img id="navbarLoggedInPfp"
-                        src={window.localStorage['photo_url']} width="50" height="50" alt={"pfp"}/>
+                        src={state.userData.photo_url} width="50" height="50" alt={"pfp"}/>
 
                 </div>
                     </div>

@@ -6,6 +6,8 @@ import Cookies from 'js-cookie';
 import toTitleCase from '../../utils/strings_and_text_responses'
 import {useParams} from "react-router-dom";
 import CommentAPIService from "../BACKEND_DEBUG/CommentAPIService";
+import UserRESTAPI from "../../restAPI/UserAPI";
+import jwtDecode from "jwt-decode";
 
 // import {LoggedInUserContext} from "../../context/LoggedInUserContext";
 
@@ -28,7 +30,7 @@ const ProfilePage = () => {
         .then(json => setUserProfileData(json));
   }, [url_params.uid]);
 
-    if (Cookies.get("loggedin_uid") == null) { 
+    if (!UserRESTAPI.areAllUserCookiesAvailable()) {
 
         return <div style={{color: 'white',textAlign: 'center',fontSize: '6em',fontFamily: 'Impact'}}>
             <span> Unauthorized access to profile page route: Must log into user account to view this page</span>
@@ -36,8 +38,12 @@ const ProfilePage = () => {
             <img src="https://i.imgflip.com/5132fw.png" alt="sadge cat"/>
         </div>
     }
-
-    let isViewingOwnProfile = Cookies.get("loggedin_uid") === url_params.uid;
+    let isViewingOwnProfile;
+    try {
+        isViewingOwnProfile = jwtDecode(Cookies.get("access_token")).user_id === url_params.uid
+    }catch {
+        isViewingOwnProfile = false;
+    }
 
     function checkIfItemExists(item){
         if(item != null){
