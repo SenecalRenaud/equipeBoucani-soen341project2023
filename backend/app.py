@@ -222,7 +222,7 @@ def signin():
 
             user = _auth.sign_in_with_email_and_password(email,password)
 
-            #TODO decoded_claims = auth.verify_id_token(id_token)
+            #decoded_claims = auth.verify_id_token(id_token)#TODO
             # # Only process if the user signed in within the last 5 minutes.
             # if time.time() - decoded_claims['auth_time'] < 5 * 60:
             #
@@ -231,6 +231,7 @@ def signin():
             # expires = datetime.datetime.now() + expires_in
             # response.set_cookie(
             #     'session', session_cookie, expires=expires, httponly=True, secure=True)
+
 
             pwdHash = firestore_user.pop('pwdHash')
             print("Password bcrypt few-rounds salted hash matched: ",end=" ")
@@ -255,6 +256,17 @@ def signin():
 
 
             print(user, "\n\tJUST SIGNED IN !!!")
+
+            # response = jsonify(auth_user_response)
+            # response.delete_cookie('session')
+            #
+            # expires_in = datetime.timedelta(seconds=300)
+            # session_cookie = auth.create_session_cookie(user['idToken'], expires_in=expires_in)
+            # expires = datetime.datetime.now() + expires_in - datetime.timedelta(seconds=285)
+            # response.set_cookie(
+            #     'session', session_cookie, expires=expires, httponly=True, secure=True
+            # )
+
             return jsonify(auth_user_response)
             # return redirect("/")
         except HTTPError as err:
@@ -278,6 +290,7 @@ def logout():
         response =  make_response("No user to logout in the backend!")
     else:
         print(session['user'], "\n\tJUST LOGGED OUT !")
+        #TODO: _auth.refresh() if same IpV4 still and if passes other checks. ....
         loggedout_user = session.pop('user')
         response = make_response(f"Log out : {json.dumps(loggedout_user)} . " + \
                                  "Delete token cookies so frontend knows user is not authentificated or authorized anymore")
@@ -427,9 +440,9 @@ def account_profile_view():
     return render_template("profiletest.html",**context)
 
 
+#todo @authorized(admin=True)
 @app.route('/firebase-api/authenticate', methods=['POST'])
 @cross_origin()
-@authorized(admin=True)
 def authenticate():
     print("GOT AUTHORIZED !")
 
@@ -460,7 +473,7 @@ def authenticate():
 @cross_origin()
 def get_user_details(_uid):
     _uid = _uid.strip()
-
+    #TODO CACHE THESE USER DETAILS MAYBE?!
     if _uid == "current":
         if 'user' in session:
             user_recordinfo = _auth.get_account_info(session['user']['idToken'])['users'][0]
@@ -744,8 +757,8 @@ def update_jobpost(_id):
         jobpost.tags = request.json['tags']
     if 'description' in request.json:
         jobpost.description = request.json['description']
-    if 'employerUid' in request.json:
-        jobpost.employerUid = request.json['employerUid']
+    # if 'employerUid' in request.json:
+    #     jobpost.employerUid = request.json['employerUid']
 
     jobpost.editDate = datetime.datetime.now()
 
