@@ -91,7 +91,7 @@ export default class CommentAPIService{
                 // expires.setTime(expires.getTime() + (auth_json.expires_in * 250 ));
                 Cookies.set('access_token', auth_json.idToken);
                 Cookies.set('refresh_token', auth_json.refreshToken);
-                Cookies.set('loggedin_uid', auth_json.uid);
+                // Cookies.set('loggedin_uid', auth_json.uid);
                 // setCookie('access_token', auth_json.idToken, { path: '/',  expires})
                 // setCookie('refresh_token', auth_json.refresh_token, {path: '/', expires})
                 // setCookie('loggedin_uid', auth_json.localId, {path: '/', expires})
@@ -183,7 +183,7 @@ export default class CommentAPIService{
         // Backend should have dealt with them, used to ensure if synchronization errors...
         Cookies.remove('access_token');
         Cookies.remove('refresh_token');
-        Cookies.remove('loggedin_uid');
+        // Cookies.remove('loggedin_uid');
         Cookies.remove('session');
 
 

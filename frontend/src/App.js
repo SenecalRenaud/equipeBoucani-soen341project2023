@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import './App.css';
 
-import { Header, Navbar} from './components';
+import { Navbar} from './components';
 
 import { BrowserRouter as Router, Routes, Route}
     from 'react-router-dom';
@@ -15,9 +15,9 @@ import SignIn from "./pages/SignIn/SignInForm";
 // import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
 import ViewJobPosts from "./pages/JobPosts/ViewJobPosts";
 import CommentAPIService from "./pages/BACKEND_DEBUG/CommentAPIService";
-import Cookies from 'js-cookie';
+// import Cookies from 'js-cookie';
 import UserRESTAPI from "./restAPI/UserAPI";
-import JobPostingAPIService from "./pages/PostAJob/JobPostingAPIService";
+// import JobPostingAPIService from "./pages/PostAJob/JobPostingAPIService";
 import {useUserContext} from "./context/UserContext";
 import {defaultState} from "./context/UserReducer";
 

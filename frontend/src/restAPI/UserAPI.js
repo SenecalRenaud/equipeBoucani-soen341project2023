@@ -16,8 +16,7 @@ export const USER_FIELDS = [
 export const USER_COOKIES = [
     "access_token",
     "refresh_token",
-    "loggedin_uid",
-    'session' //TODO MIGHT BE CAUSING ISSUES DEPENDING ON BACKEND DEPENDENCIES
+    "session" // MIGHT BE CAUSING ISSUES DEPENDING ON BACKEND DEPENDENCIES
 ]
 
 export default class UserRESTAPI  {
@@ -25,7 +24,6 @@ export default class UserRESTAPI  {
     //TODO: MOVE SOME THINGS FROM COMMENT POST API TO HERE
     //get UserNameSpace
     static parseCurrentUserObjFromFrontendCache() {
-        //TODO UUID ENCRYPTION SECURITY
         var userObj = {},
         keys = USER_FIELDS,//Object.keys(localStorage),
         i = keys.length;

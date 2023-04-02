@@ -304,7 +304,7 @@ def logout():
 
 
     #TODO CHange once securit with idToken and refresh token has been done !!! Important tokens are in cookies only for DEBUG !
-    userCookiesHashset = {"loggedin_uid","access_token","refresh_token"}
+    userCookiesHashset = {"access_token","refresh_token"}
 
     for tokenAuthCookieToRemove in set(request.cookies.keys()) & userCookiesHashset:
         response.delete_cookie(tokenAuthCookieToRemove)

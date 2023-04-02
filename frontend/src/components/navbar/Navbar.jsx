@@ -1,14 +1,14 @@
 import React, {useRef, useState} from 'react'
 import { RiMenu3Line, RiCloseLin, RiCloseLine } from 'react-icons/ri'; //might be an error here if there isnt a node_modules present...
-import {Link, Route} from "react-router-dom";
+// import {Link, Route} from "react-router-dom";
 import './navbar.css';
 import logo2 from '../../assets/logo2.png';
 import {Nav, NavLink, NavLinkSignIn, NavLinkSignUp} from "./NavElements";
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode'
-import CommentAPIService from "../../pages/BACKEND_DEBUG/CommentAPIService";
+// import CommentAPIService from "../../pages/BACKEND_DEBUG/CommentAPIService";
 import UserDropDownMenu from "../UserDropDownMenu/UserDropDownMenu";
-import JobPostingForm from "../../pages/PostAJob/JobPostingForm";
+// import JobPostingForm from "../../pages/PostAJob/JobPostingForm";
 import {useDetectOutClickOrEsc} from "../../hooks/outside-clickorescape.hook";
 import {useUserContext} from "../../context/UserContext";
 

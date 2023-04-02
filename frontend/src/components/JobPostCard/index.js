@@ -1,14 +1,14 @@
-import React, { useEffect,useState } from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import { faTrashCan,faPen } from '@fortawesome/free-solid-svg-icons';
+import {faPen, faTrashCan} from '@fortawesome/free-solid-svg-icons';
 import JobPostingAPIService from "../../pages/PostAJob/JobPostingAPIService";
 import Modal from "react-modal";
 import UserDropDownMenu from "../UserDropDownMenu/UserDropDownMenu";
 import {UserAvatarWithText} from "../Avatars";
 import CommentAPIService from "../../pages/BACKEND_DEBUG/CommentAPIService";
-import UserRESTAPI from "../../restAPI/UserAPI";
-import Cookies from 'js-cookie'
+// import UserRESTAPI from "../../restAPI/UserAPI";
+// import Cookies from 'js-cookie'
 import {useUserContext} from "../../context/UserContext";
 
 export const CardTitle = styled.h1`
