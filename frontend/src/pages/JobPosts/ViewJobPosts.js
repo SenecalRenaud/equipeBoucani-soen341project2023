@@ -1,12 +1,20 @@
 import {useEffect,useState} from "react";
 import "../PostAJob/JobPostingForm.css";
-import CoreUICard from "../../components/CoreUICard";
+//import CoreUICard from "../../components/CoreUICard";
 import JobPostCard from "../../components/JobPostCard";
 import SearchBar from "../../components/PostingsSearchBar/SearchBar";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFilter} from "@fortawesome/free-solid-svg-icons";
+import { makeStyles } from '@material-ui/core/styles';
+import Pagination from '@material-ui/lab/Pagination';
+function ViewJobPosts ()   {
 
-function ViewJobPosts (props)   {
+    const componentsPerPage = 5;
+
+
+    const [page, setPage] = useState(1);
+
+
     var filteredIndicesHashSet = new Set();
     const [data,setData] = useState([{}]);
     const [defaultData,setDefaultData] = useState([{}]);
@@ -132,22 +140,35 @@ function ViewJobPosts (props)   {
 }}/>
                 <div className="job-posts">
                     { data.id &&
-                        data.id.map((id, i) => (
-                        <JobPostCard
-                            key={i}
-                            jobtype={data.jobtype[i]}
-                            title={data.title[i]}
-                            location={data.location[i]}
-                            salary={data.salary[i]}
-                            description={data.description[i]}
-                            tags={data.tags[i]}
-                            id={id}
-                            date={new Date(Date.parse(data.date[i])).toLocaleString()}
-                            editDate={new Date(Date.parse(data.editDate[i])).toLocaleString()}
-                            employerUid={data.employerUid[i]}
-                        />
-                    ))}
+                        data.id
+                            .slice((page-1) * componentsPerPage, page*componentsPerPage)
+                            .map((id, _i) =>
+                                {
+
+                            let i = _i +  (page-1) * componentsPerPage
+                            return (<JobPostCard
+                                key={_i}
+                                jobtype={data.jobtype[i]}
+                                title={data.title[i]}
+                                location={data.location[i]}
+                                salary={data.salary[i]}
+                                description={data.description[i]}
+                                tags={data.tags[i]}
+                                id={id}
+                                date={new Date(Date.parse(data.date[i])).toLocaleString()}
+                                editDate={new Date(Date.parse(data.editDate[i])).toLocaleString()}
+                                employerUid={data.employerUid[i]}
+                            />)
+                    }
+                    )}
                 </div>
+                <Pagination
+                    count={(function(){
+                    return Math.ceil(data.id.length / componentsPerPage)
+                })()}
+                    page={page}
+                    onChange={(event,page_value)=> {setPage(page_value)}}
+                    />
             </div>
         );
     }
