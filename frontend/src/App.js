@@ -19,6 +19,7 @@ import Cookies from 'js-cookie';
 import UserRESTAPI from "./restAPI/UserAPI";
 import JobPostingAPIService from "./pages/PostAJob/JobPostingAPIService";
 import {useUserContext} from "./context/UserContext";
+import {defaultState} from "./context/UserReducer";
 
 function App() {
     const {state,dispatch} = useUserContext();
@@ -42,25 +43,44 @@ function App() {
         do not change without review,
         even if possibly subject to necessary changes in near future.
          */
-      const userLoggedInBackendSession = await UserRESTAPI.fetchCurrentUserLoggedInBackendSession();
+
+
+
+      const [isInBackendSession,userLoggedInBackendSession] = await UserRESTAPI.isUserLoggedInBackendSession();
       // UserRESTAPI.userLoggedInBackendSession = userLoggedInBackendSession;
-      console.log(dispatch)
+      if (isInBackendSession && state === defaultState){
+
+          dispatch({type: 'SET_USER',payload: userLoggedInBackendSession })
+      }else if (!isInBackendSession && state !== defaultState){
+
+          dispatch({type: 'CLEAR_USER'});
+      }else if(!isInBackendSession && state === defaultState){
+
+          if (UserRESTAPI.areAnyUserCookiesAvailable()){ // MEANS BACKEND IS LOGGED OFF, BUT FRONTEND NOT COMPLETELY
+
+              await CommentAPIService.UserLogout(dispatch,
+              {frontend_logout_only : true}) //Clean up frontend auth only
+              window.location.replace('http://localhost:3000')
+          }
+
+          return;
+      }
 
       if (Object.keys(userLoggedInBackendSession).length === 0
       && !UserRESTAPI.checkIfAllUserFrontendCacheAvailable()
-      && !UserRESTAPI.checkIfAllUserCookiesAvailable()){ // No user logged in backend session
+      && !UserRESTAPI.areAllUserCookiesAvailable()){ // No user logged in backend session
             console.log("CCCCCCCCCCCCC")
           CommentAPIService.UserLogout(dispatch,
               {frontend_logout_only : true}) //Clean up frontend auth only
 
           return;
       }
-      if (!UserRESTAPI.checkIfAllUserCookiesAvailable()) { // Some authentification / token cookies are missing, frontend unauthorized
+      if (!UserRESTAPI.areAllUserCookiesAvailable()) { // Some authentification / token cookies are missing, frontend unauthorized
           console.log("BBBBBBBB")
           console.log(Object.keys(userLoggedInBackendSession).length === 0)
 
           alert("BOUCANI SECURITY: Some User Auth / Token Cookies manual alterations were detected. \n\r\tImmediate logout. \n\r\t Status: 401")
-          CommentAPIService.UserLogout(dispatch) // Completely logout server and client side
+          await CommentAPIService.UserLogout(dispatch) // Completely logout server and client side
           window.location.replace('http://localhost:3000')
           return;
       }
@@ -83,9 +103,8 @@ function App() {
 
       }
         console.log("DDDDDDDDDDDDD")
+      //TODO LOCALSTORAGE HERE NOW MOSTLY USED FOR DEBUG, REMOVE USAGE IN APIs AND ALL CODE USING IT IF NEED BE !
       if (Object.keys(userLoggedInBackendSession).length !== 0){
-          console.log("REDUCER STATE: ")
-          console.log(state)
             await UserRESTAPI.updateCachedFrontendUserFromBackendSession(
             {userObj: userLoggedInBackendSession}
       )

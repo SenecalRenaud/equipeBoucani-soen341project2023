@@ -151,12 +151,14 @@ export default class CommentAPIService{
             }
 
         ).then(
-            data => data.json()
+            data => (data === undefined ? {} : data.json())
         ).catch(err =>
             console.log("SOME ERROR OCCURED WHILE FETCHING USER DATA: ", err)
         )
     }
     static async UserLogout(reducerDispatch,{frontend_logout_only=false} ={}){
+
+
         if(!frontend_logout_only) {
 
             await fetch(`/firebase-api/logout`, { // if fails... try: http://localhost:5000?goto=logout
