@@ -16,7 +16,8 @@ export const USER_FIELDS = [
 export const USER_COOKIES = [
     "access_token",
     "refresh_token",
-    "loggedin_uid"
+    "loggedin_uid",
+    'session' //TODO MIGHT BE CAUSING ISSUES DEPENDING ON BACKEND DEPENDENCIES
 ]
 
 export default class UserRESTAPI  {
@@ -88,8 +89,8 @@ export default class UserRESTAPI  {
     static async isUserLoggedInBackendSession(){
         try {
               const result = await UserRESTAPI.fetchCurrentUserLoggedInBackendSession();
-              return {userLoggedInBackendSession : result ,
-                       isLoggedInSession:  Object.keys(result).length !== 0};
+              return [Object.keys(result).length !== 0, result]
+
             } catch (error) {
               console.error(error);
         }
@@ -116,7 +117,9 @@ export default class UserRESTAPI  {
         }
         return true;
     }
-    static checkIfAllUserCookiesAvailable() {
+
+    //static areAllUserCookiesAvailable = UserRESTAPI.getAllUserCookies.bind(UserRESTAPI,...partialargs)
+    static areAllUserCookiesAvailable() {
         var keys = USER_COOKIES,
         i = keys.length;
 
@@ -127,6 +130,18 @@ export default class UserRESTAPI  {
             }
         }
         return true;
+    }
+        static areAnyUserCookiesAvailable() {
+            var keys = USER_COOKIES,
+            i = keys.length;
+
+            while ( i-- ) {
+                if (Cookies.get(keys[i]) != null &&
+                    Cookies.get(keys[i]) !== undefined){
+                    return true;
+                }
+            }
+            return false;
     }
 
 }

@@ -8,6 +8,11 @@ import UserRelationPermsFSM from "./MenuItems"
 import {useUserContext} from "../../context/UserContext";
 
 
+//TODO Optimization: use .bind() to bind to very user profile to result on current load !!!
+//TODO Optimization: use .bind() to bind to very user profile to result on current load !!!
+//TODO Optimization: use .bind() to bind to very user profile to result on current load !!!
+//TODO Optimization: use .bind() to bind to very user profile to result on current load !!!
+
 const UserDropDownMenu = ({triggerMenuMarkup,triggeredUserUid}) => {
 
     const {state} = useUserContext();
@@ -39,19 +44,21 @@ const UserDropDownMenu = ({triggerMenuMarkup,triggeredUserUid}) => {
         },
         [triggeredUserUid] //effect hook only called on mount since empty dependencies array
     )
-    console.log(state.userData)
-    let user = UserRESTAPI.parseCurrentUserObjFromFrontendCache()
+
+    let user = state.userData;   //UserRESTAPI.parseCurrentUserObjFromFrontendCache()
     
-    // if (!state.isAuthenticated) {//!UserRESTAPI.checkIfObjectIsValidUser(user)
-    //     user['uid'] = "qwertyuiopasdfghjklzxcvbnm12"
-    //     user['userType'] = "APPLICANT"
-    //     user['email'] = "anonymous@user.boucani"
-    //     user['firstName'] = "Anonymous"
-    //     user['lastName'] = "User"
-    // }
+    if (!state.isAuthenticated) {//!UserRESTAPI.checkIfObjectIsValidUser(user)
+        user = {}
+        user['uid'] = "qwertyuiopasdfghjklzxcvbnm12"
+        user['userType'] = "APPLICANT"
+        user['email'] = "anonymous@user.boucani"
+        user['firstName'] = "Anonymous"
+        user['lastName'] = "User"
+    }
 
     const permissionBasedMenuOptionsMarkup = useMemo(() =>
         UserRelationPermsFSM(user,otherUser), [user,otherUser]);
+
 
     let isNotUndetermined = !!user.email && !!otherUser.email;
 

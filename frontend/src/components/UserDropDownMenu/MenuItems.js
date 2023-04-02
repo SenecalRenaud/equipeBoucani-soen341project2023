@@ -5,6 +5,8 @@ permissions in interactions between
 different user types
  */
 import {Link} from "react-router-dom";
+// import jwtDecode from "jwt-decode";
+// import Cookies from "js-cookie";
 
 const USER_TYPE_BIT = {
   'APPLICANT' : 0b0001,
@@ -21,9 +23,10 @@ export default function UserRelationPermsFSM(user1,user2){
   Do not alter before requesting review
    */
 
-  const logged_in_usermail = window.localStorage.getItem("email")
-  if (user2.email === logged_in_usermail)
-    [user1,user2] = [user2,user1];
+  // const logged_in_usermail = jwtDecode(Cookies.get("access_token")).email
+  // if (user2.email === logged_in_usermail)
+  //   [user1,user2] = [user2,user1];
+
   // else if (user1.email !== logged_in_usermail)
   //   throw new Error("One of the two users interacted should be the one logged in the current session!");
 
