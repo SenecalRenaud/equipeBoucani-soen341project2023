@@ -22,6 +22,7 @@ import UserRESTAPI from "./restAPI/UserAPI";
 import {useUserContext} from "./context/UserContext";
 import {defaultState} from "./context/UserReducer";
 import LoadingScreen from "./pages/LoadingScreen/LoadingScreen";
+import PageNotFound from "./pages/Err404Screen/Err404Screen";
 
 //let renderNumber = 1;
 
@@ -125,6 +126,7 @@ return (
         {console.log("Loaded App.js")}
 
     <Routes>
+        <Route path="*" element={<PageNotFound/>}/>
         <Route exact path='/'  element={<Home />} />
         <Route path='/jobposting' element={<JobPostingForm/>} />
         <Route path='/BACKEND_DEBUG' element={<PostCommentForm postedComment={postedComment} />}/>
