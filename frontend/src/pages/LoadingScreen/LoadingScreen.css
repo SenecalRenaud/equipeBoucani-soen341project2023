@@ -1,0 +1,49 @@
+.sweet-loading {
+    /*height: 500px!important;*/
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    /*height:70vh!important;*/
+    /*position: relative;*/
+    top: 0;
+    left: 0;
+    height: 150vh;
+    width: 100%;
+    background-image: url("../../assets/logo2.png");
+    filter: drop-shadow(10px 7px 2px rgba(223,100,0,0.61));
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-color: var(--gradient-bar)!important;
+    background-clip: content-box;
+    -webkit-background-clip: content;
+    -webkit-text-fill-color: transparent;
+    z-index: 10;
+    text-shadow: var(--gradient-text);
+    /*filter: sepia(55%) drop-shadow(10px 7px 2px rgba(223,100,0,0.61)) ;*/
+
+
+}
+/*:root {*/
+/*    backdrop-filter: saturate(123,421,43);*/
+/*     blur(10px) brightness(90%);*/
+/*}*/
+
+/*.gpt3__navbar {*/
+/*    backdrop-filter: blur(10px) brightness(90%);*/
+
+/*    !*display: none;*!*/
+/*}*/
+/*.gpt3__navbar div[class^='gpt3__'] > * {*/
+/*    !*opacity: 50%;*!*/
+
+/*    filter: blur(4px) brightness(70%) !important;*/
+/*}*/
+#spinner {
+    display: inherit;
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+}
+#spinner > * {
+    background: var(--gradient-bar)!important;
+}
