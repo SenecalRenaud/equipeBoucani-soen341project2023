@@ -11,6 +11,8 @@ import UserDropDownMenu from "../UserDropDownMenu/UserDropDownMenu";
 // import JobPostingForm from "../../pages/PostAJob/JobPostingForm";
 import {useDetectOutClickOrEsc} from "../../hooks/outside-clickorescape.hook";
 import {useUserContext} from "../../context/UserContext";
+import {MouseCursorGradientTracking} from "../../utils/mouseTrackingGradient";
+import {Link} from "react-router-dom";
 
 
 const NavMenu = () => {
@@ -139,16 +141,20 @@ const Navbar = () => {
   return (
     <div className='gpt3__navbar'>
 
-      <div className='gpt3__navbar-links'>
+    <div className='gpt3__navbar-links'>
+        <MouseCursorGradientTracking markupContent={
+        <div className='gpt3__navbar-links_logo'>
+                     <Link to="/">
+                <img src={logo2} alt="logo"/>
+            </Link>
 
-        <div className='gpt3__navbar-links_logo'> 
-          <img src={logo2} alt="logo"/>
-        </div>
+        </div>}/>
         <div className='gpt3__navbar-links_container'>
           <NavMenu />
         </div>
 
       </div>
+
 
       <div className="gpt3__navbar-sign">
         <LoginOrSeeAccount />

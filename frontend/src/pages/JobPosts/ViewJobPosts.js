@@ -1,4 +1,4 @@
-import {useEffect,useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import "../PostAJob/JobPostingForm.css";
 //import CoreUICard from "../../components/CoreUICard";
 import JobPostCard from "../../components/JobPostCard";
@@ -7,18 +7,30 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFilter} from "@fortawesome/free-solid-svg-icons";
 import { makeStyles } from '@material-ui/core/styles';
 import Pagination from '@material-ui/lab/Pagination';
-function ViewJobPosts ()   {
 
+const useStyles = makeStyles(() => ({
+  ul: {
+    "& .MuiPaginationItem-root": {
+      color: "darkblue",
+    },
+    "& .Mui-selected ": {
+          background: "#de8042"
+      },
+  }
+}));
+function ViewJobPosts ()   {
+    const filteredIndicesHashSet = new Set();
+    const [data,setData] = useState([{}]);
+    const [defaultData,setDefaultData] = useState([{}]);
+    const [searchBarInput, setSearchBarInput] = useState('');
     const componentsPerPage = 5;
 
 
     const [page, setPage] = useState(1);
-
-
-    var filteredIndicesHashSet = new Set();
-    const [data,setData] = useState([{}]);
-    const [defaultData,setDefaultData] = useState([{}]);
-    const [searchBarInput, setSearchBarInput] = useState('');
+    const pageCount = useMemo(()=>{
+        return Math.ceil((data.id === undefined ? 0 : data.id.length) / componentsPerPage)
+    },[data.id])
+    const pageStyleClasses = useStyles();
 
     let [er,setEr] = useState(false);
     let [errorString, setErrorString] = useState("");
@@ -163,10 +175,10 @@ function ViewJobPosts ()   {
                     )}
                 </div>
                 <Pagination
-                    count={(function(){
-                    return Math.ceil(data.id.length / componentsPerPage)
-                })()}
+                    classes={{ul : pageStyleClasses.ul}}
+                    count={pageCount}
                     page={page}
+                    size="large"
                     onChange={(event,page_value)=> {setPage(page_value)}}
                     />
             </div>

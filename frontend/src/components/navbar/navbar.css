@@ -1,6 +1,6 @@
 .gpt3__navbar {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
 
     padding: 2rem 6rem;
@@ -15,12 +15,14 @@
 
 .gpt3__navbar-links_logo {
     margin-right: 2rem;
+    padding: 1.15rem;
+    transform: translate(-15%,0);
 }
 
 .gpt3__navbar-links_logo img {
     margin-top: 3.5px;
-    width: 62.56px;
-    height: 16.02px;
+    width: calc(3.5*62.56px);
+    height: calc(3.5*16.02px);
 }
 
 .gpt3__navbar-links_container {
