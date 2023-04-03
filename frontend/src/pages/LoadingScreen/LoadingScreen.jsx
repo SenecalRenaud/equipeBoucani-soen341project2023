@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import { css } from '@emotion/react';
 import * as reactSpinners from 'react-spinners'
 
@@ -16,11 +16,26 @@ const override = css`
 `;
 
 const LoadingScreen = (props) => {
-    // console.log(props.isFetching)
+    const mounted = useRef(false);
+    //
+    useEffect(() => {
+        const navbarEl = document.getElementsByClassName("gpt3__navbar")[0];
+        mounted.current = true;
+        navbarEl.classList.add("hidden");
+
+        return () => {
+            navbarEl.classList.remove("hidden")
+            mounted.current = false;
+
+        };
+    }, []);
+    console.log(props.isFetching)
+
+
   return ( <>
 
     <div className="sweet-loading">
-      <reactSpinners.BounceLoader color={'#36D7B7'} loading={true} id="spinner" size={100} />
+      <reactSpinners.BounceLoader color={'#81AFDD'} loading={true} id="spinner" size={120} />
     </div>
       </>
   );

@@ -5,7 +5,9 @@
 
     padding: 2rem 6rem;
 }
-
+.hidden {
+    display: none;
+}
 .gpt3__navbar-links {
     flex: 1;
     display: flex;

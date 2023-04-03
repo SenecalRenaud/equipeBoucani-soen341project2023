@@ -44,6 +44,8 @@
     left: 50vw;
     transform: translate(-50%, -50%);
 }
-#spinner > * {
-    background: var(--gradient-bar)!important;
-}
+/*#spinner > span:after {*/
+/*    content: "BOUCANI";*/
+/*    !*background: var(--gradient-bar)!important;*!*/
+/*}*/
+
