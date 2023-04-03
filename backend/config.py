@@ -9,7 +9,51 @@ ENV_FILE_NAME = ".flaskenv"
 WDIR = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(WDIR + os.sep + ENV_FILE_NAME)
 
-class CurrentDatabaseConnection(enum.Enum): #TODO: Locally Hosted test database only
+class MetaDatabaseConnection(enum.EnumMeta):
+    """
+    Database Connection Server info Meta class
+    ChiefsBestPal@AntoineCantin
+    """
+    OBLIGATORY_NAMES = {'RDBMS_ALCHEMY_HNAME', 'DB_NAME', 'DB_USER', 'DB_PASS', 'DB_HOST', 'DB_PORT'}
+    def __new__(metacls, cls, bases, classdict):
+
+        classdict['_ignore_'] = 'OBLIGATORY_NAMES'
+
+        bases = tuple([MetaDatabaseConnection.CurrentDatabaseEnum] + list(bases)[1:])
+
+        object_attrs = set(dir(type(cls, (object,), {})))
+
+        db_template_enum_obj = super().__new__(metacls, cls, bases, classdict)
+
+        
+        db_template_enum_obj._member_names_ = set(classdict.keys()) - object_attrs
+
+        non_members = set()
+
+        for attr in db_template_enum_obj._member_names_:
+
+            if attr.startswith('_') and attr.endswith('_'):
+
+                non_members.add(attr)
+
+            else:
+
+                setattr(db_template_enum_obj, attr, attr)
+
+        db_template_enum_obj._member_names_.difference_update(non_members | set(classdict.get('_ignore_',[])))
+
+        assert not (set(db_template_enum_obj.__members__) - MetaDatabaseConnection.OBLIGATORY_NAMES)
+
+
+        return db_template_enum_obj
+
+    class CurrentDatabaseEnum(enum.Enum):
+        @classmethod
+        def exportToNameSpace(cls,namespace : dict):
+            namespace.update(cls.__members__)
+            return tuple(map(lambda enum_field: enum_field.value,
+                             cls._member_map_.values()))
+class LocalHostDatabase(MetaDatabaseConnection.CurrentDatabaseEnum, metaclass=MetaDatabaseConnection):
     """
     Current Test Database connection info...
     locally hosted tables using XAMMP and mysql+apache server
@@ -21,15 +65,11 @@ class CurrentDatabaseConnection(enum.Enum): #TODO: Locally Hosted test database 
     DB_PASS = "" #else -> ":'pass'"
     DB_HOST = "localhost"
     DB_PORT = ""#e.g. :5000, :3306
-    
-    @classmethod
-    def exportToNameSpace(cls,namespace : dict):
-        namespace.update(cls.__members__)
-        return tuple(map(lambda enum_field: enum_field.value,
-                         cls._member_map_.values()))
 
 RDBMS_ALCHEMY_HNAME,DB_NAME,DB_USER,DB_PASS,DB_HOST,DB_PORT = \
-    CurrentDatabaseConnection.exportToNameSpace(globals())
+    LocalHostDatabase.exportToNameSpace(globals())
+
+localDbMySql = LocalHostDatabase.DB_HOST
 
 class ApplicationSessionConfig:
     SECRET_KEY = os.environ["SECRET_KEY"] # should set flask.Flask.secret_key
