@@ -40,7 +40,7 @@ const ProfilePage = () => {
     }
     let isViewingOwnProfile;
     try {
-        isViewingOwnProfile = jwtDecode(Cookies.get("access_token")).user_id === url_params.uid
+        isViewingOwnProfile = jwtDecode(Cookies.get("access_token")).user_id === url_params.uid || url_params.uid  === "current"
     }catch {
         isViewingOwnProfile = false;
     }
