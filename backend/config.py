@@ -1,4 +1,4 @@
-
+import MySQLdb #NOTE: DBAPI mysqlclient, leave this import here !
 from dotenv import load_dotenv
 #Avoid (dotenv.find_dotenv(".myenvfilename"))
 import os
@@ -7,6 +7,13 @@ import enum
 from abc import ABC, ABCMeta,abstractmethod
 
 from flask import Flask,current_app
+
+@enum.unique
+class DialectDBAPI(enum.Enum):
+    MYSQLCLIENT = "mysqldb" # C-library, fast... but if external sys req not met, might be issues
+    PYMYSQL = "pymysql" # Maybe slightly slower, but easier to integrate
+    MYSQLCONNECTORPYTHON = "mysqlconnector" # May cause issues in virtual env + dependencies ?
+
 
 WDIR = os.path.abspath(os.path.dirname(__file__))
 
@@ -76,7 +83,7 @@ class ABCMetaDatabaseConnection(enum.EnumMeta, ABCMeta):
         # print("MEMBERS: ",db_template_enum_obj.__members__)
         # print("MAP: ", db_template_enum_obj._member_map_)
         # print("NAMES: ", db_template_enum_obj._member_names_)
-        for attr_name in set(db_template_enum_obj._member_names_)-{'databaseServerURL','exportToNameSpace'}:
+        for attr_name in set(db_template_enum_obj._member_names_)-{'databaseServerURL','exportToNameSpace','sqlalchemyURI'}:
 
             if attr_name.startswith('_') and attr_name.endswith('_'):
 
@@ -132,8 +139,15 @@ class LocalHostDatabase(CurrentDatabaseABCEnum, enum.Enum, metaclass=ABCMetaData
     #NOTE These fields will be ignored except if exportToNameSpace(namespace,onlyObligatoryFields=False)
     SELF = object()
     @property
+    def sqlalchemyURI(self):
+        cred = self.DB_USER.value
+        if self.DB_PASS.value:
+            cred += ":" + self.DB_PASS.value
+
+        return rf"{self.RDBMS_ALCHEMY_HNAME.value}://{cred}@{self.DB_HOST.value}/{self.DB_NAME.value}"
+    @property
     def databaseServerURL(self):
-        return rf"jdbc:mysql://localhost:3306/flask_test_mysql_db"
+        return rf"jdbc:{self.RDBMS_ALCHEMY_HNAME.value}://{self.DB_HOST.value}:{self.DB_PORT.value}/{self.DB_NAME.value}"
 class HostedSql96Database(CurrentDatabaseABCEnum, enum.Enum, metaclass=ABCMetaDatabaseConnection):
     """
     From freemysqlhosting.net account.
@@ -149,23 +163,34 @@ class HostedSql96Database(CurrentDatabaseABCEnum, enum.Enum, metaclass=ABCMetaDa
     DB_PORT = os.environ.get('HOSTMYSQL96_PORT','')
 
     #NOTE These fields will be ignored except if exportToNameSpace(namespace,onlyObligatoryFields=False)
-    SELF = object()
-    BASIC_MB_SPACE = 5
-    SERVER_LOCATION = "NA-East"
-    HOSTING_ACCOUNT_NUMBER = os.environ.get('HOSTMYSQL96_ACCOUNTNO','')
+    SELF = object() # ref object to call more intuitively @property s
+
+    BASIC_MB_SPACE = 5 # Basic storage for all tables
+    SERVER_LOCATION = "NA-East" #Server datacenter location (May be of interest when choosing conns from alien IpV4s)
+
+    HOSTING_ACCOUNT_NUMBER = os.environ.get('HOSTMYSQL96_ACCOUNTNO','') #Hosting service account number
+
+    DBAPI_DIALECT = DialectDBAPI.MYSQLCLIENT #NOTE: If problems, try with other DBAPI (and install if not already done)
+    @property
+    def sqlalchemyURI(self):
+        _DBAPI_DIALECT = DialectDBAPI(self.DBAPI_DIALECT.value)._value_
+        return rf"{self.RDBMS_ALCHEMY_HNAME.value}+{_DBAPI_DIALECT}://" \
+               rf"{self.DB_USER.value}:{self.DB_PASS.value}@" \
+               rf"{self.DB_HOST.value}:{self.DB_PORT.value}/{self.DB_NAME.value}"
     @property
     def databaseServerURL(self):
-        common_uri = rf"://{self.DB_USER.value}:{self.DB_PASS.value}@{self.DB_HOST.value}:{self.DB_PORT.value}/{self.DB_NAME.value}"
-        with_protocol = r"mysql+pymysql"#TODO: Else try with jdbc:mysql
-        return with_protocol + common_uri
+
+        return self.SELF.sqlalchemyURI #TODO !!!!!!!!!!!!!!!!
+
 
 
 Chosen_EnumDatabase_Conn_Obj_ = LocalHostDatabase if useLocalInsteadOfHostedDatabase else HostedSql96Database
 
 RDBMS_ALCHEMY_HNAME,DB_NAME,DB_USER,DB_PASS,DB_HOST,DB_PORT = \
     Chosen_EnumDatabase_Conn_Obj_.exportToNameSpace(globals()) #NOTE: Current database is chosen here, and relays its members to module scope
+
 print(f"\033[32m Running \033[100;1m{Chosen_EnumDatabase_Conn_Obj_.__qualname__}\033[49m\033[22m for the backend at: "
-      f"{Chosen_EnumDatabase_Conn_Obj_.SELF.databaseServerURL}!!! \033[0m")
+      f"{Chosen_EnumDatabase_Conn_Obj_.SELF.databaseServerURL.replace(DB_PASS,len(DB_PASS)*'*')}!!! \033[0m")
 
 
 class ApplicationSessionConfig:
@@ -185,9 +210,15 @@ class ApplicationSessionConfig:
     SESSION_PERMANENT = False
     SESSION_USE_SIGNER = True
 
-    SQLALCHEMY_DATABASE_URI = f"{RDBMS_ALCHEMY_HNAME}://{DB_USER}@{DB_HOST}/{DB_NAME}" #TODO MIGHT NEED SOME FIXING
-    SQLALCHEMY_TRACK_MODIFICATIONS = True
+    SQLALCHEMY_DATABASE_URI = Chosen_EnumDatabase_Conn_Obj_.SELF.sqlalchemyURI
+    SQLALCHEMY_TRACK_MODIFICATIONS = False # True only for debugging within flask
     SQLALCHEMY_ECHO = False
+
+    #TODO app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    #    'pool_pre_ping': True,
+    #    'pool_size': 5,
+    #   'max_overflow': 10
+    # }
 
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 465

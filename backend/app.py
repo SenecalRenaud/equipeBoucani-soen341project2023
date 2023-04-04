@@ -16,9 +16,6 @@ from flask_mail import Mail, Message
 
 from requests import HTTPError
 
-# from sqlalchemy import Integer,DateTime,String,Text,Column
-# from flask.ext.session import Session, Session(app) to use flask.session instead of db.session
-
 # from werkzeug.local import LocalProxy,WSGIApplication
 from werkzeug.utils import secure_filename
 
@@ -27,6 +24,8 @@ from flask_bcrypt import Bcrypt #? (keys and password hashing engine)
 # from flask_session import Session #NOTE : Assert Accept certain MIME Types/Subtypes
 
 from flask_wtf.csrf import CSRFProtect
+
+import MySQLdb #mysqlclient
 
 import logging
 import os
@@ -68,9 +67,10 @@ from firebase_admin._auth_utils import EmailAlreadyExistsError, EmailNotFoundErr
 
 app.config.from_object(ApplicationSessionConfig)
 
+
 #Session(app)
 
-# TODO Might need to add flags here for CSRF cookie,credentials, server-side and request handling, security...
+# CSRF cookie,credentials, server-side and request handling, security...
 cors = CORS(app,
             supports_credentials=True # Access-Control-Allow-Credentials exposed for other servers / origins (i.e. outside backend app folder)
                                       # Will allow AJAX/XMLHttpRequests in js client to fetch session cookies for state and user log
@@ -79,7 +79,7 @@ cors = CORS(app,
 
 bcrypt = Bcrypt(app)
 
-db.init_app(app)
+db.init_app(app) #TODO: session_options={"autocommit": True, "autoflush": False}
 
 ma.init_app(app)
 
@@ -799,4 +799,4 @@ def flask_mail_send_test():
 if __name__ == '__main__':
 
     port = int(os.environ.get('PORT', 5000))
-    app.run(debug=True)
+    app.run(debug=True,load_dotenv=True)
