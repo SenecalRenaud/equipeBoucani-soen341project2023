@@ -12,7 +12,9 @@
     justify-content: flex-start;
     align-items: center;
 }
-
+.whitespace{
+    white-space: pre;
+}
 .gpt3__navbar-links_logo {
     margin-right: 2rem;
 }

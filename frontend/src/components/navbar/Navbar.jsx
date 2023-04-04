@@ -10,16 +10,16 @@ import CommentAPIService from "../../pages/BACKEND_DEBUG/CommentAPIService";
 const NavMenu = () => (
   <>
         <Nav>
-		<NavLink to="/" activeStyle>
+		<NavLink className='whitespace' to="/" activeStyle>
 			Home
 		</NavLink>
-		<NavLink to="/jobposting" activeStyle>
+		<NavLink className='whitespace' to="/jobposting" activeStyle>
 			Post a Job
 		</NavLink>
-        <NavLink to="/BACKEND_DEBUG" activeStyle>
+        <NavLink className='whitespace' to="/BACKEND_DEBUG" activeStyle>
             BACKEND_CRUD_DEBUG
         </NavLink>
-            <NavLink to="/profile" activeStyle>
+            <NavLink className='whitespace' to="/profile" activeStyle>
             My Profile
         </NavLink>
 
@@ -56,10 +56,10 @@ const LoginOrSeeAccount = () => {
                 </>
             :
             <>
-                <NavLinkSignIn to="/signin">
+                <NavLinkSignIn className='whitespace' to="/signin">
                     Sign in
                 </NavLinkSignIn>
-                <NavLinkSignUp to="/signup">
+                <NavLinkSignUp className='whitespace' to="/signup">
                     Sign up
                 </NavLinkSignUp>
             </>
