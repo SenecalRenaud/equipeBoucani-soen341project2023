@@ -24,24 +24,26 @@ from werkzeug.utils import secure_filename
 
 from flask_cors import CORS,cross_origin #?  (for cross origin requests)
 from flask_bcrypt import Bcrypt #? (keys and password hashing engine)
-# from flask_session import Session # TODO: Assert Accept certain MIME Types/Subtypes
+# from flask_session import Session #NOTE : Assert Accept certain MIME Types/Subtypes
 
 from flask_wtf.csrf import CSRFProtect
 
 import logging
 import os
-from functools import partial,reduce
+# from functools import partial,reduce
 import random
 import itertools
 import operator
 import json
 import string
-import re
+# import re
 
+app = Flask(__name__)
 
 #*******************************
 from forms import authorized,login_required
-from config import ApplicationSessionConfig #env vars + Session configs
+with app.app_context():
+    from config import ApplicationSessionConfig #env vars + Session configs
 from models import db,ma # SQLAlchemyInterface and MarshmallowSchema objects  to integrate
 from models import CommentPost, CommentPostSchema, JobPost, JobPostSchema
 
@@ -55,15 +57,14 @@ from authentification import fb_config,\
     mainStorageBucket,\
     firestore_db
 
-#from forms import login_required //TODO
+
 #*******************************
-import pyrebase
+# import pyrebase
 
 from firebase_admin import auth,credentials,storage,firestore
 from firebase_admin.exceptions import FirebaseError,AlreadyExistsError
 from firebase_admin._auth_utils import EmailAlreadyExistsError, EmailNotFoundError, UserNotFoundError
 
-app = Flask(__name__)
 
 app.config.from_object(ApplicationSessionConfig)
 

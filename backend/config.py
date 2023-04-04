@@ -1,28 +1,40 @@
-import json
 
-from dotenv import load_dotenv,find_dotenv
+from dotenv import load_dotenv
 #Avoid (dotenv.find_dotenv(".myenvfilename"))
 import os
 #import redis #do from_url(), >redis-cli to get localhost redis uri
 import enum
-from abc import ABC, ABCMeta,abstractmethod,abstractclassmethod
+from abc import ABC, ABCMeta,abstractmethod
 
-import dotenv
+from flask import Flask,current_app
 
 WDIR = os.path.abspath(os.path.dirname(__file__))
 
 FLASK_ENV_FILE_NAME = ".flaskenv"
 DATABASES_ENV_FILE_NAME = ".env.local" #Currently holds API key values for Firebase and MySql databases
 
+useLocalInsteadOfHostedDatabase = (os.environ['useLocalInsteadOfHostedDatabase'] == "true") if 'useLocalInsteadOfHostedDatabase' in os.environ else True
+
 try:
+
     assert load_dotenv(WDIR + os.sep + FLASK_ENV_FILE_NAME)
 
-    assert load_dotenv(WDIR + os.sep + DATABASES_ENV_FILE_NAME)
-except:
+    if not (current_app.debug or os.environ.get("FLASK_ENV") == "development") or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
+        useLocalInsteadOfHostedDatabase = input(
+            "Do you want to use your personal local version of the MySQL database instead of the hosted one? (Y/N)\n\r>>> "
+        ).strip().casefold() == 'y'
+        os.environ['useLocalInsteadOfHostedDatabase'] = str(useLocalInsteadOfHostedDatabase).lower()
+
+    if not useLocalInsteadOfHostedDatabase:
+        assert load_dotenv(WDIR + os.sep + DATABASES_ENV_FILE_NAME)
+except Exception as err :
+    print(err)
     raise FileNotFoundError("Missing Environment Variables files.\n\r"+\
                             f"\033[7;33m{FLASK_ENV_FILE_NAME}\033[0;1m and/or \033[7;33m{DATABASES_ENV_FILE_NAME}\033[0m "
                             f"should be in \033[1m./backend/\033[0m.\n\r"
                             f">>> Contact Antoine@ChiefsBestPal for necessary auth or other admins if problems")
+
+
 
 class ABCMetaDatabaseConnection(enum.EnumMeta, ABCMeta):
     """
@@ -117,6 +129,8 @@ class LocalHostDatabase(CurrentDatabaseABCEnum, enum.Enum, metaclass=ABCMetaData
     DB_HOST = "localhost"
     DB_PORT = ""#e.g. :5000, :3306
 
+    #NOTE These fields will be ignored except if exportToNameSpace(namespace,onlyObligatoryFields=False)
+    SELF = object()
     @property
     def databaseServerURL(self):
         return rf"jdbc:mysql://localhost:3306/flask_test_mysql_db"
@@ -126,22 +140,33 @@ class HostedSql96Database(CurrentDatabaseABCEnum, enum.Enum, metaclass=ABCMetaDa
     Must have the right values in .env.local or any loaded .env file for databases
     Antoine@ChiefsBestPal
     """
-    RDBMS_ALCHEMY_HNAME = 'mysql'#TODO
-    DB_NAME = "flask_test_mysql_db"#TODO
-    DB_USER = "root"#TODO
-    DB_PASS = "" #else -> ":'pass'"#TODO
-    DB_HOST = "localhost"#TODO
-    DB_PORT = ""#e.g. :5000, :3306#TODO
+
+    RDBMS_ALCHEMY_HNAME = 'mysql'
+    DB_NAME = os.environ.get('HOSTMYSQL96_NAME','')
+    DB_USER = os.environ.get('HOSTMYSQL96_USERNAME','')
+    DB_PASS = os.environ.get('HOSTMYSQL96_PASSWORD','')
+    DB_HOST = os.environ.get('HOSTMYSQL96_SERVER','')
+    DB_PORT = os.environ.get('HOSTMYSQL96_PORT','')
 
     #NOTE These fields will be ignored except if exportToNameSpace(namespace,onlyObligatoryFields=False)
+    SELF = object()
     BASIC_MB_SPACE = 5
     SERVER_LOCATION = "NA-East"
+    HOSTING_ACCOUNT_NUMBER = os.environ.get('HOSTMYSQL96_ACCOUNTNO','')
     @property
     def databaseServerURL(self):
-        return r"jdbc:mysql://localhost:3306/flask_test_mysql_db"
+        common_uri = rf"://{self.DB_USER.value}:{self.DB_PASS.value}@{self.DB_HOST.value}:{self.DB_PORT.value}/{self.DB_NAME.value}"
+        with_protocol = r"mysql+pymysql"#TODO: Else try with jdbc:mysql
+        return with_protocol + common_uri
+
+
+Chosen_EnumDatabase_Conn_Obj_ = LocalHostDatabase if useLocalInsteadOfHostedDatabase else HostedSql96Database
 
 RDBMS_ALCHEMY_HNAME,DB_NAME,DB_USER,DB_PASS,DB_HOST,DB_PORT = \
-    HostedSql96Database.exportToNameSpace(globals()) #NOTE: Current database is chosen here, and relays its members to module scope
+    Chosen_EnumDatabase_Conn_Obj_.exportToNameSpace(globals()) #NOTE: Current database is chosen here, and relays its members to module scope
+print(f"\033[32m Running \033[100;1m{Chosen_EnumDatabase_Conn_Obj_.__qualname__}\033[49m\033[22m for the backend at: "
+      f"{Chosen_EnumDatabase_Conn_Obj_.SELF.databaseServerURL}!!! \033[0m")
+
 
 class ApplicationSessionConfig:
     SECRET_KEY = os.environ["SECRET_KEY"] # should set flask.Flask.secret_key
@@ -160,7 +185,7 @@ class ApplicationSessionConfig:
     SESSION_PERMANENT = False
     SESSION_USE_SIGNER = True
 
-    SQLALCHEMY_DATABASE_URI = f"{RDBMS_ALCHEMY_HNAME}://{DB_USER}@{DB_HOST}/{DB_NAME}"
+    SQLALCHEMY_DATABASE_URI = f"{RDBMS_ALCHEMY_HNAME}://{DB_USER}@{DB_HOST}/{DB_NAME}" #TODO MIGHT NEED SOME FIXING
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     SQLALCHEMY_ECHO = False
 

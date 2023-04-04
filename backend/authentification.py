@@ -16,7 +16,7 @@ import requests
 import dotenv
 import os
 
-from .config import DATABASES_ENV_FILE_NAME,LocalHostDatabase,HostedSql96Database,ApplicationSessionConfig
+from config import DATABASES_ENV_FILE_NAME,Chosen_EnumDatabase_Conn_Obj_,ApplicationSessionConfig
 
 FIREBASE_CONFIG_JSON_NAME = ".firebase_config.json"
 FIREBASE_ADMINSDK_CREDS_SERVICEKEYS_FILENAME = ".credentials_firebase_adminsdk_n0xv8_cd14a39876.json"
@@ -28,7 +28,7 @@ firebase_sdkadmin = firebase_admin.initialize_app()
 
 fb_config = json.load(open(FIREBASE_CONFIG_JSON_NAME))
 fb_config.setdefault('databaseURL',
-                     HostedSql96Database.databaseServerURL #NOTE: Current database is chosen here
+                     Chosen_EnumDatabase_Conn_Obj_.SELF.databaseServerURL  #NOTE: Current database is chosen here
                      )
 fb_config.setdefault('storageBucket',os.environ['FIREBASE_STORAGE_BUCKET'])
 
