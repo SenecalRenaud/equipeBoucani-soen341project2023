@@ -1,6 +1,6 @@
 .gpt3__navbar {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
 
     padding: 2rem 6rem;
@@ -17,14 +17,18 @@
 
 .gpt3__navbar-links_logo {
     margin-right: 2rem;
-    padding: 1.15rem;
-    transform: translate(-15%,0);
+    z-index: 100;
+    /*padding: 1.15rem;*/
+    transform: translate(-9%,0);
 }
 
 .gpt3__navbar-links_logo img {
     margin-top: 3.5px;
-    width: calc(3.5*62.56px);
-    height: calc(3.5*16.02px);
+    /*width: 62.56px;*/
+    /*height: 16.02px;*/
+    width: calc(3.1*62.56px);
+    height: calc(3.1*16.02px);
+    z-index: 100;
 }
 
 .gpt3__navbar-links_container {
@@ -159,6 +163,12 @@ img#navbarLoggedInPfp {
     border-radius: 50%;
     position: relative;
     margin-left: .75em;
+    background-size:auto 100%;
+    /*width:65px;*/
+    /*height:65px;*/
+    display: block;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 #navbarLoggedInName {

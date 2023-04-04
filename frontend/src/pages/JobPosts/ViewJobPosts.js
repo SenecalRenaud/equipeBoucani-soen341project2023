@@ -154,10 +154,12 @@ function ViewJobPosts ()   {
                     { data.id &&
                         data.id
                             .slice((page-1) * componentsPerPage, page*componentsPerPage)
-                            .map((id, _i) =>
+                            .map((id, _i,sliced_data) =>
                                 {
 
                             let i = _i +  (page-1) * componentsPerPage
+                            console.log(i)
+                                    console.log(sliced_data)
                             return (<JobPostCard
                                 key={_i}
                                 jobtype={data.jobtype[i]}

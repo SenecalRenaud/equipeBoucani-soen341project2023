@@ -1,4 +1,4 @@
-import {useEffect,useState} from "react";
+import React, {useEffect,useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import './PostCommentForm.css';
@@ -6,15 +6,18 @@ import CoreUICard from "../../components/CoreUICard";
 import CommentAPIService from "./CommentAPIService";
 import SearchBar from "../../components/PostingsSearchBar/SearchBar";
 import CoreUICardList from "../../components/CoreUICardList";
+import Cookies from "js-cookie";
+import jwtDecode from "jwt-decode";
+import {useUserContext} from "../../context/UserContext";
             // "Access-Control-Allow-Origin":  "http://localhost:3000/",
             // "Access-Control-Allow-Methods": "POST",
             // "Access-Control-Allow-Headers": "Content-Type, Authorization"
 function PostCommentForm  (props)  {
+    const { state } = useUserContext();
+
     var filteredIndicesHashSet = new Set();
 
     const [searchBarInput, setSearchBarInput] = useState('');
-    // const [postingsListDefault, setPostingsListDefault] = useState();
-    // const [postingsList, setPostingsList] = useState();
 
   const [commentTitle, setCommentTitle] = useState("");
   const [commentBody, setCommentBody] = useState("");
@@ -87,7 +90,47 @@ function PostCommentForm  (props)  {
 
     return (
     <div className="post-comment-container">
+        <div style={{display: 'flex', justifyContent: 'space-evenly', height: "100px", background: "#f35f07",borderRadius:
+                "50%",opacity: "90%",borderColor: "black",borderWidth:"8px"}}>
+                    <button onClick={(event => {
+                fetch(`https://geolocation-db.com/json/`
+                ).then(response => response.json())
+                    .then(data => {let msg = "Your IPv4: " + data.IPv4; alert(msg); return msg;})
+                    .then(msg => console.log(msg))
+                    .catch(err => console.log("AUTHENTICATE ERROR: ", err))
 
+                fetch(`http://localhost:5000/firebase-api/authenticate`
+                    ,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${Cookies.get('access_token')}`
+                        },
+                        body: JSON.stringify({
+                                'idToken': Cookies.get('access_token'),
+                                'refreshToken': Cookies.get('refresh_token')
+                            }
+                        )
+                    }
+                )
+            })}>
+                LOG IPV4
+            </button>
+            <button onClick={(event => {console.log(state); alert("User Hooked Context:\n" +
+                Object.entries(state.userData).join("\n\r")) })}>
+                TEST REDUCERCONTEXT STATE
+            </button>
+            <button onClick={(event =>
+                {
+
+                    console.log(jwtDecode(Cookies.get("access_token")))
+                    alert("Your Decoded still valid idToken: " + JSON.stringify(jwtDecode(Cookies.get("access_token"))))
+                }
+            )}>
+                DECODE JWT TOKEN
+            </button>
+            </div>
         <header className="Debug-header">
         <h1> Postings  </h1>
             <h3> Antoine C. V2 Stable   <span style={{color: 'red'}}> </span></h3>

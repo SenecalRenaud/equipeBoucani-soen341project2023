@@ -6,7 +6,8 @@ export const MouseCursorGradientTrackingTag = styled.div`
   & {
   position: relative;
   background: transparent;
-  border-radius: 97%;
+  //border-radius: 97%;
+    
   padding: 0.5rem 1rem;
   font-size: 1.2rem;
   border: none;

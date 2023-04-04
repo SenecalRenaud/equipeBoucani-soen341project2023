@@ -38,45 +38,6 @@ const NavMenu = () => {
                 View Job Posts
             </NavLink>
 
-            <button onClick={(event => {
-                fetch(`https://geolocation-db.com/json/`
-                ).then(response => response.json())
-                    .then(data => {let msg = "Your IPv4: " + data.IPv4; alert(msg); return msg;})
-                    .then(msg => console.log(msg))
-                    .catch(err => console.log("AUTHENTICATE ERROR: ", err))
-
-                fetch(`http://localhost:5000/firebase-api/authenticate`
-                    ,
-                    {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${Cookies.get('access_token')}`
-                        },
-                        body: JSON.stringify({
-                                'idToken': Cookies.get('access_token'),
-                                'refreshToken': Cookies.get('refresh_token')
-                            }
-                        )
-                    }
-                )
-            })}>
-                LOG IPV4
-            </button>
-            <button onClick={(event => {console.log(state); alert("User Hooked Context:\n" +
-                Object.entries(state.userData).join("\n\r")) })}>
-                TEST REDUCERCONTEXT STATE
-            </button>
-            <button onClick={(event =>
-                {
-
-                    console.log(jwtDecode(Cookies.get("access_token")))
-                    alert("Your Decoded still valid idToken: " + JSON.stringify(jwtDecode(Cookies.get("access_token"))))
-                }
-            )}>
-                DECODE JWT TOKEN
-            </button>
-
         </Nav>
     </>)
 }

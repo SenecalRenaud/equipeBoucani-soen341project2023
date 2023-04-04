@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 // import { useCookies } from 'react-cookie';
 import { useUserContext} from "../../context/UserContext";
 import LoadingScreen from "../LoadingScreen/LoadingScreen";
-import ReactLoading from "react-loading";
+
 const SignInForm = () => {
 
     // Antoine's single Context x Reducer user stateful information storage ! Efficient!
