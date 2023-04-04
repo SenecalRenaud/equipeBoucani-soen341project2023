@@ -1,11 +1,13 @@
 import React from 'react';
-import { Header } from '../../components';
+import {CustomerReview, EmployerGuide, Header} from '../../components';
 import { UserGuide } from '../../components';
 const Home = () => {
   return (
       <div>
       <Header />
       <UserGuide />
+      <EmployerGuide />
+      <CustomerReview />
       </div>
 
   );

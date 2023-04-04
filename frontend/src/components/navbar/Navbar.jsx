@@ -76,7 +76,8 @@ const Navbar = () => {
       <div className='gpt3__navbar-links'>
 
         <div className='gpt3__navbar-links_logo'> 
-          <img src={logo2} alt="logo"/>
+          <nav><NavLink to="/" activeStyle>
+		<img src={logo2} alt="logo"/></NavLink></nav>
         </div>
 
         <div className='gpt3__navbar-links_container'>

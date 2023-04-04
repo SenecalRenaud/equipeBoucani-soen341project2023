@@ -2,3 +2,5 @@
 export { default as Navbar } from './navbar/Navbar' ;
 export { default as Header } from './header/Header' ;
 export { default as UserGuide } from './UserGuide/UserGuide';
+export { default as EmployerGuide } from './EmployerGuide/EmployerGuide';
+export { default as CustomerReview } from './CustomerReview/CustomerReview';
