@@ -105,6 +105,8 @@ const JobPostingForm = (props) => {
             jobDescription,
             ...(jobType === 'Time-Period' && { startDate, endDate }),
         };
+        console.log(jobPositionData)
+        window.location.replace("http://localhost:3000/viewjobposts")
     };
 
     if (!decoded_token_claims.employer){

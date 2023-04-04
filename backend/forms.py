@@ -40,7 +40,7 @@ def authorized(**permissions):
                 decoded_token = auth.verify_id_token(id_token,check_revoked=True)
                 print(decoded_token)
 
-                if decoded_token['admin']: #A regular level admin has AT LEAST all the rights of all other types combined !
+                if 'admin' in decoded_token and decoded_token['admin']: #A regular level admin has AT LEAST all the rights of all other types combined !
                     decoded_token.setdefault('employer',True)
                     decoded_token.setdefault('applicant', True)
 

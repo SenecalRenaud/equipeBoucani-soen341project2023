@@ -7,6 +7,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFilter} from "@fortawesome/free-solid-svg-icons";
 import { makeStyles } from '@material-ui/core/styles';
 import Pagination from '@material-ui/lab/Pagination';
+import LoadingScreen from "../LoadingScreen/LoadingScreen";
 
 const useStyles = makeStyles(() => ({
   ul: {
@@ -100,9 +101,11 @@ function ViewJobPosts ()   {
                     </header>
                     <h1>Job Posts</h1>
                     <div className="job-posts">
+                        <LoadingScreen/>
                         <p align="center" style={{color: "#FF5733"}}>Your API/backend server is not launched. Please ask an admin to launch the server to use this page.</p>
                     </div>
                 </div>
+
             );
         }
         else{
