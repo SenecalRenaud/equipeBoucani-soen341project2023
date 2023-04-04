@@ -1,12 +1,13 @@
 import React from 'react';
-import {CustomerReview, EmployerGuide, Header} from '../../components';
-import { UserGuide } from '../../components';
+import {CustomerReview, EmployerGuide, Header, Support, UserGuide} from '../../components';
+
 const Home = () => {
   return (
       <div>
       <Header />
       <UserGuide />
       <EmployerGuide />
+      <Support/>
       <CustomerReview />
       </div>
 
