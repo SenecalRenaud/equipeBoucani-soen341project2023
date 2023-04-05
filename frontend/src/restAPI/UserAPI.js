@@ -86,7 +86,8 @@ export default class UserRESTAPI  {
     }
     static async isUserLoggedInBackendSession(){
         try {
-              const result = await UserRESTAPI.fetchCurrentUserLoggedInBackendSession();
+              let result = await UserRESTAPI.fetchCurrentUserLoggedInBackendSession();
+
               return [Object.keys(result).length !== 0, result]
 
             } catch (error) {
@@ -96,7 +97,11 @@ export default class UserRESTAPI  {
     static async fetchCurrentUserLoggedInBackendSession(){
         // UserRESTAPI.res = Object.keys(json).length !== 0
             try {
-              const result = await CommentAPIService.GetUserDetails("current");
+
+              let result = await CommentAPIService.GetUserDetails("current");
+              console.log("fetchCurrentUserLoggedInBackendSession: ",result)
+              if (result == null)
+                  result = {}
               UserRESTAPI.userLoggedInBackendSession = result;
               return result;
             } catch (error) {

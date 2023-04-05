@@ -153,7 +153,7 @@ export default class CommentAPIService{
         ).then(
             data => (data === undefined ? {} : data.json())
         ).catch(err =>
-            console.log("SOME ERROR OCCURED WHILE FETCHING USER DATA: ", err)
+            console.log("SOME ERROR OCCURED WHILE FETCHING USER ",uid,"'s DATA: ", err)
         )
     }
     static async UserLogout(reducerDispatch,{frontend_logout_only=false} ={}){
