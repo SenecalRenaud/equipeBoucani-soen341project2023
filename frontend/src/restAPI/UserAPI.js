@@ -66,6 +66,7 @@ export default class UserRESTAPI  {
         return true;
     }
 
+
     static userLoggedInBackendSession;
 
 
