@@ -21,7 +21,7 @@ from werkzeug.utils import secure_filename
 
 from flask_cors import CORS,cross_origin #?  (for cross origin requests)
 from flask_bcrypt import Bcrypt #? (keys and password hashing engine)
-# from flask_session import Session #NOTE : Assert Accept certain MIME Types/Subtypes
+from flask_session import Session #NOTE : Assert Accept certain MIME Types/Subtypes
 
 from flask_wtf.csrf import CSRFProtect
 
@@ -68,7 +68,7 @@ from firebase_admin._auth_utils import EmailAlreadyExistsError, EmailNotFoundErr
 app.config.from_object(ApplicationSessionConfig)
 
 
-#Session(app)
+Session(app)
 
 # CSRF cookie,credentials, server-side and request handling, security...
 cors = CORS(app,
@@ -285,6 +285,7 @@ def signin():
 
 @app.route('/firebase-api/logout')
 def logout():
+    print("TRYING TO LOGOUT")
 
     if 'user' not in session:
         print("No user to logout in the backend!")
@@ -295,6 +296,17 @@ def logout():
         loggedout_user = session.pop('user')
         response = make_response(f"Log out : {json.dumps(loggedout_user)} . " + \
                                  "Delete token cookies so frontend knows user is not authentificated or authorized anymore")
+
+        try:
+            decoded_token = auth.verify_id_token(loggedout_user['localId'])
+            user_uid = decoded_token['uid']  # Get the user's UID from the decoded token
+
+            # Log out the user by revoking the refresh token
+            auth.revoke_refresh_tokens(user_uid)
+
+            print('User logged out successfully from Firebase Auth System')
+        except Exception as e:
+            print('Error logging out user from Firebase Auth System:', e)
 
     if (session_cookie := request.cookies.get('session',None)):
         # print(type(session_cookie))
@@ -470,16 +482,19 @@ def authenticate():
 
     #return response
 
-@app.route("/firebase-api/get-user/<_uid>/")
+@app.route("/firebase-api/get-user/<_uid>/",methods=['GET'],endpoint='get_user_details')
 @cross_origin()
 def get_user_details(_uid):
     _uid = _uid.strip()
     #TODO CACHE THESE USER DETAILS MAYBE?!
     if _uid == "current":
+        # print("\tUSER IS CURRENT !")
         if 'user' in session:
+            # print("\t\tUSER IN SESSION")
             user_recordinfo = _auth.get_account_info(session['user']['idToken'])['users'][0]
             _uid = user_recordinfo['localId']
         else:
+            # print("\t\tUSER NOT IN SESSION")
             return {}
 
 

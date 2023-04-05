@@ -2,7 +2,7 @@ import React, {useRef, useState} from 'react'
 import { RiMenu3Line, RiCloseLin, RiCloseLine } from 'react-icons/ri'; //might be an error here if there isnt a node_modules present...
 // import {Link, Route} from "react-router-dom";
 import './navbar.css';
-import logo2 from '../../assets/logo2.png';
+import logo2 from '../../assets/logo3.png';
 import {Nav, NavLink, NavLinkSignIn, NavLinkSignUp} from "./NavElements";
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode'
