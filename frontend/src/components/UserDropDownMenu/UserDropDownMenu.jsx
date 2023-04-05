@@ -57,8 +57,7 @@ const UserDropDownMenu = ({triggerMenuMarkup,triggeredUserUid}) => {
 
     let isNotUndetermined = !!user.email && !!otherUser.email;
 
-    console.log(`${user.firstName}->${otherUser.firstName} dropdownMenu.jsx count: ${counter.current++}`)
-    // console.log(permissionBasedMenuOptionsMarkup)
+    // console.log(`${user.firstName}->${otherUser.firstName} dropdownMenu.jsx count: ${counter.current++}`)
 
       return (
         <div className="menu-container">

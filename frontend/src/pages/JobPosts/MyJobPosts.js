@@ -9,23 +9,82 @@ import {faFilter} from "@fortawesome/free-solid-svg-icons";
 // let loadNum = 1;
 function MyJobPosts (props)   {
     // const refCounter = useRef(0);
-
-    var filteredIndicesHashSet = new Set();
+    const filteredIndicesHashSet = new Set();
     const [data,setData] = useState([{}]); //TODO: REPLACE WITH partialData state hook, directly handled in the filter alg/funciton
     const [defaultData,setDefaultData] = useState([{}]);
     const [searchBarInput, setSearchBarInput] = useState('');
 
     let [er,setEr] = useState(false);
     let [errorString, setErrorString] = useState("");
+
+        const updateSearchInput = async (searchBarInput) => {
+        /*
+        Antoine@ChiefsBestPal
+        A bit verbose/complicated, but it is working and sufficiently efficient.
+        However, it can / should be scaled and optimized in the near future !
+         */
+        filteredIndicesHashSet.clear();
+
+        for (let [fieldName,allFieldInstances] of Object.entries(defaultData)) {
+            allFieldInstances.forEach(
+                (fieldVal,dataIx) => {
+
+                    if (fieldVal != null &&
+                        fieldVal.toString().toLowerCase().includes(searchBarInput.toLowerCase()))
+                        filteredIndicesHashSet.add(dataIx);
+                    // if (defaultData.employerUid[dataIx] !== window.localStorage.getItem("uid"))
+                    //     filteredIndicesHashSet.delete(dataIx);
+
+                }
+            )
+        }
+
+
+
+        const filtered = Array.from(Object.values(defaultData)).map(
+            row => row.filter(
+                (fieldVal,dataIx) => filteredIndicesHashSet.has(dataIx)
+            )
+        );
+
+        setSearchBarInput(searchBarInput);
+        setData( //TODO CLOUD MAKE MORE EFFICIENT DATA-STRUCTURE/FUNCTIONAL PROGRAMMING WISE... BUT THIS STILL WORKS FOR THE PROJECT
+            Object.keys(defaultData).reduce(
+                (obj, key, index) => ({ ...obj, [key]: filtered[index] }), {})
+        );
+        // setPartialData(
+        //
+        // )
+        // console.log("SADSADSADSAD")
+        // console.log(filtered)
+        alert("FILTERED THING SIZE: " + filteredIndicesHashSet.size.toString())
+        document.getElementById("searchResultCount").innerText = "Found " + filteredIndicesHashSet.size + " results";
+    }
+
+
     useEffect(() => {
 
         fetch("/getjob?mapAsFields=true").then(
             response => response.json()
         ).then(
             data => {
+                let otherEmployerIxToRemove = []; //Must be list, since splice needs to avoid indices shifting
+                data.employerUid.forEach(
+                    (employerUid, postingIx) => {
+                        if( employerUid !== window.localStorage.getItem("uid"))
+                            otherEmployerIxToRemove.push(postingIx)
+                    }
+                )
+                console.log(otherEmployerIxToRemove)
+                Object.keys(data).forEach(fieldName => {
+                        otherEmployerIxToRemove.forEach(fieldValueIx => {
+                            data[fieldName].splice(fieldValueIx, 1);
+                        });
+                    })// Mutates obj since arrays of obj are shallow copies
+
                 setData(data);
                 setDefaultData(data)
-                console.log(data);
+
             }
         ).catch(function(error){
             console.log("empty db", error.toString());
@@ -41,53 +100,8 @@ function MyJobPosts (props)   {
         // }
         // loadNum ^= 0b11;
 
+
     },[])
-
-
-    const updateSearchInput = async (searchBarInput) => {
-        /*
-        Antoine@ChiefsBestPal
-        A bit verbose/complicated, but it is working and sufficiently efficient.
-        However, it can / should be scaled and optimized in the near future !
-         */
-        filteredIndicesHashSet.clear();
-
-        for (let [fieldName,allFieldInstances] of Object.entries(defaultData)) {
-            allFieldInstances.forEach(
-                (fieldVal,dataIx) => {
-
-                    if (fieldVal != null &&
-                        fieldVal.toString().toLowerCase().includes(searchBarInput.toLowerCase()))
-                        filteredIndicesHashSet.add(dataIx);
-                    if (defaultData.employerUid[dataIx] !== window.localStorage.getItem("uid"))
-                        filteredIndicesHashSet.delete(dataIx);
-
-                }
-            )
-        }
-
-
-
-        const filtered = Array.from(Object.values(defaultData)).map(
-            row => row.filter(
-                (fieldVal,dataIx) => filteredIndicesHashSet.has(dataIx)
-            )
-        );
-
-        setSearchBarInput(searchBarInput);
-        setData( //TODO MAKE MORE EFFICIENT DATA-STRUCTURE WISE... THIS WORKS BUT ITS NOT QUITE SCALABLE
-            Object.keys(defaultData).reduce(
-                (obj, key, index) => ({ ...obj, [key]: filtered[index] }), {})
-        );
-        // setPartialData(
-        //
-        // )
-        // console.log("SADSADSADSAD")
-        // console.log(filtered)
-
-        document.getElementById("searchResultCount").innerText = "Found " + filteredIndicesHashSet.size + " results";
-    }
-
 
 
 
