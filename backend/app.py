@@ -686,13 +686,13 @@ def delete_jobpost(_id):
 # =================== FLASK MAIL TESTS ===================
 #
 # TODO Unit tests might be needed for the notification system(s) soon.
-@app.route("/sendmail/<email>/<job_title>/<applicant_name>/")
-def flask_mail_send_test(email, job_title, applicant_name):
+@app.route("/sendmail/", methods=['PUT'])
+def flask_mail_send_test():
     try:
         msg = Message("Flask-Mail Test message",
                       sender="equipeboucani@gmail.com",
-                      recipients=[email])
-        msg.body = applicant_name + " has applied to your job posting for " + job_title + "!"
+                      recipients=[request.json['email']])
+        msg.body = request.json['applicant_name'] + " has applied to your job posting for " + request.json['job_title'] + "!"
         mail.send(msg)
         return "Sent"
     except Exception as e:
