@@ -102,6 +102,8 @@ return (
 
         <Route exact path='/profile/:uid' element={<ProfilePage/>} />
         <Route exact path='current/jobpostings' element={<MyJobPosts postedJob={postedJob} />}/>
+        {/*TODO: Make path:  /viewjobposts/:uid
+           TODO  and use useParams() hook like such: params.uid in useEffect dependencies */}
         {/*<Route path='/SESSION_COOKIES_DEBUG' element={<SESSION_COOKIES_DEBUG/>}/>*/}
 
     </Routes>

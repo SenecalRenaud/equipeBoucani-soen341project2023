@@ -1,4 +1,4 @@
-import {useEffect,useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import "../PostAJob/JobPostingForm.css";
 import CoreUICard from "../../components/CoreUICard";
 import JobPostCard from "../../components/JobPostCard";
@@ -6,9 +6,12 @@ import SearchBar from "../../components/PostingsSearchBar/SearchBar";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFilter} from "@fortawesome/free-solid-svg-icons";
 
+// let loadNum = 1;
 function MyJobPosts (props)   {
+    // const refCounter = useRef(0);
+
     var filteredIndicesHashSet = new Set();
-    const [data,setData] = useState([{}]);
+    const [data,setData] = useState([{}]); //TODO: REPLACE WITH partialData state hook, directly handled in the filter alg/funciton
     const [defaultData,setDefaultData] = useState([{}]);
     const [searchBarInput, setSearchBarInput] = useState('');
 
@@ -29,6 +32,15 @@ function MyJobPosts (props)   {
             setErrorString(error.toString())
             setEr(true);
         })
+
+        // if (loadNum === 2){
+        //     updateSearchInput("A")
+        // }else{
+        //     updateSearchInput("A")
+        //     updateSearchInput("")
+        // }
+        // loadNum ^= 0b11;
+
     },[])
 
 
@@ -47,10 +59,14 @@ function MyJobPosts (props)   {
                     if (fieldVal != null &&
                         fieldVal.toString().toLowerCase().includes(searchBarInput.toLowerCase()))
                         filteredIndicesHashSet.add(dataIx);
+                    if (defaultData.employerUid[dataIx] !== window.localStorage.getItem("uid"))
+                        filteredIndicesHashSet.delete(dataIx);
 
                 }
             )
         }
+
+
 
         const filtered = Array.from(Object.values(defaultData)).map(
             row => row.filter(
@@ -63,6 +79,11 @@ function MyJobPosts (props)   {
             Object.keys(defaultData).reduce(
                 (obj, key, index) => ({ ...obj, [key]: filtered[index] }), {})
         );
+        // setPartialData(
+        //
+        // )
+        // console.log("SADSADSADSAD")
+        // console.log(filtered)
 
         document.getElementById("searchResultCount").innerText = "Found " + filteredIndicesHashSet.size + " results";
     }
@@ -122,6 +143,7 @@ function MyJobPosts (props)   {
                 </section>
                 <span style={{display: 'inline-block' ,fontSize: '.9em' , marginTop: "-1rem"}}>
                  <b id="searchResultCount"> Found {(data.id ? data.id.length : 0)} results.</b>
+
             </span>
 
                 <hr  style={{
@@ -131,8 +153,12 @@ function MyJobPosts (props)   {
                     borderColor : '#000000'
                 }}/>
                 <div className="job-posts">
-                    { data.id && data.id.map((id, i)  => (
+                    { data.id && data.id.map((id, i)  =>
+                    {
+
+                        return (
                         ((window.localStorage.getItem("uid") === data.employerUid[i])) ?
+
                             <JobPostCard
                                 key={i}
                                 jobtype={data.jobtype[i]}
@@ -146,7 +172,7 @@ function MyJobPosts (props)   {
                                 editDate={new Date(Date.parse(data.editDate[i])).toLocaleString()}
                                 employerUid={data.employerUid[i]}
                             /> : null
-                        ))}
+                        )})}
                 </div>
             </div>
         );
