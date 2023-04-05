@@ -32,8 +32,8 @@ function MyJobPosts (props)   {
                     if (fieldVal != null &&
                         fieldVal.toString().toLowerCase().includes(searchBarInput.toLowerCase()))
                         filteredIndicesHashSet.add(dataIx);
-                    // if (defaultData.employerUid[dataIx] !== window.localStorage.getItem("uid"))
-                    //     filteredIndicesHashSet.delete(dataIx);
+                    if (defaultData.employerUid[dataIx] !== window.localStorage.getItem("uid"))
+                        filteredIndicesHashSet.delete(dataIx);
 
                 }
             )
@@ -57,7 +57,6 @@ function MyJobPosts (props)   {
         // )
         // console.log("SADSADSADSAD")
         // console.log(filtered)
-        alert("FILTERED THING SIZE: " + filteredIndicesHashSet.size.toString())
         document.getElementById("searchResultCount").innerText = "Found " + filteredIndicesHashSet.size + " results";
     }
 
@@ -68,6 +67,7 @@ function MyJobPosts (props)   {
             response => response.json()
         ).then(
             data => {
+                console.log(window.localStorage.getItem("uid"))
                 let otherEmployerIxToRemove = []; //Must be list, since splice needs to avoid indices shifting
                 data.employerUid.forEach(
                     (employerUid, postingIx) => {
@@ -75,11 +75,15 @@ function MyJobPosts (props)   {
                             otherEmployerIxToRemove.push(postingIx)
                     }
                 )
-                console.log(otherEmployerIxToRemove)
+
                 Object.keys(data).forEach(fieldName => {
-                        otherEmployerIxToRemove.forEach(fieldValueIx => {
-                            data[fieldName].splice(fieldValueIx, 1);
-                        });
+                        const arr = data[fieldName]
+
+                          for (let i = otherEmployerIxToRemove.length - 1; i >= 0; i--) {
+    // Remove the element at the current index
+                                arr.splice(otherEmployerIxToRemove[i], 1);
+                              }
+                        data[fieldName] = arr;
                     })// Mutates obj since arrays of obj are shallow copies
 
                 setData(data);
