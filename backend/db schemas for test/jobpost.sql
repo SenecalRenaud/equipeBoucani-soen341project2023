@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Mar 16, 2023 at 05:54 PM
+-- Generation Time: Mar 31, 2023 at 04:40 PM
 -- Server version: 8.0.31
 -- PHP Version: 8.0.26
 
@@ -24,40 +24,33 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `comment_post`
+-- Table structure for table `job_post`
 --
 
-CREATE TABLE `job_post` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS `job_post`;
+CREATE TABLE IF NOT EXISTS `job_post` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `jobtype` text NOT NULL,
   `title` varchar(100) DEFAULT NULL,
-  `location` text DEFAULT NULL,
+  `location` text,
   `salary` int DEFAULT NULL,
-  `tags` text DEFAULT NULL,
-  `description` text DEFAULT NULL,
+  `tags` text,
+  `description` text,
   `date` datetime DEFAULT NULL,
   `editDate` datetime DEFAULT NULL,
-  PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `employerUid` varchar(28) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `comment_post`
+-- Dumping data for table `job_post`
 --
 
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `comment_post`
---
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
---
+INSERT INTO `job_post` (`id`, `jobtype`, `title`, `location`, `salary`, `tags`, `description`, `date`, `editDate`, `employerUid`) VALUES
+(1, 'Full-Time', 'Minion', 'Gru\'s House', 10, 'Finance,Design', 'steal the moon', '2023-03-22 17:43:28', NULL, 'RJA0ysCVJCfd9mlFrV31zyMXftF3'),
+(2, 'Part-Time', 'Back-End dev', 'Quebec City', 2950, 'Healthcare,IT', 'jjj', '2023-03-22 17:45:36', NULL, 'OtZw937K1URQa7GMbNLG5gZLosD2'),
+(7, 'Full-Time', 'Software Dev', 'Montreal', 4600, 'Healthcare,Marketing', 'testing 123', '2023-03-29 19:19:15', NULL, 'GJPsv1EsOHfeqCuwxHZlyWJ7Nam1');
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './SignUpForm.css';
 import CommentAPIService from "../BACKEND_DEBUG/CommentAPIService";
+import {useUserContext} from "../../context/UserContext";
 
 const SignUpForm = () => {
     const [firstName, setFirstName] = useState('');
@@ -13,6 +14,10 @@ const SignUpForm = () => {
     const [userType, setUserType] = useState('');
     const [previewImage, setPreviewImage] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
+
+    const [resumeType,setResumeType] = useState('Resume')
+
+    const { dispatch } = useUserContext();
 
     const handleProfilePictureChange = (event) => {
         setProfilePicture(event.target.files[0]);
@@ -52,15 +57,22 @@ const SignUpForm = () => {
             formData.append('uploadedResume', uploadedResume);
 
             CommentAPIService.AddNewUser(formData)
-                //.then((any)=> window.location.replace('http://localhost:3000/signin'))
-                .catch(error => console.log('Following error occured after fetching from API: ',error))
+            .then(r => 
+                CommentAPIService.UserSignIn(dispatch,formData)//dispatch i.e. reducerDispatch
+            )
+
+            
         }
     };
 
     return (
         <div className="sign-up-container">
             <h1>Sign Up</h1>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={
+                (event) =>
+                    handleSubmit(event)
+            }
+                >
                 <label htmlFor="first-name-input">First Name</label>
                 <input
                     id="first-name-input"
@@ -121,7 +133,7 @@ const SignUpForm = () => {
                     </div>
                 )}
 
-                <label htmlFor="resume-input">Upload Resume</label>
+                <label htmlFor="resume-input">Upload {resumeType}</label>
                 <input
                     id="resume-input"
                     type="file"
@@ -132,11 +144,25 @@ const SignUpForm = () => {
                 <select
                     id="user-type-select"
                     value={userType}
-                    onChange={(event) => setUserType(event.target.value)}
+                    onChange={(event) => {
+                        setUserType(event.target.value)
+                        switch (event.target.value) {
+                            case "Employer":
+                                setResumeType("Company's Resume")
+                                break;
+                            case "Admin":
+                                setResumeType("Administration request document")
+                                break;
+                            case "Applicant":
+                            default:
+                                setResumeType("Resume")
+                        }
+                    }
+                }
                     required
                 >
                     <option value="">Select a user type</option>
-                    <option value="Student">Student</option>
+                    <option value="Applicant">Student/Applicant</option>
                     <option value="Employer">Employer</option>
                     <option value="Admin">Admin</option>
                 </select>

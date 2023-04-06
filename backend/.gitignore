@@ -2,6 +2,8 @@
 .env
 .env.*
 
+local_flask_sessions/*
+
 .credentials_firebase_adminsdk_8mtwu_187f5d4799.json
 .credentials_firebase_adminsdk_n0xv8_cd14a39876.json
 .firebase_config.json

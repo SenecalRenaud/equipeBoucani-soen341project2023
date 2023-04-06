@@ -4,7 +4,8 @@ import styled from "styled-components";
 export const Nav = styled.nav`
   height: 85px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
+  
   padding: 0.2rem calc((100vw - 1000px) / 2);
   z-index: 12;
 `;
@@ -15,6 +16,7 @@ export const NavLink = styled(Link)`
   align-items: center;
   text-decoration: none;
   padding: 0 1rem;
+  flex: 1;
   height: 100%;
   cursor: pointer;
   &.active {
@@ -32,7 +34,7 @@ export const NavLinkSignIn = styled(Link)`
   font-size: 18px;
   line-height: 25px;
   text-transform: capitalize;
-
+  white-space: nowrap;
   margin: 0 1rem;
   cursor: pointer;
 `;
@@ -53,4 +55,5 @@ export const NavLinkSignUp = styled(Link)`
   cursor: pointer;
   min-height: 66px;
   min-width: 66px;
+  white-space: nowrap;
 `;
