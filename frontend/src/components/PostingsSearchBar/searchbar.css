@@ -1,0 +1,16 @@
+input[type='search']:focus{
+    outline: #b84a00;
+    background-color: #eead88;
+    height: 25px;
+    font-size: 1.3em;
+}
+.navbar-nav li a{
+  padding-left: 8.5px;
+  padding-right: 8.5px;
+  font-size: 12px;
+  transition: 0.5s ease;
+}
+.navbar-nav li a > span.fa:before{
+  margin-right: 5px;
+  /* background-color: #ddd; */
+}

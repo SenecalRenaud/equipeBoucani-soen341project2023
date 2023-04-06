@@ -6,6 +6,7 @@
     margin-left: 25px;
     margin-right: 25px;
 
+
 }
 
 .profile_container_1{
@@ -74,7 +75,13 @@
     padding-bottom: 50px;
 
     min-height: 900px;
+}
 
+.profile_resume {
+    display: flex;
+    /*position: relative;*/
+    width: 600px;
+    flex-grow: 1;
 }
 
 
@@ -210,3 +217,32 @@
     margin-right: 25px;
 
 }
+
+
+button.update-profile-btn {
+  width: 48%;
+  float: left;
+  display: block;
+  margin: 40px auto;
+  margin-left: 1%;
+  padding: 15px 0;
+  font-size: 16px;
+  color: #ffffff;
+  cursor: pointer;
+  background-color: rgba(234, 116, 20, 0.65);
+  box-shadow: inset 0 0 0 2px #cb7139,
+              0 2px 0 0 rgba(203, 135, 57, 0.5);
+  transition: 0.5s ease;
+}
+button.update-profile-btn:hover{
+  background-color: rgb(203, 123, 57);
+}
+/*.update-profile-btn:after {*/
+/*  content: "World";*/
+/*  position: absolute;*/
+/*  display: block;*/
+/*  color: black;*/
+/*  top: 1px;*/
+/*  left: 1px;*/
+/*  pointer-events: none;*/
+/*}*/

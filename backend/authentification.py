@@ -16,18 +16,20 @@ import requests
 import dotenv
 import os
 
+from config import DATABASES_ENV_FILE_NAME,Chosen_EnumDatabase_Conn_Obj_,ApplicationSessionConfig
+
 FIREBASE_CONFIG_JSON_NAME = ".firebase_config.json"
 FIREBASE_ADMINSDK_CREDS_SERVICEKEYS_FILENAME = ".credentials_firebase_adminsdk_n0xv8_cd14a39876.json"
 
-dotenv.load_dotenv(".env.local")
+dotenv.load_dotenv(DATABASES_ENV_FILE_NAME)
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = FIREBASE_ADMINSDK_CREDS_SERVICEKEYS_FILENAME
 
 firebase_sdkadmin = firebase_admin.initialize_app()
 
 fb_config = json.load(open(FIREBASE_CONFIG_JSON_NAME))
 fb_config.setdefault('databaseURL',
-                     "jdbc:mysql://localhost:3306/flask_test_mysql_db"
-                     )#todo improve this since its pretty much hardcoded
+                     Chosen_EnumDatabase_Conn_Obj_.SELF.databaseServerURL  #NOTE: Current database is chosen here
+                     )
 fb_config.setdefault('storageBucket',os.environ['FIREBASE_STORAGE_BUCKET'])
 
 fb_adminsdk_cred = credentials.Certificate(FIREBASE_ADMINSDK_CREDS_SERVICEKEYS_FILENAME)
@@ -45,6 +47,42 @@ fb_storage = _firebase.storage()
 mainStorageBucket = storage.bucket(name=os.environ['FIREBASE_STORAGE_BUCKET'])
 
 firestore_db = adminsdk_firestore.client()
+
+# def authenticate_user(email="", password=""):
+    # user = auth.get_user_by_email(email)
+    # print(vars(user))
+    #
+    #
+    # uid = "HxlC0GZ2wuYHm7QRTXmE9GUDn402"
+    # custom_claims = {"admin": True}  # Optional custom claims
+    #
+    # strtoken = _auth.create_custom_token(uid,custom_claims,1)
+    # signedIn_user = _auth.sign_in_with_custom_token(strtoken)
+    # print(strtoken)
+    # # signedIn_user = _auth.sign_in_with_email_and_password(email, password)
+    # print(signedIn_user)
+    #
+    # print(_auth.get_account_info(signedIn_user))
+
+    # Generate an ID token
+    # id_token_encoded : bytes = auth.create_custom_token(uid, custom_claims)
+    # id_token : str = id_token_encoded.decode("utf-8")
+    #
+    # pyrebaseUserRecord = _auth.get_account_info(id_token)
+    # print(json.dumps(pyrebaseUserRecord))
+    # print(pyrebaseUserRecord)
+    # print(dict(**pyrebaseUserRecord))
+    # print(auth.verify_id_token(id_token_encoded))
+    # Generate a refresh token
+    # refresh_token = auth.generate_refresh_token(uid)
+    ##  print(_auth.refresh(refresh_token))
+
+
+    # #auth.create_session_cookie()
+    # #print(auth.verify_session_cookie())
+
+    # return None
+    # return id_token, refresh_token
 
 if __name__ == '__main__':
     doc_ref = firestore_db.collection(u'test_users').document(u'datafile1')

@@ -1,4 +1,5 @@
 import Cookies from "js-cookie";
+import UserRESTAPI from "../../restAPI/UserAPI";
 
 export default class CommentAPIService{
 
@@ -16,7 +17,7 @@ export default class CommentAPIService{
     }
 
     static async DeleteComment(comment_id){
-        return await fetch(`http://localhost:5000/delete/` + comment_id + '/',{
+        return await fetch(`http://localhost:5000/delete/${comment_id}/`,{
             'method':'DELETE',
             headers : {
                 'Content-Type':'application/json',
@@ -27,7 +28,7 @@ export default class CommentAPIService{
     }
 
     static async UpdateCommentPut(comment_id, request_body){
-        return await fetch(`http://localhost:5000/update/` + comment_id + '/',{
+        return await fetch(`http://localhost:5000/update/${comment_id}/`,{
             //'mode': "no-cors",//remove this line if troublesome in environment where deployed
             'method':'PUT',
             headers : {
@@ -50,31 +51,94 @@ export default class CommentAPIService{
             .catch(error => console.log("API CORE EXCEPTION... " + error))
     }
 
-    static async UserSignIn(formData){
+    static async UserSignIn(reducerDispatch,formData){
         return await fetch(`http://localhost:5000/firebase-api/signin`,{
             'method':'POST',
             body:formData,
             credentials: "include" // To get cookies in AJAX request from backend origin
         })
             .then(response => {
+                //TODO dispatch({ type: 'REQUEST_LOGIN' });
 
                 if(response.ok){
                     return response;
                 }else{
-                    console.log('no response after AJAX sign in CORS request to backend...');
+                    console.log('BAD SIGNIN RESPONSE AFTER AJAX FETCH !');
+                    response.json().then(data => {
+                        throw new Error(data.message)
+                    }
+                    ).catch(err =>
+                    {
+                        //TODO dispatch({ type: 'LOGIN_ERROR', error: error });
+
+                        alert(err)
+                    })
                 }
 
             })
             .then(data => data.json())
+            .then(auth_json => {
 
-            .catch(error => console.log("API CORE EXCEPTION... " + error))
-    }
+                auth_json.uid = auth_json.localId
+                //delete auth_json.localId
+
+                if (!UserRESTAPI.checkIfObjectIsValidUser(auth_json)){
+                    //TODO auth_json.errors = "ASDPOADOAD"
+                    console.log(auth_json)
+                    throw new Error("Auth_json not a valid user object... bad json promise")
+                }
+                // let expires = new Date();
+                // expires.setTime(expires.getTime() + (auth_json.expires_in * 250 ));
+                Cookies.set('access_token', auth_json.idToken);
+                Cookies.set('refresh_token', auth_json.refreshToken);
+                // Cookies.set('loggedin_uid', auth_json.uid);
+                // setCookie('access_token', auth_json.idToken, { path: '/',  expires})
+                // setCookie('refresh_token', auth_json.refresh_token, {path: '/', expires})
+                // setCookie('loggedin_uid', auth_json.localId, {path: '/', expires})
+                console.log(auth_json)
+
+                reducerDispatch({type: 'SET_USER', payload: auth_json})//TODO
+
+                window.localStorage.setItem("firstName",auth_json.firstName)
+                window.localStorage.setItem("lastName",auth_json.lastName)
+                window.localStorage.setItem("email",auth_json.email)
+                window.localStorage.setItem("photo_url",auth_json.photo_url)
+                window.localStorage.setItem("resume_url",auth_json.resume_url)
+                window.localStorage.setItem("lastSeenEpoch",auth_json.lastSeenEpoch)
+                window.localStorage.setItem("creationEpoch",auth_json.creationEpoch)
+                window.localStorage.setItem("userType",auth_json.userType)
+                window.localStorage.setItem("uid",auth_json.localId)
+                    // CryptoJs. auth_json.uid...
+
+                return auth_json
+            })
+            .then((auth_json)=> {
+                    //TODO dispatch({ type: 'LOGIN_SUCCESS', payload: data });
+
+                    window.location.replace('http://localhost:3000/')
+                    return auth_json
+                }
+            )
+            .catch(error =>
+            {
+                //TODO dispatch({ type: 'LOGIN_ERROR', error: data.errors[0] });
+
+                console.log('Following error occured after fetching from API: ',error)
+            })
+
+    };
+
+
+
 
     static async GetUserDetails(uid){
-        return await fetch("http://localhost:5000/firebase-api/get-user/"
-            + uid.toString() + "/",
+        return await fetch(
+            `/firebase-api/get-user/${uid.toString()}/`,
             {
                 'method': 'GET',
+        //                  headers : {
+        // //         'Content-Type':'application/json',
+        // //     }
             }).then(
                 response => {
 
@@ -87,18 +151,44 @@ export default class CommentAPIService{
             }
 
         ).then(
-            data => data.json()
+            data => (data === undefined ? {} : data.json())
+        ).catch(err =>
+            console.log("SOME ERROR OCCURED WHILE FETCHING USER ",uid,"'s DATA: ", err)
         )
     }
-    static UserLogout(){
+    static async UserLogout(reducerDispatch,{frontend_logout_only=false} ={}){
+
+
+        if(!frontend_logout_only) {
+
+            await fetch(`/firebase-api/logout`, { // if fails... try: http://localhost:5000?goto=logout
+
+            }).then(response => {
+                console.log(response)
+                return Promise.resolve("User logged out properly");
+            }).catch(
+                err => {
+
+                    console.log("FAILED TO LOGOUT ON ONE OF THE SERVERS !")
+                    console.error(err)
+                    console.log(err)
+                }
+            );
+        }
+
+        reducerDispatch({type: 'CLEAR_USER'})
+
+        window.localStorage.clear()
+
+        // Backend should have dealt with them, used to ensure if synchronization errors...
         Cookies.remove('access_token');
         Cookies.remove('refresh_token');
-        Cookies.remove('loggedin_uid');
-        fetch("http://localhost:5000/firebase-api/logout", {
-            credentials: "include"
-        }).then(response => {
-            return Promise.resolve("User logged out properly");
-        });
-        window.localStorage.clear()
-}
+        // Cookies.remove('loggedin_uid');
+        Cookies.remove('session');
+
+
+
+
+
+    }
 }

@@ -2,12 +2,11 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 
 import datetime
-import dataclasses
 import enum
 
 from uuid import uuid1, uuid4, uuid5
-
 generate_pr_uuid = lambda: uuid4().hex
+
 
 db = SQLAlchemy()
 
@@ -102,17 +101,20 @@ class JobPost(db.Model):
     title = db.Column(db.String(100), unique=True, nullable=False)
     description = db.Column(db.Text())
     tags = db.Column(db.Text())
-    date = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now)
     editDate = db.Column(db.DateTime(timezone=True), default=lambda: None)
+    date = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now)
+    employerUid = db.Column(db.VARCHAR(28), nullable=False ) #default firebase uuid used is 28 alphanumerical string
 
-    def __init__(self, jobtype, title, location, salary, description, tags):
+    def __init__(self, jobtype, title, location, salary, description, tags, employerUid):
         self.jobtype = jobtype
         self.title = title
         self.location = location
         self.salary = salary
         self.description = description
         self.tags = tags
+        self.employerUid = employerUid
 
+        # Attributes used for common modification date handling (IF ANY) in app routes !
         self.isEdited = False
         self._editDate = None
 
@@ -129,4 +131,4 @@ class JobPost(db.Model):
 
 class JobPostSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'type', 'title', 'location', 'salary', 'description', 'tags', 'date', 'editDate')
+        fields = ('id', 'jobtype', 'title', 'location', 'salary', 'description', 'tags', 'date', 'editDate','employerUid')

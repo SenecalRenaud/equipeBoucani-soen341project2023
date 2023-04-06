@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import './JobPostingForm.css';
 import JobPostingAPIService from "./JobPostingAPIService";
-
+import jwtDecode from "jwt-decode";
+import Cookies from "js-cookie";
 const JobPostingForm = (props) => {
-    let jobTypeTwo = '';
+
+    const decoded_token_claims = jwtDecode(Cookies.get("access_token"));
+
     const [jobType, setJobType] = useState('');
     const [jobTitle, setJobTitle] = useState('');
     const [location, setLocation] = useState('');
@@ -16,7 +19,6 @@ const JobPostingForm = (props) => {
 
     const handleJobTypeChange = (type) => {
         setJobType(type);
-        jobTypeTwo = type;
     };
 
     const handleJobTitleChange = (event) => {
@@ -56,7 +58,12 @@ const JobPostingForm = (props) => {
 
     const handleJobDescriptionChange = (event) => {
         const description = event.target.value;
-        if (description.length <= 200) {
+        var maxWords = 350;
+        var wordCount = description.split(/\s+/).length;
+        if (wordCount>maxWords) {
+            description.preventDefault()
+        }
+        else{
             setJobDescription(description);
             setWordCount(description.split(/\s+/).length);
         }
@@ -74,8 +81,11 @@ const JobPostingForm = (props) => {
         event.preventDefault();
 
 
-        JobPostingAPIService.AddJobPosting({"jobtype" : jobType, "title" : jobTitle, "location" : location, "salary" : salary, "tags" : industryTags.toString(), "description" : jobDescription})
-            .then((response) => props.postedComment(response))
+        JobPostingAPIService.AddJobPosting({"jobtype" : jobType, "title" : jobTitle, "location" : location, "salary" : salary, "tags" : industryTags.toString(), "description" : jobDescription,
+
+            'employerUid': decoded_token_claims.user_id
+        })
+            .then((response) => props.postedJob(response))
                 .then((any)=> window.location.reload())
             .catch(error => console.log('Following error occurred after fetching from API: ',error))
 
@@ -95,7 +105,21 @@ const JobPostingForm = (props) => {
             jobDescription,
             ...(jobType === 'Time-Period' && { startDate, endDate }),
         };
+        console.log(jobPositionData)
+        window.location.replace("http://localhost:3000/viewjobposts")
     };
+
+    if (!decoded_token_claims.employer){
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        useEffect(
+            () =>
+            {
+                alert("Only employers are allowed to post jobs ! Redirecting ... ")
+                window.location.replace('http://localhost:3000')
+            }
+            ,[]
+        )
+    }
 
     return (
         <div className="job-position-container">
@@ -207,10 +231,9 @@ const JobPostingForm = (props) => {
                         id="job-description-input"
                         value={jobDescription}
                         onChange={handleJobDescriptionChange}
-                        maxLength="200"
                         required
                     />
-                    <p className="word-count">{wordCount}/200 words</p>
+                    <p className="word-count">{wordCount}/350 words</p>
                     <div className="apply-button-container">
                         <button className="apply-button">Submit</button>
                     </div>

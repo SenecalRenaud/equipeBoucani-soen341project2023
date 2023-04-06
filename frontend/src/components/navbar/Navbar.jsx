@@ -1,23 +1,37 @@
-import React, { useState } from 'react'
+import React, {useRef, useState} from 'react'
 import { RiMenu3Line, RiCloseLin, RiCloseLine } from 'react-icons/ri'; //might be an error here if there isnt a node_modules present...
-import {Link} from "react-router-dom";
+// import {Link, Route} from "react-router-dom";
 import './navbar.css';
-import logo2 from '../../assets/logo2.png';
+import logo2 from '../../assets/logo3.png';
 import {Nav, NavLink, NavLinkSignIn, NavLinkSignUp} from "./NavElements";
 import Cookies from 'js-cookie';
-import CommentAPIService from "../../pages/BACKEND_DEBUG/CommentAPIService";
+import jwtDecode from 'jwt-decode'
+// import CommentAPIService from "../../pages/BACKEND_DEBUG/CommentAPIService";
+import UserDropDownMenu from "../UserDropDownMenu/UserDropDownMenu";
+// import JobPostingForm from "../../pages/PostAJob/JobPostingForm";
+import {useDetectOutClickOrEsc} from "../../hooks/outside-clickorescape.hook";
+import {useUserContext} from "../../context/UserContext";
+import {MouseCursorGradientTracking} from "../../utils/mouseTrackingGradient";
+import {Link} from "react-router-dom";
 
-const NavMenu = () => (
-  <>
+
+const NavMenu = () => {
+    const {state} = useUserContext();
+
+    //can use activestyle={{}}
+    return (<>
         <Nav>
 		<NavLink className='whitespace' to="/" activeStyle>
 			Home
 		</NavLink>
-		<NavLink className='whitespace' to="/jobposting" activeStyle>
-			Post a Job
-		</NavLink>
+		{
+                (state.userData && state.userData.userType === "EMPLOYER") &&
+                <NavLink className='whitespace' to="/jobposting" activeStyle>
+                    Post a Job
+                </NavLink>
+            }
         <NavLink className='whitespace' to="/BACKEND_DEBUG" activeStyle>
-            BACKEND_CRUD_DEBUG
+            [BACKEND CRUDV2 <br></br>DEBUG ANTOINE]
         </NavLink>
             <NavLink className='whitespace' to="/profile" activeStyle>
             My Profile
@@ -26,14 +40,23 @@ const NavMenu = () => (
             Jobs
         </NavLink>
 
+            <NavLink to="/viewjobposts">
+                View Job Posts
+            </NavLink>
 
         </Nav>
-  </>
-)
+    </>)
+}
 const LoginOrSeeAccount = () => {
     // const [userRecordInfo,setUserRecordInfo] = useState({});
+    const {state} = useUserContext();
 
-    let uid = Cookies.get('loggedin_uid');
+    let uid;
+    try {
+        uid = jwtDecode(Cookies.get("access_token")).user_id
+    }catch {
+        uid = undefined;
+    }
     // if(uid != null){
     //     CommentAPIService.GetUserDetails(uid).then(
     //         json =>
@@ -43,19 +66,30 @@ const LoginOrSeeAccount = () => {
     //         }
     //     )
     // }
-
     // console.log(userRecordInfo)
-    return (uid ?
+    return (uid !== undefined && uid && state.userData ?
             <>
-                <div style={{color: 'white'}}>
-                <span>{window.localStorage['firstName']} {window.localStorage['lastName']}</span>
-                <img src={window.localStorage['photo_url']} width="50" height="50" alt={"pfp"}/>
-                <p style={{fontSize: "0.5em"}} onClick=
-                        {(e)=>
-                        {CommentAPIService.UserLogout();window.location.replace('http://localhost:3000')}}>
-                    Sign Out
-                </p>
+            <UserDropDownMenu triggerMenuMarkup={
+
+
+                <div className="loggedInUser_container"
+
+                >
+                    <div className="navbarLoggedInText">
+                <span id="navbarLoggedInName">
+                    {state.userData.firstName} {state.userData.lastName}</span>
+
+                        <p>
+                            {state.userData.userType}
+                        </p>
+                    </div>
+                    <div>
+                                        <img id="navbarLoggedInPfp"
+                        src={state.userData.photo_url} width="50" height="50" alt={"pfp"}/>
+
                 </div>
+                    </div>
+                    } triggeredUserUid={uid} />
                 </>
             :
             <>
@@ -72,43 +106,54 @@ const LoginOrSeeAccount = () => {
 }
 const Navbar = () => {
   //make it false in beggining, since it will cahnge to true when true
-  const [toggleMenu, setToggleMenu] = useState(false);
+  const minimizedMenuRef = useRef(null);
+  const [toggleMenu, setToggleMenu] = useDetectOutClickOrEsc(minimizedMenuRef,false);
   return (
     <div className='gpt3__navbar'>
 
-      <div className='gpt3__navbar-links'>
+    <div className='gpt3__navbar-links'>
+        <MouseCursorGradientTracking markupContent={
+        <div className='gpt3__navbar-links_logo'>
+                     <Link to="/">
+                <img src={logo2} alt="logo"/>
+            </Link>
 
-        <div className='gpt3__navbar-links_logo'> 
-          <nav><NavLink to="/" activeStyle>
-		<img src={logo2} alt="logo"/></NavLink></nav>
-        </div>
-
+        </div>}/>
         <div className='gpt3__navbar-links_container'>
           <NavMenu />
         </div>
 
       </div>
 
+
       <div className="gpt3__navbar-sign">
         <LoginOrSeeAccount />
       </div>
       
 
-      <div className='gpt3__navbar-menu'>
+
       {toggleMenu
-          ? <RiCloseLine color="#fff" size={27} onClick={() => setToggleMenu(false)} />
-          : <RiMenu3Line color="#fff" size={27} onClick={() => setToggleMenu(true)} />}
-          {toggleMenu && (
-        <div className="gpt3__navbar-menu_container scale-up-center">
-          <div className="gpt3__navbar-menu_container-links">
-          <NavMenu />
+          ?
+          <div ref={minimizedMenuRef} className='gpt3__navbar-menu'>
+          <RiCloseLine color="#fff" size={27} onClick={() => setToggleMenu(false)} />
+            <div className="gpt3__navbar-menu_container scale-up-center">
+              <div className="gpt3__navbar-menu_container-links">
+                <NavMenu />
+              </div>
+              <div className="gpt3__navbar-menu_container-links-sign">
+                <LoginOrSeeAccount />
+              </div>
+            </div>
           </div>
-          <div className="gpt3__navbar-menu_container-links-sign">
-          <LoginOrSeeAccount />
+          :
+          <div className='gpt3__navbar-menu'>
+          <RiMenu3Line color="#fff" size={27} onClick={() => setToggleMenu(true)} />
           </div>
-        </div>
-        )}
-      </div>
+          }
+        {/*  {toggleMenu && (*/}
+
+        {/*)}*/}
+
       
       
     </div>
