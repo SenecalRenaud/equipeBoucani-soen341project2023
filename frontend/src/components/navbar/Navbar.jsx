@@ -21,18 +21,21 @@ const NavMenu = () => {
     //can use activestyle={{}}
     return (<>
         <Nav>
-            <NavLink to="/">
-                Home
-            </NavLink>
-            {
+		<NavLink className='whitespace' to="/" activeStyle>
+			Home
+		</NavLink>
+		{
                 (state.userData && state.userData.userType === "EMPLOYER") &&
-                <NavLink to="/jobposting">
+                <NavLink className='whitespace' to="/jobposting" activeStyle>
                     Post a Job
                 </NavLink>
             }
-            <NavLink to="/BACKEND_DEBUG">
-                [BACKEND CRUDV2 &emsp;DEBUG ANTOINE]
-            </NavLink>
+        <NavLink className='whitespace' to="/BACKEND_DEBUG" activeStyle>
+            [BACKEND CRUDV2 &emsp;DEBUG ANTOINE]
+        </NavLink>
+            <NavLink className='whitespace' to="/profile" activeStyle>
+            My Profile
+        </NavLink>
 
             <NavLink to="/viewjobposts">
                 View Job Posts
@@ -87,10 +90,10 @@ const LoginOrSeeAccount = () => {
                 </>
             :
             <>
-                <NavLinkSignIn to="/signin">
+                <NavLinkSignIn className='whitespace' to="/signin">
                     Sign in
                 </NavLinkSignIn>
-                <NavLinkSignUp to="/signup">
+                <NavLinkSignUp className='whitespace' to="/signup">
                     Sign up
                 </NavLinkSignUp>
             </>

@@ -1,9 +1,15 @@
 import React from 'react';
-import { Header } from '../../components';
+import {CustomerReview, EmployerGuide, Header, Support, UserGuide} from '../../components';
 
 const Home = () => {
   return (
+      <div>
       <Header />
+      <UserGuide />
+      <EmployerGuide />
+      <Support/>
+      <CustomerReview />
+      </div>
 
   );
 };

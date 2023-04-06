@@ -1,0 +1,90 @@
+.MainContainer{
+    display:flex;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap:wrap;
+    margin-top: 50px;
+    margin-left: 0;
+
+
+}
+.StepOne{
+    display:flex;
+    flex-direction: column;
+    border: 5px solid white;
+    border-radius: 5px;
+    width:400px;
+    height:300px;
+    margin: 20px;
+
+}
+
+.StepTwo{
+    display:flex;
+    flex-direction: column;
+    border: 5px solid white;
+    border-radius: 5px;
+    width:400px;
+    height:300px;
+    margin: 20px;
+}
+
+
+.StepThree{
+    display:flex;
+    flex-direction: column;
+
+    border: 5px solid white;
+    border-radius: 5px;
+    width:400px;
+    height:300px;
+    margin: 20px;
+
+
+}
+
+.stepText{
+    color:white;
+    max-width:400px;
+
+    margin-left: 25px;
+    margin-right: 25px;
+    margin-top: 40px;
+    margin-bottom: 10px;
+}
+.titleText{
+    background: var(--gradient-text);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-left: 25px;
+    margin-right: 25px;
+    margin-bottom: 5px;
+
+    max-width:400px;
+}
+.descripText{
+    color:var(--color-text);
+    align-self: left;
+    padding-top: 5px;
+    font-family: var(--font-family);
+    font-size: 20px;
+    font-weight: normal;
+    margin-left: 25px;
+    margin-right: 25px;
+    margin-bottom: 5px;
+}
+
+.MainTitle{
+
+    background: var(--gradient-text);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    font-size: 62px;
+    margin-bottom: 5px;
+    align-self: center;
+
+    max-width:400px;
+}
