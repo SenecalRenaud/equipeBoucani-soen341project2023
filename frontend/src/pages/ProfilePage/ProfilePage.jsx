@@ -102,11 +102,13 @@ Thank you for reading and I hope to share more of my journey with you soon.</h1>
             <container className="profile_container_3">
             <iframe className="profile_resume" src={userProfileData.resume_url}
                     alt="resume" >
-            <iframe className="profile_resume" src={userProfileData.resume_url}
+                <iframe className="profile_resume" src={userProfileData.resume_url}
                     alt="resume" style={{width:'100%', height:'800px',overflow: 'hidden'}} >
                 </iframe>
+            </iframe>
             </container>
         </container>
+
   )
 }
 
