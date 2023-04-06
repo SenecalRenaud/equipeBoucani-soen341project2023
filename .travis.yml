@@ -6,7 +6,7 @@ node_js:
 cache: npm
 
 install:
-  - "npm install --prefix ./frontend"
+  - "npm install --prefix ./frontend --force"
 services: mysql
 addons:
   chrome: stable
