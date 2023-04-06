@@ -105,7 +105,7 @@ class JobPost(db.Model):
     date = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now)
     employerUid = db.Column(db.VARCHAR(28), nullable=False ) #default firebase uuid used is 28 alphanumerical string
 
-    def __init__(self, jobtype, title, location, salary, description, tags,employerUid):
+    def __init__(self, jobtype, title, location, salary, description, tags, employerUid):
         self.jobtype = jobtype
         self.title = title
         self.location = location

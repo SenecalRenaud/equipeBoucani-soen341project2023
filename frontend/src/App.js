@@ -18,6 +18,7 @@ import ViewJobPosts from "./pages/JobPosts/ViewJobPosts";
 import CommentAPIService from "./pages/BACKEND_DEBUG/CommentAPIService";
 // import Cookies from 'js-cookie';
 import UserRESTAPI from "./restAPI/UserAPI";
+import MyJobPosts from "./pages/JobPosts/MyJobPosts";
 // import JobPostingAPIService from "./pages/PostAJob/JobPostingAPIService";
 import {useUserContext} from "./context/UserContext";
 import {defaultState} from "./context/UserReducer";
@@ -146,6 +147,9 @@ return (
         <Route path='/viewjobposts' element={<ViewJobPosts postedJob={postedJob} />} />
 
         <Route exact path='/profile/:uid' element={<ProfilePage/>} />
+        <Route exact path='current/jobpostings' element={<MyJobPosts postedJob={postedJob} />}/>
+        {/*TODO: Make path:  /viewjobposts/:uid
+           TODO  and use useParams() hook like such: params.uid in useEffect dependencies */}
         {/*<Route path='/SESSION_COOKIES_DEBUG' element={<SESSION_COOKIES_DEBUG/>}/>*/}
 
         <Route exact path='/loading' element={<LoadingScreen/>} />
@@ -157,3 +161,16 @@ return (
 }
 
 export default App;
+
+// <img src={logo} className="App-logo" alt="logo" />
+// <p>
+//   Edit <code>src/App.js</code> and save to reload.
+// </p>
+// <a
+//   className="App-link"
+//   href="https://reactjs.org"
+//   target="_blank"
+//   rel="noopener noreferrer"
+// >
+//   Learn React
+// </a>

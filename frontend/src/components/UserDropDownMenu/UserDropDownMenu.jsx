@@ -9,9 +9,7 @@ import {useUserContext} from "../../context/UserContext";
 
 
 //TODO Optimization: use .bind() to bind to very user profile to result on current load !!!
-//TODO Optimization: use .bind() to bind to very user profile to result on current load !!!
-//TODO Optimization: use .bind() to bind to very user profile to result on current load !!!
-//TODO Optimization: use .bind() to bind to very user profile to result on current load !!!
+
 
 const UserDropDownMenu = ({triggerMenuMarkup,triggeredUserUid}) => {
 
@@ -45,6 +43,7 @@ const UserDropDownMenu = ({triggerMenuMarkup,triggeredUserUid}) => {
         [triggeredUserUid] //effect hook only called on mount since empty dependencies array
     )
 
+
     let user = state.userData;   //UserRESTAPI.parseCurrentUserObjFromFrontendCache()
     
     if (!state.isAuthenticated) {//!UserRESTAPI.checkIfObjectIsValidUser(user)
@@ -62,8 +61,7 @@ const UserDropDownMenu = ({triggerMenuMarkup,triggeredUserUid}) => {
 
     let isNotUndetermined = !!user.email && !!otherUser.email;
 
-    //todo console.log(`${user.firstName}->${otherUser.firstName} dropdownMenu.jsx count: ${counter.current++}`)
-
+    // console.log(`${user.firstName}->${otherUser.firstName} dropdownMenu.jsx count: ${counter.current++}`)
 
       return (
         <div className="menu-container">

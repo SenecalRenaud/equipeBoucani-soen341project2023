@@ -16,6 +16,9 @@ from flask_mail import Mail, Message
 
 from requests import HTTPError
 
+# from sqlalchemy import Integer,DateTime,String,Text,Column
+# from flask.ext.session import Session, Session(app) to use flask.session instead of db.session
+
 # from werkzeug.local import LocalProxy,WSGIApplication
 from werkzeug.utils import secure_filename
 
@@ -46,22 +49,22 @@ with app.app_context():
 from models import db,ma # SQLAlchemyInterface and MarshmallowSchema objects  to integrate
 from models import CommentPost, CommentPostSchema, JobPost, JobPostSchema
 
-from authentification import fb_config,\
-    fb_adminsdk_cred,\
-    _firebase,\
-    _auth,\
-    fb_db,\
-    fb_storage,\
-    firebase_default_app,\
-    mainStorageBucket,\
+from authentification import fb_config, \
+    fb_adminsdk_cred, \
+    _firebase, \
+    _auth, \
+    fb_db, \
+    fb_storage, \
+    firebase_default_app, \
+    mainStorageBucket, \
     firestore_db
 
 
 #*******************************
 # import pyrebase
 
-from firebase_admin import auth,credentials,storage,firestore
-from firebase_admin.exceptions import FirebaseError,AlreadyExistsError
+from firebase_admin import auth, credentials, storage, firestore
+from firebase_admin.exceptions import FirebaseError, AlreadyExistsError
 from firebase_admin._auth_utils import EmailAlreadyExistsError, EmailNotFoundError, UserNotFoundError
 
 
@@ -72,12 +75,15 @@ Session(app)
 
 # CSRF cookie,credentials, server-side and request handling, security...
 cors = CORS(app,
-            supports_credentials=True # Access-Control-Allow-Credentials exposed for other servers / origins (i.e. outside backend app folder)
-                                      # Will allow AJAX/XMLHttpRequests in js client to fetch session cookies for state and user log
+            supports_credentials=True
+            # Access-Control-Allow-Credentials exposed for other servers / origins (i.e. outside backend app folder)
+            # Will allow AJAX/XMLHttpRequests in js client to fetch session cookies for state and user log
             )
 
+app.config.from_object(ApplicationSessionConfig)
 
 bcrypt = Bcrypt(app)
+# Session(app)
 
 db.init_app(app) #TODO: session_options={"autocommit": True, "autoflush": False}
 
@@ -120,7 +126,8 @@ print("\033[32;7;1m FLASK APP HAS STARTED ! \033[0m")
 #     app.logger.error('%s %s %s %s %s %s', timestamp, request.remote_addr, request.method, request.scheme, request.full_path, response.status)
 #     return response
 
-#TODO Seperate once database has scaled... For now, single modules are convenient
+
+# TODO Seperate once database has scaled... For now, single modules are convenient
 from models import *
 commentpost_schema = CommentPostSchema()
 commentposts_schema = CommentPostSchema(many=True)
@@ -128,11 +135,11 @@ commentposts_schema = CommentPostSchema(many=True)
 
 @app.route("/")
 def index():
-    if (query_val := request.args.get("goto",default=None)) in ("signin","signup"):
+    if (query_val := request.args.get("goto", default=None)) in ("signin", "signup"):
         return redirect(rf"/firebase-api/{query_val}")
 
     elif 'user' in session:
-        print(" User "  + session['user']['email'] + " is logged in on server-side session!")
+        print(" User " + session['user']['email'] + " is logged in on server-side session!")
         if query_val == "logout":
 
             return redirect(r"/firebase-api/logout")
@@ -143,61 +150,64 @@ def index():
             print("Forcefully logout user")
             return redirect(r"/firebase-api/logout")
 
-        header_content =  f'Hi, {user_recordinfo["displayName"]}' + "\t" + \
-                            "\t" + f"<a href='/firebase-api/userprofile'><img src=\"{user_recordinfo['photoUrl']}\" width='75' height='75'/></a>" +\
-                          "<sub>(click to view profile)</sub>" + render_template(r"header_logout.html")
+        header_content = f'Hi, {user_recordinfo["displayName"]}' + "\t" + \
+                         "\t" + f"<a href='/firebase-api/userprofile'><img src=\"{user_recordinfo['photoUrl']}\" width='75' height='75'/></a>" + \
+                         "<sub>(click to view profile)</sub>" + render_template(r"header_logout.html")
 
     else:
         header_content = render_template(r"header_login_or_signup.html")
 
-
     return header_content + "<br><hr>" + render_template(r"PAGE_CONTENT.html") \
-        + "<a href='/api/cookies_test/'> Click here to view session and cookies test page </a>"
+           + "<a href='/api/cookies_test/'> Click here to view session and cookies test page </a>"
+
 
 @app.route("/getall-cookies/")
 def getall_cookies():
-
     return jsonify(request.cookies)
+
+
 @app.route("/get-cookie/")
 def get_cookie():
     response = make_response("""Look at this cookie !
                              If made from client-side,
                              it means The AJAX request
                              was not blocked by CORS or something else.
-                             """ )
-    #response.headers["Set-Cookie"]
+                             """)
+    # response.headers["Set-Cookie"]
     sessioncookie_value = session['user']['localId'] if 'user' in session else "anonymous"
 
     response.set_cookie(key="loggedin_user_uid", value=sessioncookie_value)
-                        # path="/api/cookies_test/")
-                        # domain="fake.subdomain.net")
+    # path="/api/cookies_test/")
+    # domain="fake.subdomain.net")
     print(response)
     return response
+
+
 @app.route("/api/cookies_test/")
 def cookies_test():
     print(request.cookies)
     if 'user' not in session:
         return jsonify(msg="No user logged in found in session!")
 
-    user_auth_dict = session['user'] # Firebase-auth user record, not the firestore custom one
+    user_auth_dict = session['user']  # Firebase-auth user record, not the firestore custom one
     print(user_auth_dict)
 
     assert user_auth_dict['localId'] == request.cookies["user_uid"]
 
-    user_dict = firestore_db.collection(u'Users')\
+    user_dict = firestore_db.collection(u'Users') \
         .document(request.cookies["user_uid"]).get().to_dict()
 
-
     if user_dict['userType'] != "ADMIN":
-        #del user_dict['pwdHash'] #bytes are not serializable + cross origin requests should have direct access to this in response
+        # del user_dict['pwdHash'] #bytes are not serializable + cross origin requests should have direct access to this in response
         # return jsonify(user_dict)
-        user_auth_dict['expiresIn'] = str(3600//4)
+        user_auth_dict['expiresIn'] = str(3600 // 4)
         return jsonify(user_auth_dict)
     else:
         return jsonify(msg="Can not display current user '" + user_auth_dict['displayName']
                            + "' because they are an ADMIN !")
 
-@app.route('/firebase-api/signin',methods=['POST','GET'])
+
+@app.route('/firebase-api/signin', methods=['POST', 'GET'])
 def signin():
 
     if request.method == "POST":
@@ -235,12 +245,12 @@ def signin():
 
 
             pwdHash = firestore_user.pop('pwdHash')
-            print("Password bcrypt few-rounds salted hash matched: ",end=" ")
+            print("Password bcrypt few-rounds salted hash matched: ", end=" ")
             print(bcrypt.check_password_hash(
-                pwdHash,password
+                pwdHash, password
             ))
 
-            session['user'] = user
+            session['user'] = user  # ['email'] #todo: high-level identifier e.g. username goes here
 
             auth_user_response = user.copy()
             userRecordInfo = _auth.get_account_info(user['idToken'])['users'][0]
@@ -250,8 +260,8 @@ def signin():
             )
             auth_user_response.update(
                 dict(
-                    creationEpoch = userRecordInfo['createdAt'],
-                    lastSeenEpoch = userRecordInfo['lastLoginAt']
+                    creationEpoch=userRecordInfo['createdAt'],
+                    lastSeenEpoch=userRecordInfo['lastLoginAt']
                 )
             )
 
@@ -274,14 +284,15 @@ def signin():
             # print(err.__context__.args)
             parsedHttpErr = json.loads(err.args[1])
 
-            login_err_resp = make_response(parsedHttpErr['error'],401)
+            login_err_resp = make_response(parsedHttpErr['error'], 401)
             login_err_resp.status = parsedHttpErr['error']['message']
             # login_err_resp.access_control_allow_credentials = True
-            print(login_err_resp.json,401)
-            return login_err_resp.json,401
+            print(login_err_resp.json, 401)
+            return login_err_resp.json, 401
         except Exception as gen_err:
             return {'message': str(gen_err)}
     return render_template("logintest.html")
+
 
 @app.route('/firebase-api/logout')
 def logout():
@@ -488,20 +499,12 @@ def get_user_details(_uid):
     _uid = _uid.strip()
     #TODO CACHE THESE USER DETAILS MAYBE?!
     if _uid == "current":
-        # print("\tUSER IS CURRENT !")
         if 'user' in session:
-            # print("\t\tUSER IN SESSION")
             user_recordinfo = _auth.get_account_info(session['user']['idToken'])['users'][0]
             _uid = user_recordinfo['localId']
         else:
-            # print("\t\tUSER NOT IN SESSION")
             return {}
 
-
-    # if 'user' in session:
-    #     id_token = session['user']['idToken']
-    #     decoded_token = auth.verify_id_token(id_token)
-    #     print(decoded_token)
     # print(_uid)
     # print(session)
     doc_ref = firestore_db.collection(u'Users').document(_uid)
@@ -661,9 +664,9 @@ def add_commentpost():
     }
     :return:  sql table type schema json response
     """
-    title,body = request.json['title'],request.json['body']
+    title, body = request.json['title'], request.json['body']
 
-    commentpost = CommentPost(title,body)
+    commentpost = CommentPost(title, body)
     db.session.add(commentpost)
     db.session.commit()
 
@@ -794,17 +797,18 @@ def delete_jobpost(_id):
 
     return jobpost_schema.jsonify(jobpost)
 
+
 #
 # =================== FLASK MAIL TESTS ===================
 #
-#TODO Unit tests might be needed for the notification system(s) soon.
-@app.route("/sendmail")
+# TODO Unit tests might be needed for the notification system(s) soon.
+@app.route("/sendmail/", methods=['PUT'])
 def flask_mail_send_test():
     try:
         msg = Message("Flask-Mail Test message",
                       sender="equipeboucani@gmail.com",
-                      recipients=["ozan.alptekin2002@gmail.com"])
-        msg.body = "This is a test message from flask mail"
+                      recipients=[request.json['email']])
+        msg.body = request.json['applicant_name'] + " has applied to your job posting for " + request.json['job_title'] + "!"
         mail.send(msg)
         return "Sent"
     except Exception as e:
