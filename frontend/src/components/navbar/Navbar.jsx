@@ -31,7 +31,7 @@ const NavMenu = () => {
                 </NavLink>
             }
         <NavLink className='whitespace' to="/BACKEND_DEBUG" activeStyle>
-            [BACKEND CRUDV2 &emsp;DEBUG ANTOINE]
+            [BACKEND CRUDV2 <br></br>DEBUG ANTOINE]
         </NavLink>
             <NavLink className='whitespace' to="/profile" activeStyle>
             My Profile
