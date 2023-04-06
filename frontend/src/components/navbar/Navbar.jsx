@@ -22,6 +22,9 @@ const NavMenu = () => (
             <NavLink className='whitespace' to="/profile" activeStyle>
             My Profile
         </NavLink>
+            <NavLink className='whitespace' to="/jobs" activeStyle>
+            Jobs
+        </NavLink>
 
 
         </Nav>
