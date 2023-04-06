@@ -260,7 +260,7 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
             {
                 //TODO: Make checks to see if already in applied list !
                 (state.userData && state.userData.userType === "APPLICANT") &&
-                <CardApplyButton  onClick={(e) => {alert("TODO: Implement Application system !")}}>  Apply </CardApplyButton>
+                <CardApplyButton  onClick={(e) => {HandleApply(id, employerUid)}}>  Apply </CardApplyButton>
             }
 
 
