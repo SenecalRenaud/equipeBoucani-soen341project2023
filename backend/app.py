@@ -636,7 +636,7 @@ def get_all_commentposts():
     results_arr = commentposts_schema.dump(all_commentposts)
     print(results_arr)
     if any(filter(None,results_arr)) and request.args.get('mapAsFields') == 'true':
-        print("Mapped fields into dict instead of array of obj!")
+        # print("Mapped fields into dict instead of array of obj!")
         response_fieldsdict = dict(map(lambda kv: (kv[0], [kv[1]]), results_arr[0].items()))
 
         for k, v in itertools.chain.from_iterable(map(operator.methodcaller('items'), results_arr[1:])):
@@ -720,7 +720,7 @@ def get_all_jobposts():
     results_arr = jobposts_schema.dump(all_jobposts)
 
     if any(filter(None,results_arr)) and request.args.get('mapAsFields') == 'true':
-        print("Mapped fields into dict instead of array of obj!")
+        # print("Mapped fields into dict instead of array of obj!")
         response_fieldsdict = dict(map(lambda kv: (kv[0], [kv[1]]), results_arr[0].items()))
 
         for k, v in itertools.chain.from_iterable(map(operator.methodcaller('items'), results_arr[1:])):
@@ -741,7 +741,7 @@ def get_jobpost(_id):
 @cross_origin()
 @authorized(employer=True)
 def addJobPost():
-
+    print("HELLO THIS WORKS !!!!!!!!!!!!!")
     jobtype, title, location, salary, description, tags,employerUid = request.json['jobtype'], request.json['title'], request.json[
         'location'], request.json['salary'], request.json['description'], request.json['tags'],request.json['employerUid']
 

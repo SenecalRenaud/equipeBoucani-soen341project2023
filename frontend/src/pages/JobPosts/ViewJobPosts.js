@@ -43,7 +43,7 @@ function ViewJobPosts ()   {
             data => {
                 setData(data);
                 setDefaultData(data)
-                console.log(data);
+                // console.log(data);
             }
         ).catch(function(error){
             console.log("empty db", error.toString());
@@ -80,7 +80,7 @@ function ViewJobPosts ()   {
      );
 
          setSearchBarInput(searchBarInput);
-         setData( //TODO MAKE MORE EFFICIENT DATA-STRUCTURE WISE... THIS WORKS BUT ITS NOT QUITE SCALABLE
+         setData(
          Object.keys(defaultData).reduce(
              (obj, key, index) => ({ ...obj, [key]: filtered[index] }), {})
      );
@@ -161,8 +161,8 @@ function ViewJobPosts ()   {
                                 {
 
                             let i = _i +  (page-1) * componentsPerPage
-                            console.log(i)
-                                    console.log(sliced_data)
+                            // console.log(i)
+                            //         console.log(sliced_data)
                             return (<JobPostCard
                                 key={_i}
                                 jobtype={data.jobtype[i]}

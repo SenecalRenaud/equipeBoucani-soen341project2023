@@ -80,7 +80,7 @@ const JobPostingForm = (props) => {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-
+        console.log("DECODED TOKEN CLAIMS: ", decoded_token_claims.user_id)
         JobPostingAPIService.AddJobPosting({"jobtype" : jobType, "title" : jobTitle, "location" : location, "salary" : salary, "tags" : industryTags.toString(), "description" : jobDescription,
 
             'employerUid': decoded_token_claims.user_id
