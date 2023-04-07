@@ -77,16 +77,17 @@ const JobPostingForm = (props) => {
         setEndDate(event.target.value);
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
+        const reqbody = {"jobtype" : jobType, "title" : jobTitle, "location" : location, "salary" : salary, "tags" : industryTags.toString(), "description" : jobDescription,
 
-
-        JobPostingAPIService.AddJobPosting({"jobtype" : jobType, "title" : jobTitle, "location" : location, "salary" : salary, "tags" : industryTags.toString(), "description" : jobDescription,
-
-            'employerUid': decoded_token_claims.user_id
-        })
-            .then((response) => props.postedJob(response))
-                .then((any)=> window.location.reload())
+            'employerUid': decoded_token_claims.user_id.toString()
+        };
+        console.log(reqbody)
+        console.log(decoded_token_claims.user_id)
+        await JobPostingAPIService.AddJobPosting(reqbody)
+            // .then((response) => props.postedJob(response))
+                // .then((any)=> window.location.reload())
             .catch(error => console.log('Following error occurred after fetching from API: ',error))
 
         setJobType('')

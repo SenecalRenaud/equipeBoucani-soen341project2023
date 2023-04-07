@@ -161,8 +161,8 @@ function ViewJobPosts ()   {
                                 {
 
                             let i = _i +  (page-1) * componentsPerPage
-                            console.log(i)
-                                    console.log(sliced_data)
+                            // console.log(i)
+                            //         console.log(sliced_data)
                             return (<JobPostCard
                                 key={_i}
                                 jobtype={data.jobtype[i]}

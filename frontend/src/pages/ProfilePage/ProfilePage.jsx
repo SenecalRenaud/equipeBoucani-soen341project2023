@@ -22,7 +22,7 @@ const ProfilePage = () => {
     // const {loggedInUser} = useContext(LoggedInUserContext);
 
     const DATETIME_OPTIONS = {hour: '2-digit',minute: '2-digit', weekday: 'short',month: 'long',day: 'numeric', year: 'numeric'}
-    String.prototype.toTitleCase = (str) => toTitleCase(str)
+    // String.prototype.toTitleCase = (str) => toTitleCase(str)
 
       useEffect(() => {
           // console.log("GET USER DETAILS FROM SERVER SIDE !")
@@ -100,8 +100,7 @@ Thank you for reading and I hope to share more of my journey with you soon.</h1>
             </container>
 
             <container className="profile_container_3">
-            <iframe className="profile_resume" src={userProfileData.resume_url}
-                    alt="resume" >
+
             <iframe className="profile_resume" src={userProfileData.resume_url}
                     alt="resume" style={{width:'100%', height:'800px',overflow: 'hidden'}} >
                 </iframe>
