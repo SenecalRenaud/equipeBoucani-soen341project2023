@@ -760,7 +760,7 @@ def addJobPost():
 
 
 @app.route("/updatejob/<_id>/", methods=['PUT'],endpoint='update_jobpost')
-@authorized(employer=True,admin=True)
+@authorized(employer=True)#,admin=True enabled automatically in wrapped
 def update_jobpost(_id):
     jobpost = JobPost.query.get(_id)
 
@@ -787,7 +787,7 @@ def update_jobpost(_id):
 
 
 @app.route("/deletejob/<_id>/", methods=['DELETE'],endpoint='delete_jobpost')
-@authorized(employer=True,admin=True)
+@authorized(employer=True)#,admin=True enabled automatically in wrapped
 def delete_jobpost(_id):
     jobpost = JobPost.query.get(_id)
 
