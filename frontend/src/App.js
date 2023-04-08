@@ -28,6 +28,7 @@ import {useUserContext} from "./context/UserContext";
 import {defaultState} from "./context/UserReducer";
 import LoadingScreen from "./pages/LoadingScreen/LoadingScreen";
 import PageNotFound from "./pages/Err404Screen/Err404Screen";
+import Apply from "./pages/Apply/Apply";
 // import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
 
 
@@ -139,6 +140,7 @@ return (
         <Route path='/BACKEND_DEBUG' element={<PostCommentForm postedComment={postedComment} />}/>
         <Route path='/profile' element={<ProfilePage/>} />
         <Route path='/jobs' element={<JobPosting/>} />
+        <Route path='/apply' element={<Apply/>} />
         <Route path='/signup' element={<SignUp/>} />
         <Route path='/signin' element={<SignIn/>} />
         <Route path='/SESSION_COOKIES_DEBUG' element={<SESSION_COOKIES_DEBUG/>}/>

@@ -11,7 +11,7 @@ const CustomerReview = () => {
 
        <container className="text_container">
            <h1>"</h1>
-        <h1>This website is by far the best site I've come across it many years! It is easy to use, and the selection is incredible. It truely helped me find the place where I should be.</h1>
+        <h1>This website is by far the best site I've come across in many years! It is easy to use, and the selection is incredible. It truely helped me find the place where I was meant to be.</h1>
            <h1>"</h1>
        </container>
        <container className="img_container">

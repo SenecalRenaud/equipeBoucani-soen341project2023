@@ -1,0 +1,55 @@
+.main_container{
+    display:flex;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap:wrap;
+    margin-top: 75px;
+
+    margin-left: 0;
+}
+.box{
+    display:flex;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap:wrap;
+    background: white;
+    border-radius: 10px;
+    width: 600px;
+
+
+}
+.img_logo{
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    padding: 40px;
+}
+.name{
+    margin-top: 85px;
+    margin-left: 50px;
+    margin-right: 25px;
+    font-weight: 900;
+}
+.description{
+    margin-top: 20px;
+    margin-left: 70px;
+    margin-right:70px;
+    margin-bottom: 40px;
+    font-size: 22px;
+    text-align: center;
+    color:#FF4820;
+}
+
+.formstyle{
+    margin-bottom: 50px;
+}
+
+
+
+.resume{
+ margin-bottom: 20px;
+    background: white;
+}
+.coverletter{
+    margin-bottom: 70px;
+}
