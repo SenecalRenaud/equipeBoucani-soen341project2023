@@ -23,7 +23,7 @@ def authorized(**permissions):
         nonlocal permissions
         def wrapper(*args, **kwargs):
             nonlocal permissions,func
-
+            print("GETTING ID TOKEN!!!!!")
             #TODO auth.verify_session_cookie() best for backend and JWT best for frontend ? USE BOTH?
             #TODO auth.verify_session_cookie() best for backend and JWT best for frontend ? USE BOTH?
             #TODO auth.verify_session_cookie() best for backend and JWT best for frontend ? USE BOTH?
@@ -33,7 +33,7 @@ def authorized(**permissions):
 
             # Get the Authorization header from the request
             id_token = request.headers.get('Authorization', '').split('Bearer ')[-1]
-
+            print(id_token)
             # Verify the ID token and get the user's custom claims
             try:
 

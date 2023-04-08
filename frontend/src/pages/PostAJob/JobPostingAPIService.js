@@ -12,7 +12,10 @@ export default class JobPostingAPIService{
             body:JSON.stringify(request_body)
         })
             .then(response => response.json())
-            .catch(error => console.log("API CORE EXCEPTION... " + error))
+            .catch(error => {
+                console.log("CRUD JOBPOST (ADD) API CORE EXCEPTION... ")
+                console.log(error)
+            })
     }
 
     static async DeleteJobPosting(job_id){
@@ -24,7 +27,11 @@ export default class JobPostingAPIService{
             },
         })
             .then(response => response.json())
-            .catch(error => console.log("API CORE EXCEPTION... " + error))
+            .catch(error => {
+                    console.log("CRUD JOBPOST (DEL) API CORE EXCEPTION... ")
+                    console.log(error)
+                }
+            )
     }
 
     static async EditJobPosting(job_id, request_body){
@@ -38,7 +45,10 @@ export default class JobPostingAPIService{
             body:JSON.stringify(request_body)
         })
             .then(response => response.json())
-            .catch(error => console.log("API CORE EXCEPTION... " + error))
+            .catch(error => {
+                console.log("CRUD JOBPOST (EDIT) API CORE EXCEPTION... ")
+                console.log(error)
+            })
     }
 
     static async sendNotification(request_body){
@@ -50,7 +60,7 @@ export default class JobPostingAPIService{
             body:JSON.stringify(request_body)
         })
             .then(response => response.json())
-            .catch(error => console.log("API CORE EXCEPTION... " + error))
+            .catch(error => console.log("NOTIFICATION (SEND) API CORE EXCEPTION... " + error))
     }
 }
 

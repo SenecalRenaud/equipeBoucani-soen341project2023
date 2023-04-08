@@ -194,12 +194,12 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
         setIsOpen(!isOpen);
     };
 
-    const handleEdit = (event) => {
-
-        JobPostingAPIService.EditJobPosting(toBeEditedID,
+    const handleEdit = async (event) => {
+        event.preventDefault();
+        await JobPostingAPIService.EditJobPosting(toBeEditedID,
             {"title" : editJobTitle, "jobtype": editJobType, "location": editLocation, "salary": editSalary, "description": editJobDescription, "tags": editIndustryTags.toString()}
         )
-            //.then((response) => props.postedComment(response))
+            // .then((response) => props.postedComment(response))
             .then((any)=> window.location.reload())
             .catch(error => console.log('Following error occured after fetching from API: ',error))
         setJobType('')
@@ -210,9 +210,9 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
         setJobDescription('')
     };
 
-    const HandleApply = (event) => {
+    const HandleApply = async (event) => {
         const applicantName = window.localStorage.firstName + " " + window.localStorage.lastName;
-        JobPostingAPIService.sendNotification({"email": employerUser.email, "applicant_name": applicantName, "job_title": title})
+        await JobPostingAPIService.sendNotification({"email": employerUser.email, "applicant_name": applicantName, "job_title": title})
             .then((any)=> window.location.reload())
             .catch(error => console.log('Following error occurred after fetching from API: ',error))
     }
@@ -266,7 +266,7 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
 
         </CardArticle>
         <Modal isOpen={isOpen} onRequestClose={toggleModal} ariaHideApp={false}>
-            <form onSubmit={() => {handleEdit(); toggleModal()}}>
+            <form onSubmit={(event) => {handleEdit(event); toggleModal()}}>
                 <br/><br/>
                 <label>
                     Job Type:
@@ -368,10 +368,10 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
         </Modal>
     </>);};
 
-const handleDelete = (job_id) => {
+const handleDelete = async (job_id) => {
     //event.preventDefault();
 
-    JobPostingAPIService.DeleteJobPosting(job_id)
+    await JobPostingAPIService.DeleteJobPosting(job_id)
         .then((any)=> window.location.reload())
         .catch(error => console.log('Following error occured after fetching from API: ',error))
 

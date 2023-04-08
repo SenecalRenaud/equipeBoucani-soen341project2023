@@ -135,7 +135,7 @@ return (
     <Routes>
         <Route path="*" element={<PageNotFound/>}/>
         <Route exact path='/'  element={<Home />} />
-        <Route path='/jobposting' element={<JobPostingForm/>} />
+        <Route path='/jobposting' element={<JobPostingForm postedJob={postedJob}/>} />
         <Route path='/BACKEND_DEBUG' element={<PostCommentForm postedComment={postedComment} />}/>
         <Route path='/profile' element={<ProfilePage/>} />
         <Route path='/jobs' element={<JobPosting/>} />
