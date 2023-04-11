@@ -92,8 +92,7 @@ const ProfilePage = () => {
                 <footer>
                     <Link to={{ pathname: `/profile`,
                                 search : `?edit=${url_params.uid}`,
-                                state: { from: `/profile/${url_params.uid}`,
-                                         userProfileData : userProfileData } }}>
+                                state: { userProfileData } }}>
                     <button className="update-profile-btn">Edit my profile</button>
                         </Link>
                 </footer>
