@@ -221,10 +221,9 @@
 
 button.update-profile-btn {
   width: 48%;
-  float: left;
   display: block;
-  margin: 40px auto;
-  margin-left: 1%;
+  margin: 0 auto;
+  margin-left: 25%;
   padding: 15px 0;
   font-size: 16px;
   color: #ffffff;
