@@ -166,6 +166,7 @@ img#navbarLoggedInPfp {
     position: relative;
     margin-left: .75em;
     background-size:auto 100%;
+    object-fit: cover;
     /*width:65px;*/
     /*height:65px;*/
     display: block;

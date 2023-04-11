@@ -5,9 +5,10 @@
     align-self: center;
     margin-left: 25px;
     margin-right: 25px;
-
-
+    object-fit: cover;
 }
+
+
 
 .profile_container_1{
     display:flex;
@@ -235,6 +236,19 @@ button.update-profile-btn {
 }
 button.update-profile-btn:hover{
   background-color: rgb(203, 123, 57);
+}
+
+.editDisabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    /*pointer-events: none;*/
+    color: #3d3d3d;
+}
+
+.editChanged {
+  color: orangered !important;
+  border: 5px dotted blue !important;
+
 }
 /*.update-profile-btn:after {*/
 /*  content: "World";*/

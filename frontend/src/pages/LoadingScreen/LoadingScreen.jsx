@@ -34,7 +34,7 @@ const LoadingScreen = (props) => {
 
   return ( <>
 
-    <div className="sweet-loading">
+    <div className="sweet-loading" >
       <reactSpinners.BounceLoader color={'#81AFDD'} loading={true} id="spinner" size={120} />
     </div>
       </>
