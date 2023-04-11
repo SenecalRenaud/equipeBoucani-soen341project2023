@@ -4,10 +4,11 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faEnvelope, faPhone,faUser} from "@fortawesome/free-solid-svg-icons";
 import Cookies from 'js-cookie';
 import toTitleCase from '../../utils/strings_and_text_responses'
-import {Link, useParams, useNavigate} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import CommentAPIService from "../BACKEND_DEBUG/CommentAPIService";
 import UserRESTAPI from "../../restAPI/UserAPI";
 import jwtDecode from "jwt-decode";
+import {useUserContext} from "../../context/UserContext";
 
 // import {LoggedInUserContext} from "../../context/LoggedInUserContext";
 
@@ -15,7 +16,9 @@ import jwtDecode from "jwt-decode";
 
 
 const ProfilePage = () => {
-    const history = useNavigate();
+    const {state} = useUserContext();
+    const currentViewerUser = state.userData;
+
     const [userProfileData,setUserProfileData] = useState({});
     const url_params = useParams(); //Todo CryptoJS.AES.decrypt(ciphertext.toString(), 'secret key 123') decode bytes
 
@@ -90,10 +93,19 @@ const ProfilePage = () => {
                 {
                     (isViewingOwnProfile || hasAdminTokenClaims)   &&
                 <footer>
-                    <Link to={{ pathname: `/profile`,
-                                search : `?edit=${url_params.uid}`,
-                                state: { userProfileData } }}>
-                    <button className="update-profile-btn">Edit my profile</button>
+
+                    <Link
+                        to={{ pathname: `/profile/${url_params.uid}/edit`,
+                                search : `?editor=${currentViewerUser.uid}`}}>
+                    <button className="update-profile-btn"
+                            onClick={()=> {
+                                window.caches.open('profileEditing')
+                                    .then(cache => {
+                                        cache.put('/editedUserProfileData',
+                                            new Response(JSON.stringify(userProfileData)))
+                                    })
+                            }}
+                    >Edit my profile</button>
                         </Link>
                 </footer>
                 }

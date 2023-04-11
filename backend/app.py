@@ -546,6 +546,7 @@ def update_user_details(_uid):
         _uid = user_recordinfo['localId']
 
     if request.method == "PATCH":
+        print(request.form)
         print(NotImplementedError("Not Implemented: client side PATCH request to update firebase user"))
         return {'message' : "Firebase user update >Not implemented< with PATCH requests. Must make a client-side REST API that fetches with PATCH REQUEST.\n\r "
                             "Native backend only uses POST to update users " }

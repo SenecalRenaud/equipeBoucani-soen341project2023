@@ -37,7 +37,7 @@ const NavMenu = () => {
             <NavLink to="/viewjobposts">
                 View Job Posts
             </NavLink>
-
+        {/*<NavLink className='whitespace' to='/aboutus'> Something bout us ig </NavLink>*/}
         </Nav>
     </>)
 }
