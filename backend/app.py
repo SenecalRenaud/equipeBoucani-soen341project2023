@@ -1,6 +1,7 @@
 import datetime
 from time import strftime,localtime
 
+import sqlalchemy.exc
 from flask import \
     Flask,\
     jsonify,\
@@ -97,7 +98,12 @@ mail.init_app(app)
 
 
 with app.app_context():
+    # try:
     db.create_all()
+    # except sqlalchemy.exc.OperationalError as failedConn:
+    #     if r'localhost' not in failedConn.args[0]:
+    #         raise failedConn
+    #     os.environ['useLocalInsteadOfHostedDatabase'] = "false"
 
 
 
@@ -726,6 +732,7 @@ def get_all_jobposts():
         for k, v in itertools.chain.from_iterable(map(operator.methodcaller('items'), results_arr[1:])):
             if response_fieldsdict.setdefault(k, None):
                 response_fieldsdict[k].append(v)
+
         assert all(len(listed_fields_v) == len(results_arr) for listed_fields_v in response_fieldsdict.values())
         return jsonify(response_fieldsdict)
 
@@ -741,7 +748,6 @@ def get_jobpost(_id):
 @cross_origin()
 @authorized(employer=True)
 def addJobPost():
-    print("HELLO THIS WORKS !!!!!!!!!!!!!")
     jobtype, title, location, salary, description, tags,employerUid = request.json['jobtype'], request.json['title'], request.json[
         'location'], request.json['salary'], request.json['description'], request.json['tags'],request.json['employerUid']
 

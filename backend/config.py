@@ -7,6 +7,7 @@ import enum
 from abc import ABC, ABCMeta,abstractmethod
 
 from flask import Flask,current_app
+from sqlalchemy import create_engine,exc as sqlalchemy_exceptions
 
 @enum.unique
 class DialectDBAPI(enum.Enum):
@@ -26,7 +27,13 @@ try:
 
     assert load_dotenv(WDIR + os.sep + FLASK_ENV_FILE_NAME)
 
-    if not (current_app.debug or os.environ.get("FLASK_ENV") == "development") or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
+    # Hosted has not been chosen
+    # AND
+    # ( Neither flaskapp or Flaskenvar indicate debug/developement mode
+    #   OR WERKZEUG IS ON FIRST NONDEBUG RUN of app)
+    if useLocalInsteadOfHostedDatabase and \
+        (not (current_app.debug or os.environ.get("FLASK_ENV") == "development")
+        or os.environ.get("WERKZEUG_RUN_MAIN") == "true"):
         useLocalInsteadOfHostedDatabase = input(
             "Do you want to use your personal local version of the MySQL database instead of the hosted one? (Y/N)\n\r>>> "
         ).strip().casefold() == 'y'
@@ -148,6 +155,36 @@ class LocalHostDatabase(CurrentDatabaseABCEnum, enum.Enum, metaclass=ABCMetaData
     @property
     def databaseServerURL(self):
         return rf"jdbc:{self.RDBMS_ALCHEMY_HNAME.value}://{self.DB_HOST.value}:{self.DB_PORT.value}/{self.DB_NAME.value}"
+
+
+# ChiefstBestPal: If Local servers not functioning or running, automatically try to connect to hosted database.
+if useLocalInsteadOfHostedDatabase:
+
+    try:
+        engine = create_engine(LocalHostDatabase.SELF.sqlalchemyURI)  # NOTE: SQLALCHEMY_ENGINE_OPTIONS would be kwargs
+
+        poolProxiedConnection = engine.raw_connection()
+
+        cursor = poolProxiedConnection.cursor()
+        cursor.execute('SELECT 1')
+        cursor.close()
+        poolProxiedConnection.close()
+
+    except (
+            Exception
+    ) as SelectedDBAPI_OperationalErr:
+        if not type(SelectedDBAPI_OperationalErr).__name__.endswith('OperationalError'):
+            raise SelectedDBAPI_OperationalErr
+
+        print("\033[1;93mChoosing Hosted Database... Localhost database engine not working...\033[0m\n\r")
+
+        assert load_dotenv(WDIR + os.sep + DATABASES_ENV_FILE_NAME)
+
+        os.environ['useLocalInsteadOfHostedDatabase'] = "false"
+        useLocalInsteadOfHostedDatabase = False
+
+
+
 class HostedSql96Database(CurrentDatabaseABCEnum, enum.Enum, metaclass=ABCMetaDatabaseConnection):
     """
     From freemysqlhosting.net account.
@@ -183,7 +220,6 @@ class HostedSql96Database(CurrentDatabaseABCEnum, enum.Enum, metaclass=ABCMetaDa
         return self.SELF.sqlalchemyURI #TODO !!!!!!!!!!!!!!!!
 
 
-
 Chosen_EnumDatabase_Conn_Obj_ = LocalHostDatabase if useLocalInsteadOfHostedDatabase else HostedSql96Database
 
 RDBMS_ALCHEMY_HNAME,DB_NAME,DB_USER,DB_PASS,DB_HOST,DB_PORT = \
@@ -216,6 +252,7 @@ class ApplicationSessionConfig:
 
     #TODO app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
     #    'pool_pre_ping': True,
+    #    'pool_recycle' : 3600,
     #    'pool_size': 5,
     #   'max_overflow': 10
     # }
