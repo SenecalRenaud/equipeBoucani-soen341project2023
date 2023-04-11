@@ -15,6 +15,8 @@ import {useUserContext} from "../../context/UserContext";
 //TODO: useLocation() to do page view count inside a useEffect(,deps:[location])
 
 
+export const DATETIME_OPTIONS = {hour: '2-digit',minute: '2-digit', weekday: 'short',month: 'long',day: 'numeric', year: 'numeric'};
+
 const ProfilePage = () => {
     const {state} = useUserContext();
     const currentViewerUser = state.userData;
@@ -25,7 +27,6 @@ const ProfilePage = () => {
     //Antoine context load, avoids useless props-based reloads of components
     // const {loggedInUser} = useContext(LoggedInUserContext);
 
-    const DATETIME_OPTIONS = {hour: '2-digit',minute: '2-digit', weekday: 'short',month: 'long',day: 'numeric', year: 'numeric'}
     String.prototype.toTitleCase = (str) => toTitleCase(str)
 
       useEffect(() => {

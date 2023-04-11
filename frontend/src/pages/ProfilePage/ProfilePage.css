@@ -208,6 +208,8 @@
 
 .profile-content-introduction{
     align-self: left;
+    width: auto;
+    height: auto;
     padding-top: 5px;
     font-family: var(--font-family);
     font-weight: 600;
