@@ -134,7 +134,7 @@ class JobPostSchema(ma.Schema):
         fields = ('id', 'jobtype', 'title', 'location', 'salary', 'description', 'tags', 'date', 'editDate','employerUid')
 
 
-class Applications(db.Model):
+class Application(db.Model):
     __slots__ = ()
     __tablename__ = "applications"
 
@@ -150,6 +150,6 @@ class Applications(db.Model):
         self.coverLetter = coverLetter
 
 
-class ApplicationsSchema(ma.Schema):
+class ApplicationSchema(ma.Schema):
     class Meta:
         fields = ('id', 'jobPostId', 'applicantUid', 'coverLetter', 'date')

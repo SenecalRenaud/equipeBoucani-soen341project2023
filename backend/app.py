@@ -47,7 +47,7 @@ from forms import authorized,login_required
 with app.app_context():
     from config import ApplicationSessionConfig #env vars + Session configs
 from models import db,ma # SQLAlchemyInterface and MarshmallowSchema objects  to integrate
-from models import CommentPost, CommentPostSchema, JobPost, JobPostSchema
+from models import CommentPost, CommentPostSchema, JobPost, JobPostSchema, Application, ApplicationSchema
 
 from authentification import fb_config, \
     fb_adminsdk_cred, \
@@ -109,6 +109,9 @@ commentposts_schema = CommentPostSchema(many=True)
 
 jobpost_schema = JobPostSchema()
 jobposts_schema = JobPostSchema(many=True)
+
+application_schema = ApplicationSchema()
+applications_schema = ApplicationSchema(many=True)
 
 
 app.logger = logging.getLogger("myapp")
@@ -814,6 +817,60 @@ def flask_mail_send_test():
     except Exception as e:
         return str(e)
 
+#
+# =================== Applications ===================
+#
+
+@app.route("/addapplication", methods=['POST'],endpoint='addApplication')
+@cross_origin()
+@authorized(applicant=True)
+def addApplication():
+    jobPostId, applicantUid, coverLetter = request.json['jobPostId'], request.json['applicantUid'], request.json['coverLetter']
+
+    application = Application(jobPostId, applicantUid, coverLetter)
+    db.session.add(application)
+    db.session.commit()
+
+    return application_schema.jsonify(application)
+
+@app.route("/getapplication/<_id>/", methods=['GET'])
+def get_application(_id):
+    application = Application.query.get(_id)
+    return application_schema.jsonify(application)
+
+@app.route('/getapplications', methods=['GET'])  # methods = [list http reqs methods]
+def get_all_applications():
+    """
+    GET request to view all table entries directly from 'many' mode sql schema
+    :return: json response
+    Antoine Cantin@ChiefsBestPal
+    """
+
+    all_applications = Application.query.all()
+    results_arr = applications_schema.dump(all_applications)
+
+    if any(filter(None,results_arr)) and request.args.get('mapAsFields') == 'true':
+        # print("Mapped fields into dict instead of array of obj!")
+        response_fieldsdict = dict(map(lambda kv: (kv[0], [kv[1]]), results_arr[0].items()))
+
+        for k, v in itertools.chain.from_iterable(map(operator.methodcaller('items'), results_arr[1:])):
+            if response_fieldsdict.setdefault(k, None):
+                response_fieldsdict[k].append(v)
+        assert all(len(listed_fields_v) == len(results_arr) for listed_fields_v in response_fieldsdict.values())
+        return jsonify(response_fieldsdict)
+
+    return jsonify(results_arr)
+
+@app.route("/deleteapplication/<_id>/", methods=['DELETE'],endpoint='delete_application')
+@authorized(applicant=True)#,admin=True enabled automatically in wrapped
+def delete_application(_id):
+    application = Application.query.get(_id)
+
+    db.session.delete(application)
+
+    db.session.commit()
+
+    return jobpost_schema.jsonify(application)
 
 if __name__ == '__main__':
 
