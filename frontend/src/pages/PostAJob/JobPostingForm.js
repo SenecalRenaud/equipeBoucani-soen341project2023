@@ -218,7 +218,7 @@ const JobPostingForm = (props) => {
                         maxLength="200"
                         required
                     />
-                    <p className="word-count">{wordCount}/200 words</p>
+                    <p className="word-count">{wordCount}/200 words </p>
                     {jobTypeError && <p className="job-type-error">{jobTypeError}</p>}
                     <div className="apply-button-container">
                         <button className="apply-button">Submit</button>
