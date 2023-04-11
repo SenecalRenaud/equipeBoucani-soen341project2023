@@ -21,9 +21,9 @@ const NavMenu = () => {
     //can use activestyle={{}}
     return (<>
         <Nav>
-		<NavLink className='whitespace' to="/" >
-			Home
-		</NavLink>
+		{/*<NavLink className='whitespace' to="/" >*/}
+		{/*	Home*/}
+		{/*</NavLink>*/}
 		{
                 (state.userData && state.userData.userType === "EMPLOYER") &&
                 <NavLink className='whitespace' to="/jobposting" >
