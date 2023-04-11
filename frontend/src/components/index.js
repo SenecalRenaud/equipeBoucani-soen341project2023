@@ -5,3 +5,4 @@ export { default as UserGuide } from './UserGuide/UserGuide';
 export { default as EmployerGuide } from './EmployerGuide/EmployerGuide';
 export { default as CustomerReview } from './CustomerReview/CustomerReview';
 export { default as Support } from './Support/Support';
+export { default as Footer } from './Footer/Footer';

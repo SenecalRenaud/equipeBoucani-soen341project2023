@@ -7,7 +7,7 @@ const CustomerReview = () => {
   return (
 <div>
     <hr className='paddinghr'/>
-     <container className="main_container">
+     <container className="main_container_customer">
 
        <container className="text_container">
            <h1>"</h1>

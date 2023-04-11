@@ -28,8 +28,8 @@
     margin-top: 3.5px;
     /*width: 62.56px;*/
     /*height: 16.02px;*/
-    width: calc(3.1*62.56px);
-    height: calc(3.1*16.02px);
+    width: calc(2.1*62.56px);
+    height: calc(2.1*16.02px);
     z-index: 100;
 }
 
