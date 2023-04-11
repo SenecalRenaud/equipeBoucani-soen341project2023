@@ -16,6 +16,9 @@ const NavMenu = () => (
 		<NavLink className='whitespace' to="/jobposting" activeStyle>
 			Post a Job
 		</NavLink>
+        <NavLink className='whitespace' to="/applyJob" activeStyle>
+            Apply to a Job
+        </NavLink>
         <NavLink className='whitespace' to="/BACKEND_DEBUG" activeStyle>
             BACKEND_CRUD_DEBUG
         </NavLink>

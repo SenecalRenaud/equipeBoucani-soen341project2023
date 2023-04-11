@@ -14,6 +14,7 @@ import SignUp from "./pages/SignUp/SignUpForm";
 import SignIn from "./pages/SignIn/SignInForm";
 import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
 import JobPosting from "./pages/JobPostings/JobPosting";
+import ApplyJob from "./pages/ApplyJob/ApplyJob";
 
 
 
@@ -34,6 +35,7 @@ return (
         <Route path='/BACKEND_DEBUG' element={<PostCommentForm postedComment={postedComment} />}/>
         <Route path='/profile' element={<ProfilePage/>} />
         <Route path='/jobs' element={<JobPosting/>} />
+        <Route path='/ApplyJob' element={<ApplyJob/>} />
         <Route path='/signup' element={<SignUp/>} />
         <Route path='/signin' element={<SignIn/>} />
         <Route path='/SESSION_COOKIES_DEBUG' element={<SESSION_COOKIES_DEBUG/>}/>
