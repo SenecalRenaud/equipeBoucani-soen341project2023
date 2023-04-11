@@ -132,3 +132,24 @@ class JobPost(db.Model):
 class JobPostSchema(ma.Schema):
     class Meta:
         fields = ('id', 'jobtype', 'title', 'location', 'salary', 'description', 'tags', 'date', 'editDate','employerUid')
+
+
+class Applications(db.Model):
+    __slots__ = ()
+    __tablename__ = "applications"
+
+    id = db.Column(db.Integer, primary_key=True)
+    jobPostId = db.Column(db.Text())
+    applicantUid = db.Column(db.VARCHAR(28))
+    coverLetter = db.Column(db.Text())
+    date = date = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now)
+
+    def __init__(self, jobPostId, applicantUid, coverLetter):
+        self.jobPostId = jobPostId
+        self.applicantUid = applicantUid
+        self.coverLetter = coverLetter
+
+
+class ApplicationsSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'jobPostId', 'applicantUid', 'coverLetter', 'date')
