@@ -13,6 +13,10 @@ import PostCommentForm from "./pages/BACKEND_DEBUG/PostCommentForm";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import SignUp from "./pages/SignUp/SignUpForm";
 import SignIn from "./pages/SignIn/SignInForm";
+import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
+import JobPosting from "./pages/JobPostings/JobPosting";
+
+
 // import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
 import ViewJobPosts from "./pages/JobPosts/ViewJobPosts";
 import CommentAPIService from "./pages/BACKEND_DEBUG/CommentAPIService";
@@ -24,7 +28,8 @@ import {useUserContext} from "./context/UserContext";
 import {defaultState} from "./context/UserReducer";
 import LoadingScreen from "./pages/LoadingScreen/LoadingScreen";
 import PageNotFound from "./pages/Err404Screen/Err404Screen";
-import AboutUs from "./pages/AboutUs/aboutus";
+import Apply from "./pages/Apply/Apply";
+//import AboutUs from "./pages/AboutUs/aboutus";
 import EditProfilePage from "./pages/ProfilePage/EditProfilePage";
 // import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
 
@@ -134,6 +139,8 @@ return (
         <Route path="*" element={<PageNotFound/>}/>
         <Route exact path='/'  element={<Home />} />
         <Route path='/jobposting' element={<JobPostingForm postedJob={postedJob}/>} />
+        <Route path='/jobs' element={<JobPosting/>} />
+        <Route path='/apply' element={<Apply/>} />
         <Route path='/BACKEND_DEBUG' element={<PostCommentForm postedComment={postedComment} />}/>
         <Route path='/signup'
            element={

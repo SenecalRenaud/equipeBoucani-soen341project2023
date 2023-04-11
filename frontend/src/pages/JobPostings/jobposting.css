@@ -1,0 +1,12 @@
+.main_banner{
+    display:flex;
+    justify-content: left;
+    flex-direction: row;
+    flex-wrap:wrap;
+    margin-top: 50px;
+    margin-left: 0;
+
+}
+.imgbanner{
+
+}
