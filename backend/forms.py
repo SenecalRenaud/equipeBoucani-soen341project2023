@@ -9,6 +9,9 @@ from flask import g, request, redirect, url_for, jsonify, make_response,session
 
 import logging
 
+from backend.models import JobPost
+
+
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -19,6 +22,9 @@ def login_required(f):
 
 
 def authorized(**permissions):
+    """
+    author: ChiefsBestPal@Antoine Cantin
+    """
     def decorator(func):
         nonlocal permissions
         def wrapper(*args, **kwargs):
@@ -46,33 +52,57 @@ def authorized(**permissions):
                 decoded_token = auth.verify_id_token(id_token,check_revoked=True)
                 print(decoded_token)
 
+                if (isRequesterAdmin := 'admin' in decoded_token and decoded_token['admin']) \
+                    and permissions.get('admin',True) is False: #Even admins are not able to proceed. Specific task, admin not required to access.
+                    raise auth.InsufficientPermissionError(
+                        "Admin does not need to and cant access this route; Permission admin=False is not fullfilled. Authorization Denied.",
+                        None,
+                        403
+                    )
+                elif isRequesterAdmin: #A regular level admin has AT LEAST all the rights of all other types combined !
+                    decoded_token.setdefault('employer',True)
+                    decoded_token.setdefault('applicant', True)
+                    decoded_token.pop('myself',None)
+
+
                 if 'myself' in permissions:
-                    #TODO assert '_uid' in request.view_args
+                    affected_user_uid = ""
+                    if '_uid' in request.view_args: #The request is manipulating a user direct info
+                        affected_user_uid = request.view_args.get('_uid')
+                    elif '_jobid' in request.view_args: #The request is manipulating a user's job post
+                        affected_user_uid = JobPost.query.get(
+                            request.view_args.get('_jobid')
+                        ).employerUid
+                    else: # TODO: Similar handling will be done for interviews, applications, etc...
+                        raise auth.UserNotFoundError(
+                            f"Critical error and warning: No view arguments tracing back to " + \
+                            f"a user were found in flask app route: {request.full_path}. Cant verify myself=... permission.",
+                            None,
+                            401
+                        )
+
                     if (session_user := session.get("user", None)) is None or session_user['idToken'] != id_token:
                         raise auth.ExpiredSessionCookieError(
                             f"Backend session could not be found and myself permission thus couldnt be verified; Authorization denied.",
                             session_user
                         )
-                    elif bool(permissions['myself']) and session_user['idToken'] != id_token:
+                    elif bool(permissions['myself']) and decoded_token['sub'] != affected_user_uid:
                         raise auth.InsufficientPermissionError(
-                            f"Could not fullfill 'myself'=True perm. Action requested on user has to be done by that user. Authorization denied.",
+                            f"Could not fullfill 'myself'=True perm. Action requested on user has to be done by that user. Authorization denied." +\
+                            f"{decoded_token['sub']} was refused {request.path} ",
                             session_user,
-                            401
+                            403
                         )
-                    elif not bool(permissions['myself']) and session_user['idToken'] == id_token:
+                    elif not bool(permissions['myself']) and decoded_token['sub'] == affected_user_uid:
                         raise auth.InsufficientPermissionError(
-                            f"Could not fullfill 'myself'=False requirement. Action requested on user cant be done by that user. Authorization denied.",
+                            f"Could not fullfill 'myself'=False requirement. Action requested on user cant be done by that user. Authorization denied."+\
+                            f"{decoded_token['sub']} was refused {request.path}" ,
                             session_user,
-                            401
+                            403
                         )
                     else:
                         print(f"myself={bool(permissions['myself'])} permission has been authorized.")
                         del permissions['myself']
-
-
-                if 'admin' in decoded_token and decoded_token['admin']: #A regular level admin has AT LEAST all the rights of all other types combined !
-                    decoded_token.setdefault('employer',True)
-                    decoded_token.setdefault('applicant', True)
 
 
                 permissions = dict(filter(lambda kv: kv[1], permissions.items()))

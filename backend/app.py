@@ -501,7 +501,6 @@ def authenticate():
 
 @app.route("/firebase-api/get-user/<_uid>/",methods=['GET'],endpoint='get_user_details')
 @cross_origin()
-@authorized(admin=True)
 def get_user_details(_uid):
     _uid = _uid.strip()
     #TODO CACHE THESE USER DETAILS MAYBE?!
@@ -536,9 +535,9 @@ def get_user_details(_uid):
 
 
 @app.route("/firebase-api/edit-user/<_uid>/",methods=['PATCH','POST'])
+@authorized(myself=True)
 def update_user_details(_uid):
     print("UPDATING USER!!!")
-    # TODO: REVISIT MY @AUTHORIZE DECORATOR SO YOU CAN DO WITH BITS: admin | myself & ~employer, etc...
     # TODO: Checked logged in user: Only Admins and the user at uuid can edit user at uuid
     # TODO: Checked logged in user: Only Admins and the user at uuid can edit user at uuid
     # TODO: Checked logged in user: Only Admins and the user at uuid can edit user at uuid
@@ -691,7 +690,7 @@ def get_commentpost(_id):
     return commentpost_schema.jsonify(commentpost)
 
 
-#TODO Use ['PATCH'] to partially update existing commentpost, only selected json/req header fields !
+
 @app.route("/update/<_id>/",methods=['PUT'])
 def update_commentpost(_id):
     commentpost = CommentPost.query.get(_id)
@@ -752,7 +751,7 @@ def get_jobpost(_jobid):
 
 @app.route("/addjob", methods=['POST'],endpoint='addJobPost')
 @cross_origin()
-@authorized(employer=True)
+@authorized(employer=True,admin=False)
 def addJobPost():
     jobtype, title, location, salary, description, tags,employerUid = request.json['jobtype'], request.json['title'], request.json[
         'location'], request.json['salary'], request.json['description'], request.json['tags'],request.json['employerUid']
@@ -772,7 +771,7 @@ def addJobPost():
 
 
 @app.route("/updatejob/<_jobid>/", methods=['PUT'],endpoint='update_jobpost')
-@authorized(employer=True,myself=True)#,admin=True enabled automatically in wrapped
+@authorized(employer=True,myself=True)#admin is not set to false, so admins can also do this
 def update_jobpost(_jobid):
     jobpost = JobPost.query.get(_jobid)
 
@@ -799,7 +798,7 @@ def update_jobpost(_jobid):
 
 
 @app.route("/deletejob/<_jobid>/", methods=['DELETE'],endpoint='delete_jobpost')
-@authorized(employer=True,myself=True)#,admin=True enabled automatically in wrapped
+@authorized(employer=True,myself=True)#admin is not set to false, so admins can also do this
 def delete_jobpost(_jobid):
     jobpost = JobPost.query.get(_jobid)
 
