@@ -10,6 +10,7 @@ import CommentAPIService from "../../pages/BACKEND_DEBUG/CommentAPIService";
 // import UserRESTAPI from "../../restAPI/UserAPI";
 // import Cookies from 'js-cookie'
 import {useUserContext} from "../../context/UserContext";
+import { useNavigate } from 'react-router-dom';
 
 export const CardTitle = styled.h1`
     font-size: 2em;
@@ -132,6 +133,8 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
 
     const [employerUser,setEmployerUser] = useState([{}])
 
+    const navigate = useNavigate();
+
     useEffect(
         ()=> {
             CommentAPIService.GetUserDetails(
@@ -213,7 +216,7 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
     const HandleApply = async (event) => {
         const applicantName = window.localStorage.firstName + " " + window.localStorage.lastName;
         await JobPostingAPIService.sendNotification({"email": employerUser.email, "applicant_name": applicantName, "job_title": title})
-            .then((any)=> window.location.reload())
+            .then((any)=> navigate('./../apply', {state: {jobPostId: id}}))
             .catch(error => console.log('Following error occurred after fetching from API: ',error))
     }
 
