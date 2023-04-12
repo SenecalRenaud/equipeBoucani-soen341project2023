@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import './App.css';
 
-import { Navbar} from './components';
+import {Footer, Navbar} from './components';
 
 import { BrowserRouter as Router, Routes, Route,Navigate}
     from 'react-router-dom';
@@ -165,6 +165,7 @@ return (
         <Route path='/loading' element={<LoadingScreen/>} />
 
     </Routes>
+    <Footer />
     </Router>
 
 );

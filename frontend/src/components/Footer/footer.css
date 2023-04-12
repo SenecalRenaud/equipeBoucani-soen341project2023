@@ -1,0 +1,63 @@
+.bigFoot{
+    background: #333333;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+
+
+}
+.links{
+    padding-top: 60px;
+    align-self: center;
+}
+.info{
+    padding-top: 20px;
+    align-self: center;
+    text-align: center;
+    font-size: 10px;
+    color: #ffffff;
+    font-weight: normal;
+    padding-bottom: 30px;
+    vertical-align: center;
+}
+
+.instagram{
+    width:75px;
+    height:75px;
+    padding:20px;
+}
+.instagram:hover{
+    cursor: pointer;
+}
+.facebook{
+    width:75px;
+    height:75px;
+    padding:18px;
+}
+.facebook:hover{
+    cursor: pointer;
+}
+.twitter{
+    width:75px;
+    height:75px;
+    padding:17px;
+}
+.twitter:hover{
+    cursor: pointer;
+}
+.linkedin{
+    width:75px;
+    height:75px;
+    padding: 8px;
+}
+.linkedin:hover{
+    cursor: pointer;
+}
+.youtube{
+    width:75px;
+    height:75px;
+    padding:8px;
+}
+.youtube:hover{
+    cursor: pointer;
+}
