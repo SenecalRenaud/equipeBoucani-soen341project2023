@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useCallback } from 'react';
+import React, {useState, useEffect, useCallback, useRef} from 'react';
 import {useNavigate, useParams, useLocation, Link} from 'react-router-dom';
 import jwtDecode from "jwt-decode";
 import Cookies from "js-cookie";
@@ -24,6 +24,11 @@ const EditProfilePage = () => {
     const [emailChanged,setEmailChanged] = useState(false);
     const [resumeChanged,setResumeChanged] = useState(false);
     const [pfpChanged,setPfpChanged] = useState(false);
+
+    const pfpOutputRef = useRef(null);
+    const pfpInputRef = useRef(null);
+    const resumeOutputRef = useRef(null);
+    const resumeInputRef = useRef(null);
 
     useEffect( ()=> {
         window.caches.match('/editedUserProfileData')
@@ -85,6 +90,10 @@ const EditProfilePage = () => {
         reader.readAsDataURL(file);
 
         setPfpChanged(true)
+
+        // let image = document.getElementById('pfpOutput');
+	    // image.src = URL.createObjectURL(event.target.files[0]);
+
     };
 
     const handleResumeFileChange = (event) => { //todo useCallback
@@ -99,9 +108,21 @@ const EditProfilePage = () => {
 
         setResumeChanged(true)
 
+        // let iframe_pdf = document.getElementById('resumeOutput');
+	    // iframe_pdf.src = URL.createObjectURL(event.target.files[0]);
+
     };
+    /**
+     * _@app.route("/firebase-api/edit-user/<_uid>/",methods=['PATCH','POST'])
+     * _@authorized(myself=True)
+     * _def update_user_details(_uid):
+     *
+     * Contact ChiefsBestPal @ Antoine Cantin before altering this.
+     *
+     * @param event
+     * @returns {Promise<void>}
+     */
     const handleSubmit = async (event) => { //todo useCallback
-        console.log("OOOOOOOOOOOOOOOOOOOOOOOOOO")
         event.preventDefault();
         const formData = new FormData();
         if (firstNameChanged)
@@ -110,13 +131,17 @@ const EditProfilePage = () => {
             formData.append('lastName', userProfileData.lastName);
         if (emailChanged)
             formData.append('email', userProfileData.email);
-        if (pfpChanged)
-            formData.append('profilePicture', userProfileData.photo_url);
-        if (resumeChanged)
-            formData.append('uploadedResume', userProfileData.resume_url);
+        if (pfpChanged) {
+            // formData.append('profilePicture', userProfileData.photo_url);
+            formData.append('profilePicture',pfpInputRef.current.files[0]);
+        }
+        if (resumeChanged) {
+            // formData.append('uploadedResume', userProfileData.resume_url);
+            formData.append('uploadedResume',resumeInputRef.current.files[0]);
+        }
         // formData.append('bio', userProfileData.bio);
         console.log("FORM DATA")
-        console.log(formData)
+        // console.log(formData)
         console.log(uid)
         await window.caches.open('profileEditing')
                     .then(cache => {
@@ -127,13 +152,15 @@ const EditProfilePage = () => {
           method: 'PATCH',
           body: formData,
           headers: {
-            'Authorization': `Bearer ${Cookies.get('access_token')}`,//'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${Cookies.get('access_token')}`,
+              // 'Content-Type': 'application/x-www-form-urlencoded'
+            //'Content-Type': 'multipart/form-data'
           },
+          files: resumeInputRef.current.files[0]
         }).then(response => {
           console.log("Updated User info !")
           console.log("Response : ",response)
           setOriginalProfileData(userProfileData)
-
 
           let curr_url_path = location.pathname + location.search
 
@@ -153,17 +180,19 @@ const EditProfilePage = () => {
         return "no user logged in"
     }
 
-    return (<form className="daddyContainer" onSubmit={handleSubmit} encType="multipart/form-data">
+    return (<form className="daddyContainer" onSubmit={handleSubmit}
+                  encType="multipart/form-data">
         <container className="profile_container_1">
             <label>
               Profile Picture:
               <input type="file" accept="image/*" onChange={handlePfpImageChange}
-                        name="profilePicture"/>
+                        name="profilePicture" ref={pfpInputRef}/>
             </label>
         {userProfileData.photo_url && <img
                                         onClick={document.forms[0].elements}
                                         src={checkIfItemExists(userProfileData.photo_url)} alt="pfp"
-                                        className={pfpChanged ? "editChanged" : ""} />}
+                                        className={pfpChanged ? "editChanged" : ""}
+                                        ref={pfpOutputRef}/>}
             <label className="profile-content-username">
                 <input className={firstNameChanged ? "editChanged" : ""} type='text' value={checkIfItemExists(userProfileData.firstName)}
                 onChange={(event) => {handleTextInputChange(event); setFirstNameChanged(originalProfileData.firstName === userProfileData.firstName)}}
@@ -221,7 +250,7 @@ Thank you for reading and I hope to share more of my journey with you soon.</tex
             <label>
           Resume:
           <input type="file" accept="application/pdf" onChange={handleResumeFileChange}
-          name="uploadedResume"/>
+          name="uploadedResume" ref={resumeInputRef}/>
         </label>
         {userProfileData.resume_url && (
             <div>
@@ -229,7 +258,8 @@ Thank you for reading and I hope to share more of my journey with you soon.</tex
                 View Resume in other tab</a>
                         <iframe className="profile_resume" src={userProfileData.resume_url}
                 alt="resume" style={{width:'100%', height:'800px',overflow: 'hidden'}}
-            className={resumeChanged ? "editChanged" : ""} >
+            className={resumeChanged ? "editChanged" : ""}
+               ref={resumeOutputRef}      >
             </iframe>
             </div>
             )

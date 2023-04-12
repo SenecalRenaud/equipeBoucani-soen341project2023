@@ -66,9 +66,16 @@ def authorized(**permissions):
 
 
                 if 'myself' in permissions:
+                    if (session_user := session.get("user", None)) is None or session_user['idToken'] != id_token:
+                        raise auth.ExpiredSessionCookieError(
+                            f"Backend session could not be found and myself permission thus couldnt be verified; Authorization denied.",
+                            session_user
+                        )
                     affected_user_uid = ""
                     if '_uid' in request.view_args: #The request is manipulating a user direct info
                         affected_user_uid = request.view_args.get('_uid')
+                        if affected_user_uid == 'current':
+                            affected_user_uid = session_user['localId']
                     elif '_jobid' in request.view_args: #The request is manipulating a user's job post
                         affected_user_uid = JobPost.query.get(
                             request.view_args.get('_jobid')
@@ -81,12 +88,8 @@ def authorized(**permissions):
                             401
                         )
 
-                    if (session_user := session.get("user", None)) is None or session_user['idToken'] != id_token:
-                        raise auth.ExpiredSessionCookieError(
-                            f"Backend session could not be found and myself permission thus couldnt be verified; Authorization denied.",
-                            session_user
-                        )
-                    elif bool(permissions['myself']) and decoded_token['sub'] != affected_user_uid:
+
+                    if bool(permissions['myself']) and decoded_token['sub'] != affected_user_uid:
                         raise auth.InsufficientPermissionError(
                             f"Could not fullfill 'myself'=True perm. Action requested on user has to be done by that user. Authorization denied." +\
                             f"{decoded_token['sub']} was refused {request.path} ",

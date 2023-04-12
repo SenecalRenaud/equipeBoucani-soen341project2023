@@ -1,6 +1,8 @@
 import datetime
+from io import BytesIO
 from time import strftime,localtime
 
+import google.api_core.exceptions
 import requests
 import sqlalchemy.exc
 from flask import \
@@ -23,6 +25,9 @@ from requests import HTTPError
 
 # from werkzeug.local import LocalProxy,WSGIApplication
 from werkzeug.utils import secure_filename
+from werkzeug.datastructures import ImmutableMultiDict
+from werkzeug.formparser import parse_form_data
+
 
 from flask_cors import CORS,cross_origin #?  (for cross origin requests)
 from flask_bcrypt import Bcrypt #? (keys and password hashing engine)
@@ -558,11 +563,7 @@ def update_user_details(_uid):
     before changing
     """
     print("UPDATING USER!!!")
-    # TODO: Checked logged in user: Only Admins and the user at uuid can edit user at uuid
-    # TODO: Checked logged in user: Only Admins and the user at uuid can edit user at uuid
-    # TODO: Checked logged in user: Only Admins and the user at uuid can edit user at uuid
-    # TODO: Checked logged in user: Only Admins and the user at uuid can edit user at uuid
-    # TODO: Checked logged in user: Only Admins and the user at uuid can edit user at uuid
+
     _uid = _uid.strip()
     if _uid == "current" and 'user' in session:
         # print("USER IN SESSION !")
@@ -585,6 +586,11 @@ def update_user_details(_uid):
                 str(_uid))
             resume_url = None if 'resume_url' in user_docref.get().to_dict() else user_docref.get().to_dict()['resume_url']
             print(request.form)
+            print(request.files)
+            # data = request.get_data()
+            # print(request.get_data(parse_form_data=True))
+            # formfiles = parse_form_data(BytesIO(data))#content_type=request.content_type
+            # print(formfiles)
             if 'firstName' in request.form:
                 firstName = request.form['firstName']
             if 'lastName' in request.form:
@@ -602,9 +608,12 @@ def update_user_details(_uid):
                     blob = mainStorageBucket.blob(r"profilePictures/" + filename)
                     blob.upload_from_filename(pfpfilepath)
                     blob.make_public()  # public access URL to download and view PFPs externally
-                    mainStorageBucket.delete_blob(
-                        "profilePictures/" + pfp_publicurl.rsplit('/', 1)[-1]
-                    )
+                    try:
+                        mainStorageBucket.delete_blob(
+                            "profilePictures/" + pfp_publicurl.rsplit('/', 1)[-1]
+                        )
+                    except google.api_core.exceptions.NotFound:
+                        pass
                     pfp_publicurl = blob.public_url
             if 'uploadedResume' in request.files:
                 uploaded_pdf_resume_file = request.files['uploadedResume']
@@ -617,9 +626,12 @@ def update_user_details(_uid):
 
                 resume_blob = mainStorageBucket.blob(r"resumes/" + filename)
                 resume_blob.upload_from_filename(resumefilepath)
-                mainStorageBucket.delete_blob(
-                    "resumes/" + pfp_publicurl.rsplit('/', 1)[-1]
-                )
+                try:
+                    mainStorageBucket.delete_blob(
+                        "resumes/" + pfp_publicurl.rsplit('/', 1)[-1]
+                    )
+                except google.api_core.exceptions.NotFound:
+                    pass
                 os.remove(resumefilepath)
                 resume_blob.make_public()
                 resume_url = resume_blob.public_url
