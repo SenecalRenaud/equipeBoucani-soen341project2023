@@ -470,9 +470,9 @@ def account_profile_view():
     return render_template("profiletest.html",**context)
 
 
-#todo @authorized(admin=True)
-@app.route('/firebase-api/authenticate', methods=['POST'])
+@app.route('/firebase-api/authenticate', methods=['GET'],endpoint="authenticate")
 @cross_origin()
+@authorized(applicant=True,myself=True)
 def authenticate():
     print("GOT AUTHORIZED !")
 
@@ -501,6 +501,7 @@ def authenticate():
 
 @app.route("/firebase-api/get-user/<_uid>/",methods=['GET'],endpoint='get_user_details')
 @cross_origin()
+@authorized(admin=True)
 def get_user_details(_uid):
     _uid = _uid.strip()
     #TODO CACHE THESE USER DETAILS MAYBE?!
@@ -537,6 +538,10 @@ def get_user_details(_uid):
 @app.route("/firebase-api/edit-user/<_uid>/",methods=['PATCH','POST'])
 def update_user_details(_uid):
     print("UPDATING USER!!!")
+    # TODO: REVISIT MY @AUTHORIZE DECORATOR SO YOU CAN DO WITH BITS: admin | myself & ~employer, etc...
+    # TODO: Checked logged in user: Only Admins and the user at uuid can edit user at uuid
+    # TODO: Checked logged in user: Only Admins and the user at uuid can edit user at uuid
+    # TODO: Checked logged in user: Only Admins and the user at uuid can edit user at uuid
     # TODO: Checked logged in user: Only Admins and the user at uuid can edit user at uuid
     # TODO: Checked logged in user: Only Admins and the user at uuid can edit user at uuid
     _uid = _uid.strip()
@@ -740,9 +745,9 @@ def get_all_jobposts():
     return jsonify(results_arr)  # **{'Hello' : 'World'})
 
 
-@app.route("/getjob/<_id>/", methods=['GET'])
-def get_jobpost(_id):
-    jobpost = JobPost.query.get(_id)
+@app.route("/getjob/<_jobid>/", methods=['GET'])
+def get_jobpost(_jobid):
+    jobpost = JobPost.query.get(_jobid)
     return jobpost_schema.jsonify(jobpost)
 
 @app.route("/addjob", methods=['POST'],endpoint='addJobPost')
@@ -766,10 +771,10 @@ def addJobPost():
 
 
 
-@app.route("/updatejob/<_id>/", methods=['PUT'],endpoint='update_jobpost')
-@authorized(employer=True)#,admin=True enabled automatically in wrapped
-def update_jobpost(_id):
-    jobpost = JobPost.query.get(_id)
+@app.route("/updatejob/<_jobid>/", methods=['PUT'],endpoint='update_jobpost')
+@authorized(employer=True,myself=True)#,admin=True enabled automatically in wrapped
+def update_jobpost(_jobid):
+    jobpost = JobPost.query.get(_jobid)
 
     if 'jobtype' in request.json:
         jobpost.jobtype = request.json['jobtype']
@@ -793,10 +798,10 @@ def update_jobpost(_id):
     return jobpost_schema.jsonify(jobpost)
 
 
-@app.route("/deletejob/<_id>/", methods=['DELETE'],endpoint='delete_jobpost')
-@authorized(employer=True)#,admin=True enabled automatically in wrapped
-def delete_jobpost(_id):
-    jobpost = JobPost.query.get(_id)
+@app.route("/deletejob/<_jobid>/", methods=['DELETE'],endpoint='delete_jobpost')
+@authorized(employer=True,myself=True)#,admin=True enabled automatically in wrapped
+def delete_jobpost(_jobid):
+    jobpost = JobPost.query.get(_jobid)
 
     db.session.delete(jobpost)
 

@@ -5,7 +5,7 @@ import datetime
 
 from firebase_admin import auth
 from functools import wraps
-from flask import g, request, redirect, url_for, jsonify, make_response
+from flask import g, request, redirect, url_for, jsonify, make_response,session
 
 import logging
 
@@ -23,6 +23,7 @@ def authorized(**permissions):
         nonlocal permissions
         def wrapper(*args, **kwargs):
             nonlocal permissions,func
+            # TODO: REVISIT MY @AUTHORIZE DECORATOR SO YOU CAN DO WITH BITS: admin | myself & ~employer, etc...
             print("GETTING ID TOKEN!!!!!")
             #TODO auth.verify_session_cookie() best for backend and JWT best for frontend ? USE BOTH?
             #TODO auth.verify_session_cookie() best for backend and JWT best for frontend ? USE BOTH?
@@ -32,13 +33,42 @@ def authorized(**permissions):
             # TODO CHECK IPV4 LOCATION BASED !!!!! JTW COOKIE COULD BE MISUSED ELSE IF SOMEHOW LEAKED !
 
             # Get the Authorization header from the request
-            id_token = request.headers.get('Authorization', '').split('Bearer ')[-1]
+            auth_header = request.headers.get('Authorization', '').strip()
+            id_token = auth_header.split('Bearer ')[-1]
+            if not id_token:
+                id_token = auth_header.split(' ')[-1]
+            if not id_token:
+                id_token = request.cookies.get('access_token',None)
             print(id_token)
+
             # Verify the ID token and get the user's custom claims
             try:
-
                 decoded_token = auth.verify_id_token(id_token,check_revoked=True)
                 print(decoded_token)
+
+                if 'myself' in permissions:
+                    #TODO assert '_uid' in request.view_args
+                    if (session_user := session.get("user", None)) is None or session_user['idToken'] != id_token:
+                        raise auth.ExpiredSessionCookieError(
+                            f"Backend session could not be found and myself permission thus couldnt be verified; Authorization denied.",
+                            session_user
+                        )
+                    elif bool(permissions['myself']) and session_user['idToken'] != id_token:
+                        raise auth.InsufficientPermissionError(
+                            f"Could not fullfill 'myself'=True perm. Action requested on user has to be done by that user. Authorization denied.",
+                            session_user,
+                            401
+                        )
+                    elif not bool(permissions['myself']) and session_user['idToken'] == id_token:
+                        raise auth.InsufficientPermissionError(
+                            f"Could not fullfill 'myself'=False requirement. Action requested on user cant be done by that user. Authorization denied.",
+                            session_user,
+                            401
+                        )
+                    else:
+                        print(f"myself={bool(permissions['myself'])} permission has been authorized.")
+                        del permissions['myself']
+
 
                 if 'admin' in decoded_token and decoded_token['admin']: #A regular level admin has AT LEAST all the rights of all other types combined !
                     decoded_token.setdefault('employer',True)
@@ -54,6 +84,8 @@ def authorized(**permissions):
                 # Token revoked, inform the user to reauthenticate or signOut().
                 print(revokedNeedRefresh)
                 refresh_token = request.json['refreshToken']
+                if not refresh_token:
+                    refresh_token = request.cookies.get("refresh_token")
 
                 response = make_response("Refreshing token of session cookie")
                 response.set_cookie('session',expires=0)

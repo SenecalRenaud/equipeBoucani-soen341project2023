@@ -130,6 +130,29 @@ function PostCommentForm  (props)  {
             )}>
                 DECODE JWT TOKEN
             </button>
+            <button
+                onClick={async (e)=>{
+                     let decodedtoken = jwtDecode(Cookies.get("access_token"));
+                     await fetch(`/firebase-api/authenticate`,{
+                         method : 'GET',
+                         headers: {
+                             'Authorization': `Bearer ${Cookies.get('access_token')}`
+                         },
+                         credentials: "include"
+
+                }).then(
+                    response => response.json()
+                     ).then(
+                         data => {
+                             console.log("TEST RESULT:")
+                             console.log(data)
+                         }
+                     )
+                }
+            }
+            >
+                Test Backend Authorization
+            </button>
             </div>
         <header className="Debug-header">
         <h1> Postings  </h1>
