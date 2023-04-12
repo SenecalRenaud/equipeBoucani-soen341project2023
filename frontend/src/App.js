@@ -31,6 +31,7 @@ import PageNotFound from "./pages/Err404Screen/Err404Screen";
 import Apply from "./pages/Apply/Apply";
 //import AboutUs from "./pages/AboutUs/aboutus";
 import EditProfilePage from "./pages/ProfilePage/EditProfilePage";
+import CommentSection from "./components/CommentSection/CommentSection";
 // import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
 
 
@@ -129,6 +130,7 @@ function App() {
         ,[]
     )
     //NOTE: </UserContextProvider> is wrapped in the App's index.js ...
+
 return (
     <Router>
     <Navbar />
@@ -154,6 +156,8 @@ return (
            } />
 
         <Route path='/viewjobposts' element={<ViewJobPosts postedJob={postedJob} />} />
+
+        <Route path="/commentsection_test" element={<CommentSection/>}/>
 
         <Route exact path='/profile/:uid' element={<ProfilePage/>} />
         <Route path='/profile/:uid/edit' element={<EditProfilePage/>}/>
