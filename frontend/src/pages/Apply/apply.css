@@ -14,8 +14,7 @@
     flex-wrap:wrap;
     background: white;
     border-radius: 10px;
-    width: 600px;
-
+    width: 1000px;
 
 }
 .img_logo{
@@ -35,9 +34,9 @@
     margin-left: 70px;
     margin-right:70px;
     margin-bottom: 40px;
-    font-size: 22px;
-    text-align: center;
-    color:#FF4820;
+    font-size: 17px;
+    text-align: left;
+    color:black;
 }
 
 .formstyle{
@@ -52,4 +51,6 @@
 }
 .coverletter{
     margin-bottom: 70px;
+    height: 500px;
+    font-size:14px;
 }

@@ -30,6 +30,12 @@ const NavMenu = () => {
                     Post a Job
                 </NavLink>
             }
+            {
+                (state.userData && state.userData.userType === "APPLICANT") &&
+                <NavLink className='whitespace' to="/viewApplications" >
+                    My Applications
+                </NavLink>
+            }
         <NavLink className='whitespace' to="/BACKEND_DEBUG" >
             [BACKEND CRUDV2 <br></br>DEBUG ANTOINE]
         </NavLink>

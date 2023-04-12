@@ -15,6 +15,7 @@ import SignUp from "./pages/SignUp/SignUpForm";
 import SignIn from "./pages/SignIn/SignInForm";
 import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
 import JobPosting from "./pages/JobPostings/JobPosting";
+import ViewMyApplications from "./pages/ViewMyApplications/ViewMyApplications";
 import ApplyJob from "./pages/ApplyJob/ApplyJob";
 
 
@@ -160,6 +161,7 @@ return (
 
         <Route path="/commentsection_test" element={<CommentSection/>}/>
 
+        <Route path='/viewApplications' element={<ViewMyApplications />} />
         <Route exact path='/profile/:uid' element={<ProfilePage/>} />
         <Route path='/profile/:uid/edit' element={<EditProfilePage/>}/>
         <Route exact path='current/jobpostings' element={<MyJobPosts postedJob={postedJob} />}/>
