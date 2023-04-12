@@ -156,7 +156,7 @@ const EditProfilePage = () => {
               // 'Content-Type': 'application/x-www-form-urlencoded'
             //'Content-Type': 'multipart/form-data'
           },
-          files: resumeInputRef.current.files[0]
+          // files: resumeInputRef.current.files[0]
         }).then(response => {
           console.log("Updated User info !")
           console.log("Response : ",response)

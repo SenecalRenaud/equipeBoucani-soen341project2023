@@ -20,11 +20,14 @@ const LoadingScreen = (props) => {
     //
     useEffect(() => {
         const navbarEl = document.getElementsByClassName("gpt3__navbar")[0];
+        const footerEl = document.getElementsByClassName("bigFoot")[0];
+
         mounted.current = true;
         navbarEl.classList.add("hidden");
-
+        footerEl.classList.add("hidden")
         return () => {
             navbarEl.classList.remove("hidden")
+            footerEl.classList.remove("hidden")
             mounted.current = false;
 
         };

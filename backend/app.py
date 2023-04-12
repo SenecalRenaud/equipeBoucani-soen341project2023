@@ -640,15 +640,21 @@ def update_user_details(_uid):
                              display_name=firstName + ' ' + lastName,
                              photo_url=pfp_publicurl)
 
-            firestore_db.collection(u'Users').document(
-                str(_uid)
-            ).update(
-                dict(
+            user_firestore_data = dict(
                     firstName=firstName,
                     lastName=lastName,
                     photo_url=pfp_publicurl,
                     resume_url=resume_url
-                )
+            )
+            if 'uploadedResume' not in request.files:
+                del user_firestore_data['resume_url']
+            if 'profilePicture' not in request.files:
+                del user_firestore_data['photo_url']
+
+            firestore_db.collection(u'Users').document(
+                str(_uid)
+            ).update(
+                user_firestore_data
             )
 
         except ValueError as badUid:

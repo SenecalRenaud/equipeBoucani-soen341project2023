@@ -61,3 +61,6 @@
 .youtube:hover{
     cursor: pointer;
 }
+.hidden {
+    display: none;
+}
