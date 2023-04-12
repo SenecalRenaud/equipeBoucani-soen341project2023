@@ -15,6 +15,7 @@ import SignUp from "./pages/SignUp/SignUpForm";
 import SignIn from "./pages/SignIn/SignInForm";
 import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
 import JobPosting from "./pages/JobPostings/JobPosting";
+import ViewMyApplications from "./pages/ViewMyApplications/ViewMyApplications";
 
 
 // import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
@@ -156,7 +157,7 @@ return (
            } />
 
         <Route path='/viewjobposts' element={<ViewJobPosts postedJob={postedJob} />} />
-
+        <Route path='/viewApplications' element={<ViewMyApplications />} />
         <Route exact path='/profile/:uid' element={<ProfilePage/>} />
         <Route exact path='current/jobpostings' element={<MyJobPosts postedJob={postedJob} />}/>
         {/*TODO: Make path:  /viewjobposts/:uid
