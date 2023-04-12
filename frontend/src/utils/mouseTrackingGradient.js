@@ -16,6 +16,9 @@ export const MouseCursorGradientTrackingTag = styled.div`
   cursor: pointer;
   outline: none;
   overflow: hidden;
+    
+  //border-radius: 50% / 10% 50% 10% 50%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 & span {
@@ -39,6 +42,33 @@ export const MouseCursorGradientTrackingTag = styled.div`
 &:hover::before {
   --size: 200px;
 }
+//.box::before,
+//.box::after {
+//  content: "";
+//  position: absolute;
+//  top: 0;
+//  left: 0;
+//  right: 0;
+//  bottom: 0;
+//  z-index: -1;
+//}
+//
+//.box::before {
+//  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.5) 100%);
+//}
+//
+//.box::after {
+//  background: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.5) 100%);
+//}
+//
+//.box:hover::before,
+//.box:hover::after {
+//  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
+//}
+//
+//.box:hover {
+//  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+//}
 `
 let mouseTrackingHandler = (element,event) => {
   let rect = event.target.getBoundingClientRect();

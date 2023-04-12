@@ -1,4 +1,40 @@
 import React, { useState } from 'react';
+import './commentsection.css'
+
+const mouseTrackerHandler = (element,event) => {
+
+}
+function MouseHighlightContainer(){
+  var container = document.querySelector(".container");
+  var highlight = document.createElement("div");
+  highlight.classList.add("highlight");
+  container.appendChild(highlight);
+
+  container.addEventListener("mousemove", function(event) {
+    var rect = container.getBoundingClientRect();
+    var x = event.clientX - rect.left;
+    var y = event.clientY - rect.top;
+    var w = container.offsetWidth;
+    var h = container.offsetHeight;
+    var cx = w / 2;
+    var cy = h / 2;
+    var dx = Math.abs(x - cx);
+    var dy = Math.abs(y - cy);
+    var maxd = Math.sqrt(Math.pow(w / 2, 2) + Math.pow(h / 2, 2));
+    var percent = (maxd - Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2))) / maxd;
+    var size = 100 + percent * 100;
+    highlight.style.width = size + "%";
+    highlight.style.height = size + "%";
+    highlight.style.top = (cy - size / 2) + "px";
+    highlight.style.left = (cx - size / 2) + "px";
+});
+
+  container.addEventListener("mouseleave", function(event) {
+    highlight.style.width = "0";
+    highlight.style.height = "0";
+  });
+
+}
 
 function CommentSection({ __comments }) { //TODO PASS COMMENTS DATASTRUCTURE FROM BACKEND API
 
@@ -73,8 +109,11 @@ function CommentSection({ __comments }) { //TODO PASS COMMENTS DATASTRUCTURE FRO
   };
 
   return (
-    <div style={{color: "whitesmoke"}}>
+    <div style={{background: "whitesmoke"}}>
+      <div className="container">
       <h3>Comments</h3>
+      </div>
+      <hr/>
       <ul>
         {comments.map((comment) => (
           <li key={comment.id}>

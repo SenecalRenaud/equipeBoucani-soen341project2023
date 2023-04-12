@@ -32,11 +32,8 @@ def authorized(**permissions):
             # TODO: REVISIT MY @AUTHORIZE DECORATOR SO YOU CAN DO WITH BITS: admin | myself & ~employer, etc...
             print("GETTING ID TOKEN!!!!!")
             #TODO auth.verify_session_cookie() best for backend and JWT best for frontend ? USE BOTH?
-            #TODO auth.verify_session_cookie() best for backend and JWT best for frontend ? USE BOTH?
-            #TODO auth.verify_session_cookie() best for backend and JWT best for frontend ? USE BOTH?
+
             #TODO CHECK IPV4 LOCATION BASED !!!!! JTW COOKIE COULD BE MISUSED ELSE IF SOMEHOW LEAKED !
-            #TODO CHECK IPV4 LOCATION BASED !!!!! JTW COOKIE COULD BE MISUSED ELSE IF SOMEHOW LEAKED !
-            # TODO CHECK IPV4 LOCATION BASED !!!!! JTW COOKIE COULD BE MISUSED ELSE IF SOMEHOW LEAKED !
 
             # Get the Authorization header from the request
             auth_header = request.headers.get('Authorization', '').strip()
