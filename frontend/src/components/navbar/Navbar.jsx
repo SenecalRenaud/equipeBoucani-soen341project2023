@@ -60,6 +60,7 @@ const LoginOrSeeAccount = () => {
     //         }
     //     )
     // }
+
     // console.log(userRecordInfo)
     return (uid !== undefined && uid && state.userData ?
             <>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import './App.css';
 
 import {Footer, Navbar} from './components';
@@ -15,6 +15,7 @@ import SignUp from "./pages/SignUp/SignUpForm";
 import SignIn from "./pages/SignIn/SignInForm";
 import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
 import JobPosting from "./pages/JobPostings/JobPosting";
+import ApplyJob from "./pages/ApplyJob/ApplyJob";
 
 
 // import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
@@ -167,6 +168,8 @@ return (
         {/*<Route path='/SESSION_COOKIES_DEBUG' element={<SESSION_COOKIES_DEBUG/>}/>*/}
 
         <Route path='/loading' element={<LoadingScreen/>} />
+
+        <Route path='/ApplyJob' element={<ApplyJob/>} />
 
     </Routes>
     <Footer />
