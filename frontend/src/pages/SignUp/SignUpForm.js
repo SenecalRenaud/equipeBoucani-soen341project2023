@@ -168,7 +168,7 @@ const SignUpForm = () => {
                 </select>
 
                 <button className="sign-up-button" type="submit">
-                    Sign Up
+                    Create Account !
                 </button>
             </form>
         </div>

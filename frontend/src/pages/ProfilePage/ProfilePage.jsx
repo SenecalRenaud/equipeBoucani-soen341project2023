@@ -19,7 +19,6 @@ export const DATETIME_OPTIONS = {hour: '2-digit',minute: '2-digit', weekday: 'sh
 
 const ProfilePage = () => {
     const {state} = useUserContext();
-    const currentViewerUser = state.userData;
 
     const [userProfileData,setUserProfileData] = useState({});
     const url_params = useParams(); //Todo CryptoJS.AES.decrypt(ciphertext.toString(), 'secret key 123') decode bytes
@@ -61,6 +60,12 @@ const ProfilePage = () => {
         }
         return "no user logged in"
     }
+    function checkIfObjExists(obj) {
+        if (obj != null) {
+            return obj;
+        }
+        return {};
+    }
     return (
 
         <container className="daddyContainer">
@@ -97,7 +102,7 @@ const ProfilePage = () => {
 
                     <Link
                         to={{ pathname: `/profile/${url_params.uid}/edit`,
-                                search : `?editor=${currentViewerUser.uid}`}}>
+                                search : `?editor=${checkIfObjExists(state.userData).uid}`}}>
                     <button className="update-profile-btn"
                             onClick={()=> {
                                 window.caches.open('profileEditing')
@@ -107,6 +112,7 @@ const ProfilePage = () => {
                                     })
                             }}
                     >Edit my profile</button>
+                        <span className='hoverMessage'> Update your user profile information </span>
                         </Link>
                 </footer>
                 }

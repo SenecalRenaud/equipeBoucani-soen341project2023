@@ -1,6 +1,7 @@
 import datetime
 from time import strftime,localtime
 
+import requests
 import sqlalchemy.exc
 from flask import \
     Flask,\
@@ -215,7 +216,10 @@ def cookies_test():
 
 @app.route('/firebase-api/signin', methods=['POST', 'GET'])
 def signin():
-
+    """
+    Contact: ChiefsBestPal @ Antoine Cantin
+    before changing
+    """
     if request.method == "POST":
 
         email = request.form.get('email')
@@ -302,6 +306,10 @@ def signin():
 
 @app.route('/firebase-api/logout')
 def logout():
+    """
+    Contact: ChiefsBestPal @ Antoine Cantin
+    before changing
+    """
     print("TRYING TO LOGOUT")
 
     if 'user' not in session:
@@ -342,6 +350,10 @@ def logout():
     return response #redirect(r'/')
 @app.route('/firebase-api/signup',methods=['POST','GET'])
 def signup():
+    """
+    Contact: ChiefsBestPal @ Antoine Cantin
+    before changing
+    """
     if request.method == "POST":
         email = request.form.get('email')
         password = request.form.get('password')
@@ -502,6 +514,10 @@ def authenticate():
 @app.route("/firebase-api/get-user/<_uid>/",methods=['GET'],endpoint='get_user_details')
 @cross_origin()
 def get_user_details(_uid):
+    """
+    Contact: ChiefsBestPal @ Antoine Cantin
+    before changing
+    """
     _uid = _uid.strip()
     #TODO CACHE THESE USER DETAILS MAYBE?!
     if _uid == "current":
@@ -528,7 +544,7 @@ def get_user_details(_uid):
             uid = _uid
         ) # JS Epoch format... for some datetime modules, may need to divide by 1000, etc..
     )
-    #TODO: ADD A CRYPT SALT AND/OR IV FOR UUID ENCRYPTION ALG TO BE USED WITH CRYPTO JS
+    #COULD ADD A CRYPT SALT AND/OR IV FOR UUID ENCRYPTION ALG TO BE USED WITH CRYPTO JS
     del user_fields['pwdHash'] #do not need/want pass bcrypt hash bytes-string in requests
 
     return jsonify(user_fields)
@@ -537,6 +553,10 @@ def get_user_details(_uid):
 @app.route("/firebase-api/edit-user/<_uid>/",methods=['PATCH','POST'])
 @authorized(myself=True)
 def update_user_details(_uid):
+    """
+    Contact: ChiefsBestPal @ Antoine Cantin
+    before changing
+    """
     print("UPDATING USER!!!")
     # TODO: Checked logged in user: Only Admins and the user at uuid can edit user at uuid
     # TODO: Checked logged in user: Only Admins and the user at uuid can edit user at uuid
@@ -549,13 +569,13 @@ def update_user_details(_uid):
         user_recordinfo = _auth.get_account_info(session['user']['idToken'])['users'][0]
         _uid = user_recordinfo['localId']
 
-    if request.method == "PATCH":
-        print(request.form)
-        print(NotImplementedError("Not Implemented: client side PATCH request to update firebase user"))
-        return {'message' : "Firebase user update >Not implemented< with PATCH requests. Must make a client-side REST API that fetches with PATCH REQUEST.\n\r "
-                            "Native backend only uses POST to update users " }
+    # if request.method == "PATCH":
+    #     print(request.form)
+    #     print(NotImplementedError("Not Implemented: client side PATCH request to update firebase user"))
+    #     return {'message' : "Firebase user update >Not implemented< with PATCH requests. Must make a client-side REST API that fetches with PATCH REQUEST.\n\r "
+    #                         "Native backend only uses POST to update users " }
 
-    elif request.method == 'POST':
+    if request.method in ['PATCH','POST']:
         try:
             user = auth.get_user(_uid)
             firstName,lastName = user.display_name.strip().split(' ',1)
@@ -564,7 +584,7 @@ def update_user_details(_uid):
             user_docref = firestore_db.collection(u'Users').document(
                 str(_uid))
             resume_url = None if 'resume_url' in user_docref.get().to_dict() else user_docref.get().to_dict()['resume_url']
-
+            print(request.form)
             if 'firstName' in request.form:
                 firstName = request.form['firstName']
             if 'lastName' in request.form:
@@ -628,7 +648,11 @@ def update_user_details(_uid):
             print(serverFirebaseErr)
             return {'message': 'Firebase error, contact developpers.'},403
 
-        print({'message': f'Sucessfully updated user profile {_uid}'}, 200)
+        print((success_response :=({'message': f'Sucessfully updated user profile {_uid}'}, 200)))
+        if request.method == 'PATCH':#Most common, because from frontend. POST is for test template backend interface only
+            return success_response
+    else:
+        return {'message': 'Bad request Method'},400
     return redirect("/firebase-api/userprofile")
 
 #

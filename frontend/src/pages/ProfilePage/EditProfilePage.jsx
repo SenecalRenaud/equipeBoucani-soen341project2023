@@ -42,8 +42,7 @@ const EditProfilePage = () => {
 
         if (editor_uid == null || editor_uid !== jwtdecoded.user_id) {
             console.log("Invalid profile route query and/or url")
-            history('/');
-            return <></>
+            return history('/');
         }
 
         if(
@@ -54,8 +53,7 @@ const EditProfilePage = () => {
 
     }catch {
         alert("Not Authorized to edit this profile");
-        history(-1);
-        return <></>
+        return history(-1);
     }
     console.log("Editing Profile")
     }, [])
@@ -103,26 +101,50 @@ const EditProfilePage = () => {
 
     };
     const handleSubmit = async (event) => { //todo useCallback
+        console.log("OOOOOOOOOOOOOOOOOOOOOOOOOO")
         event.preventDefault();
         const formData = new FormData();
-        formData.append('firstName', userProfileData.firstName);
-        formData.append('lastName', userProfileData.lastName);
-        formData.append('email', userProfileData.email);
-        formData.append('profilePicture', userProfileData.photo_url);
-        formData.append('uploadedResume', userProfileData.resume_url);
+        if (firstNameChanged)
+            formData.append('firstName', userProfileData.firstName);
+        if (lastNameChanged)
+            formData.append('lastName', userProfileData.lastName);
+        if (emailChanged)
+            formData.append('email', userProfileData.email);
+        if (pfpChanged)
+            formData.append('profilePicture', userProfileData.photo_url);
+        if (resumeChanged)
+            formData.append('uploadedResume', userProfileData.resume_url);
         // formData.append('bio', userProfileData.bio);
-
-        await fetch(`/firebase-api/edit-user/${uid}/`, {
+        console.log("FORM DATA")
+        console.log(formData)
+        console.log(uid)
+        await window.caches.open('profileEditing')
+                    .then(cache => {
+                        cache.put('/editedUserProfileData',
+                            new Response(JSON.stringify(userProfileData)))
+                    })
+        return await fetch(`/firebase-api/edit-user/${uid}/`, {
           method: 'PATCH',
           body: formData,
           headers: {
-            'Content-Type': 'multipart/form-data'
+            'Authorization': `Bearer ${Cookies.get('access_token')}`,//'Content-Type': 'multipart/form-data',
           },
         }).then(response => {
-          history(`/profile/${uid}`);
+          console.log("Updated User info !")
+          console.log("Response : ",response)
+          setOriginalProfileData(userProfileData)
+
+
+          let curr_url_path = location.pathname + location.search
+
+          history(`/profile/${uid}`)
+          history(curr_url_path)
+          return history(`/profile/${uid}`)
+
         }).catch(error => {
           console.log(error);
         });
+
     };
     function checkIfItemExists(item){
         if(item != null){
@@ -131,8 +153,8 @@ const EditProfilePage = () => {
         return "no user logged in"
     }
 
-    return (<form className="daddyContainer">
-        <container className="profile_container_1" onSubmit={handleSubmit}>
+    return (<form className="daddyContainer" onSubmit={handleSubmit} encType="multipart/form-data">
+        <container className="profile_container_1">
             <label>
               Profile Picture:
               <input type="file" accept="image/*" onChange={handlePfpImageChange}
@@ -198,7 +220,8 @@ Thank you for reading and I hope to share more of my journey with you soon.</tex
         <container className="profile_container_3">
             <label>
           Resume:
-          <input type="file" accept="application/pdf" onChange={handleResumeFileChange} />
+          <input type="file" accept="application/pdf" onChange={handleResumeFileChange}
+          name="uploadedResume"/>
         </label>
         {userProfileData.resume_url && (
             <div>
@@ -215,7 +238,8 @@ Thank you for reading and I hope to share more of my journey with you soon.</tex
         </container>
             <container className="profile_container_4">
                 <input type='submit' value="Save changes"
-                       className='update-profile-btn editSave'/>
+                       className='update-profile-btn editSave'
+                        />
                 <span className='hoverMessage'> Saving all changes and update profile </span>
                 <button onClick={(e)=> {history(`/profile/${uid}`)}}
                     className='update-profile-btn editCancel'

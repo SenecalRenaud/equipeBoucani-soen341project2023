@@ -99,7 +99,14 @@
     justify-content: center;
     margin-top: 50px;
 }
-
+form.daddyContainer {
+    border: 3px dashed #2f4667;
+    margin-top: 0px;
+}
+form.daddyContainer > container[class^='profile_container'] {
+    margin: 15px;
+    background-color: rgb(239, 240, 243);
+}
 .profile-content-username {
 
     align-self: center;
@@ -267,14 +274,14 @@ input[type='submit'].update-profile-btn:hover{
 
 }
 
-.editSave {
+.editSave { /* Filter allows to change them based on overall profile page themes*/
     position: relative;
     color: inherit;
     filter: brightness(0) saturate(100%) invert(16%) sepia(95%) saturate(3484%) hue-rotate(148deg) brightness(91%) contrast(98%);
     /*backdrop-filter: hue-rotate(105deg);*/
 
 }
-.editCancel {
+.editCancel { /* Filter allows to change them based on overall profile page themes*/
     position: relative;
     color: inherit;
     filter: brightness(0) saturate(100%) invert(22%)
@@ -305,9 +312,9 @@ input[type='submit'].update-profile-btn:hover{
     align-self: center;
     justify-content: stretch;
     min-width: available;
-    background-color:white;
+    background-color: rgb(181, 211, 246);
     border-radius : 10px;
-    margin:25px;
+    margin:5px;
 
     padding-top: 50px;
     padding-bottom: 50px;
