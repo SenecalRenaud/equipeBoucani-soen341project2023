@@ -110,26 +110,30 @@ def authorized(**permissions):
                     raise auth.InvalidIdTokenError(
                         f"Missing Custom claims / Permissions from JWT: {diff_set}; Authorization denied.")
 
-            except auth.RevokedIdTokenError as revokedNeedRefresh:
+            except auth.RevokedIdTokenError as generic_jwt_err:
+                print("auth.RevokedIdTokenError")
+                print(generic_jwt_err)
+
+                return jsonify({'error': 'Unauthorized'}), 401
+            except auth.InvalidIdTokenError as expiredNeedRefresh:
                 # Token revoked, inform the user to reauthenticate or signOut().
-                print(revokedNeedRefresh)
+                print("auth.InvalidIdTokenError")
+                print(expiredNeedRefresh)
+                print("AAAAAA ?")
                 refresh_token = request.json['refreshToken']
                 if not refresh_token:
                     refresh_token = request.cookies.get("refresh_token")
-
+                print("BBBBBBBBB ?")
                 response = make_response("Refreshing token of session cookie")
                 response.set_cookie('session',expires=0)
-
+                print("CCCCCCCCCC ?")
                 session_cookie = auth.create_session_cookie(refresh_token,expires_in=3600)
                 response.set_cookie(
                     'session', session_cookie.decode("utf-8"),
                                         httponly=True, secure=True,samesite='Strict'
                 )
+                print("DDDDDDDDDDDD ?")
                 return wrapper(*args,**kwargs)
-            except auth.InvalidIdTokenError as generic_jwt_err:
-                print(generic_jwt_err)
-
-                return jsonify({'error': 'Unauthorized'}), 401
             except auth.UserDisabledError:
                 # Token belongs to a disabled user record.
                 auth.revoke_refresh_tokens(decoded_token['sub']) # Revoke allsessions
