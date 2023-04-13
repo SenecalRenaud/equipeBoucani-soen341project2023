@@ -31,3 +31,15 @@ parser.add_argument('--config', dest='config_options', action=ConfigAction, narg
                     help='configuration options in the format KEY=VALUE')
 
 parser.add_argument("--sqldb",dest='specified_sqldb', choices=["local", "hosted"], help="type of database to use (local or hosted) (see config.py)")
+
+__doc__ = """
+python app.py --help
+ to see the docs and help info I made
+--config SESSION_COOKIE_SAMESITE="None" SESSION_COOKIE_HTTPONLY=False MAIL_USE_TLS=True MAIL_SERVER=somethng.gmail@lol
+this will set any Flask app config options as seen in config.py/ApplicationSessionConfig, (which are passed to app.config.from_object(ApplicationSessionConfig),etc... )
+--sqldb local
+ or 
+--sqldb hosted
+ Will force the program to pick the specified database.
+All of these are optional
+"""

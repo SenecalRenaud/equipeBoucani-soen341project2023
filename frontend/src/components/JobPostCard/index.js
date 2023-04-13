@@ -5,7 +5,7 @@ import {faPen, faTrashCan} from '@fortawesome/free-solid-svg-icons';
 import JobPostingAPIService from "../../pages/PostAJob/JobPostingAPIService";
 import Modal from "react-modal";
 import UserDropDownMenu from "../UserDropDownMenu/UserDropDownMenu";
-import {UserAvatarGroup, UserAvatarWithText} from "../Avatars";
+import {AvatarGroupWithClickableAvatars, UserAvatarGroup, UserAvatarWithText} from "../Avatars";
 import CommentAPIService from "../../pages/BACKEND_DEBUG/CommentAPIService";
 // import UserRESTAPI from "../../restAPI/UserAPI";
 // import Cookies from 'js-cookie'
@@ -158,7 +158,7 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
                     console.log(applicants);
                 });
                 //setListOfApplicants(applicantsList);
-                console.log(listOfApplicants);
+                // console.log(listOfApplicants);
             }
         )
 
@@ -296,11 +296,12 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
                 <CardApplyButton  onClick={(e) => {HandleApply(id, employerUid)}}>  Apply </CardApplyButton>
             }
             <CardText>{listOfApplicants.length ===0 ?
-                'No applicants yet!' :
+                'Be the first to apply. No applicants yet!' :
                 listOfApplicants.length === 1 ?
                     'Already 1 Applicant!' :
-                    'Already ' + listOfApplicants.length + ' applicants!'}</CardText>
-            {UserAvatarGroup(listOfApplicants, 5)}
+                    'Received ' + listOfApplicants.length + ' applications!'}</CardText>
+            {UserAvatarGroup([...new Map(listOfApplicants.map(applicant => [applicant.uid, applicant])).values()],
+                5)}
 
 
         </CardArticle>

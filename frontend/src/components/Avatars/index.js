@@ -1,9 +1,11 @@
-import React from "react";
+import React, {useState} from "react";
 import styled, { ThemeProvider } from "styled-components";
 import Typography from "@material-ui/core/Typography";
 import Avatar from "@material-ui/core/Avatar";
 import {AvatarGroup} from "@material-ui/lab";
 import { StylesProvider, useTheme } from "@material-ui/core/styles";
+import UserDropDownMenu from "../UserDropDownMenu/UserDropDownMenu";
+import {Button, Menu, MenuItem} from "@material-ui/core";
 
 const AvatarContainer = styled.div`
   display: flex;
@@ -14,6 +16,39 @@ const AvatarContainer = styled.div`
 
   & > * {
     margin: 2px;
+  }
+  & .MuiAvatar-root {
+    width: 50px ;
+    height: 50px ;
+  }
+
+`;
+const GroupedAvatarContainer = styled.div`
+  display: flex;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: antiquewhite;
+  //gap: 20px;
+  //margin-left: -100px;
+  & > * {
+    //margin: 12px;
+    border: 0;
+    background: none;
+  }
+  & .MuiAvatarGroup-root{
+    background: none;
+    border: none;
+  }
+  & .menu-trigger {
+    object-fit: cover;
+    background: none;
+    box-shadow: none;
+    margin-left: -20px;
+    
+    justify-content: left;
+    align-items: flex-start;
   }
 
 `;
@@ -66,25 +101,74 @@ function UserAvatarWithText(userObj,key=0,avatarSize=6) {
 
   );
 }
-function UserAvatarGroup(usersList,maxNumOfUsersShown) {
+function UserAvatarGroup(usersList,maxNumOfUsersShown,useDropDownMenu=true) {
   return (
-    <AvatarContainer>
+    <GroupedAvatarContainer>
       <AvatarGroup max={maxNumOfUsersShown}>
           {
               usersList.map((userObj,ix) =>
-                  (
+                  !useDropDownMenu ?
                       <Avatar
                         key={ix}
                         alt={userObj.firstName}
                         src={userObj.photo_url}
+                        imgProps={{
+        style: { objectFit: 'cover', width: '100%', height: '100%' },
+      }}
                         />
-                  )
+                  :
+                    <UserDropDownMenu
+                    triggerMenuMarkup={
+                        <Avatar
+                        key={ix}
+                        alt={userObj.firstName}
+                        src={userObj.photo_url}
+                        />}
+                    triggeredUserUid={userObj.uid}
+                />
               )
           }
 
 
       </AvatarGroup>
-    </AvatarContainer>
+    </GroupedAvatarContainer>
   );
 }
-export {UserAvatarWithText,UserAvatarGroup }
+
+function AvatarGroupWithClickableAvatars(usersList,maxNumOfUsersShown) {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedAvatar, setSelectedAvatar] = useState(null);
+
+  const handleClick = (event, avatar) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedAvatar(avatar);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+    setSelectedAvatar(null);
+  };
+
+  return (
+     <GroupedAvatarContainer>
+      <AvatarGroup max={maxNumOfUsersShown}>
+        {usersList.map((avatar) => (
+          <Button key={avatar.uid} onClick={(e) => handleClick(e, avatar)}>
+            <Avatar alt={avatar.firstName} src={avatar.photo_url} />
+          </Button>
+        ))}
+      </AvatarGroup>
+        <Menu
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        <MenuItem onClick={handleClose}>{selectedAvatar?.firstName}</MenuItem>
+        {/* Other menu items */}
+      </Menu>
+     </GroupedAvatarContainer>
+  );
+}
+
+export {UserAvatarWithText,UserAvatarGroup, AvatarGroupWithClickableAvatars}

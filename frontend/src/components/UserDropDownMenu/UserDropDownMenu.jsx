@@ -11,8 +11,11 @@ import {useUserContext} from "../../context/UserContext";
 //TODO Optimization: use .bind() to bind to very user profile to result on current load !!!
 
 
+/**
+ * Contact author: Antoine Cantin @ChiefsBestPal
+ * Before making any changes here. Report bugs immediately.
+ */
 const UserDropDownMenu = ({triggerMenuMarkup,triggeredUserUid}) => {
-
     const {state} = useUserContext();
 
     //const counter = useRef(0);

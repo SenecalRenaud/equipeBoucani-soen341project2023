@@ -11,7 +11,6 @@ import React from 'react';
 // };
 
 
-//TODO MAKE THEM VERIFY WITH VerifyTokensAndSessionCookie.js AND/OR BACKEND VERIFYVIEW+DECORATOR  !
 //TODO: ADAPT FOR MORE STATE PROPERTY FIELDS + do ...state
 
 export const defaultState = {
