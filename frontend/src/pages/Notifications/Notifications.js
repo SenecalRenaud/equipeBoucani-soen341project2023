@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import "../PostAJob/JobPostingForm.css";
 import CoreUICard from "../../components/CoreUICard";
 import JobPostCard from "../../components/JobPostCard";
@@ -9,12 +9,13 @@ import ApplicationCard from "../../components/ApplicationCard";
 import NotificationCard from "../../components/NotificationCard";
 import {useUserContext} from "../../context/UserContext";
 import {useParams} from "react-router-dom";
+import UserRESTAPI from "../../restAPI/UserAPI";
 
 // let loadNum = 1;
 function Notifications (props)   {
     // const refCounter = useRef(0);
     const filteredIndicesHashSet = new Set();
-    const [data,setData] = useState([{}]); //TODO: REPLACE WITH partialData state hook, directly handled in the filter alg/funciton
+    const [data,setData] = useState([{}]);
     const [defaultData,setDefaultData] = useState([{}]);
     const [employerUid, setEmployerUid] = useState('');
 
@@ -24,9 +25,7 @@ function Notifications (props)   {
     const url_params = useParams()
 
     const { state } = useUserContext();
-    let userObj = state.userData; // This will be the Object with all user info...
-    //So... userObj.uid, userObj.firstName, userObj.email, etc...
-    
+
 
     useEffect(() => {
 
@@ -80,9 +79,17 @@ function Notifications (props)   {
             setEr(true);
         })
 
-    },[])
+    },[employerUid, url_params.uid])
 
+    if (!UserRESTAPI.areAllUserCookiesAvailable() || (state.userData && state.userData.uid !== url_params.uid
+    && state.userData.userType !== "ADMIN") ) {
 
+        return <div style={{color: 'white',textAlign: 'center',fontSize: '6em',fontFamily: 'Impact'}}>
+            <span> Unauthorized access to route to view this persons' notifications: Must log into the right user account to view this page</span>
+            <hr/>
+            <img src="https://i.imgflip.com/5132fw.png" alt="sadge cat"/>
+        </div>
+    }
 
     if (er || typeof data.id === 'undefined'){ // Json request body not loaded properly if not job post ID
         if (errorString.startsWith("SyntaxError")// || errorString === "SyntaxError: Unexpected token 'P', \"Proxy error\"... is not valid JSON"
