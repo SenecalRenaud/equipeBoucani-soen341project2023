@@ -295,7 +295,11 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
                 (state.userData && state.userData.userType === "APPLICANT") &&
                 <CardApplyButton  onClick={(e) => {HandleApply(id, employerUid)}}>  Apply </CardApplyButton>
             }
-            <CardText>Already {listOfApplicants.length} applicant(s)!</CardText>
+            <CardText>{listOfApplicants.length ===0 ?
+                'No applicants yet!' :
+                listOfApplicants.length === 1 ?
+                    'Already 1 Applicant!' :
+                    'Already ' + listOfApplicants.length + ' applicants!'}</CardText>
             {UserAvatarGroup(listOfApplicants, 5)}
 
 
