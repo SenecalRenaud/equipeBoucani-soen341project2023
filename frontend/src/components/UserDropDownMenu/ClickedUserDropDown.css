@@ -4,6 +4,7 @@
 
 }
 .menu {
+  z-index: 1000;
   background: #ffffff;
   border-radius: 8px;
   position: absolute;
