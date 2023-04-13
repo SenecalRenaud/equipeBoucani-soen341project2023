@@ -76,6 +76,7 @@ from firebase_admin._auth_utils import EmailAlreadyExistsError, EmailNotFoundErr
 
 app.config.from_object(ApplicationSessionConfig)
 
+
 Session(app)
 
 # CSRF cookie,credentials, server-side and request handling, security...
@@ -591,7 +592,7 @@ def update_user_details(_uid):
                 firstName = request.form['firstName']
             if 'lastName' in request.form:
                 lastName = request.form['lastName']
-            if 'profilePicture' in request.files:  # request.json:
+            if 'profilePicture' in request.files:#request.json:
                 uploaded_pfp_file = request.files['profilePicture']
 
                 filename = secure_filename(uploaded_pfp_file.filename)
@@ -637,10 +638,10 @@ def update_user_details(_uid):
                              photo_url=pfp_publicurl)
 
             user_firestore_data = dict(
-                firstName=firstName,
-                lastName=lastName,
-                photo_url=pfp_publicurl,
-                resume_url=resume_url
+                    firstName=firstName,
+                    lastName=lastName,
+                    photo_url=pfp_publicurl,
+                    resume_url=resume_url
             )
             if 'uploadedResume' not in request.files:
                 del user_firestore_data['resume_url']
@@ -655,20 +656,19 @@ def update_user_details(_uid):
 
         except ValueError as badUid:
             print(badUid)
-            return {'message': 'Uid is invalid'}, 400
+            return {'message': 'Uid is invalid'},400
         except UserNotFoundError as userNotFound:
-            return {'message': str(userNotFound)}, 404
+            return {'message': str(userNotFound)},404
         except FirebaseError as serverFirebaseErr:
             print(serverFirebaseErr)
-            return {'message': 'Firebase error, contact developpers.'}, 403
+            return {'message': 'Firebase error, contact developpers.'},403
 
-        print((success_response := ({'message': f'Sucessfully updated user profile {_uid}'}, 200)))
-        if request.method == 'PATCH':  # Most common, because from frontend. POST is for test template backend interface only
+        print((success_response :=({'message': f'Sucessfully updated user profile {_uid}'}, 200)))
+        if request.method == 'PATCH':#Most common, because from frontend. POST is for test template backend interface only
             return success_response
     else:
-        return {'message': 'Bad request Method'}, 400
+        return {'message': 'Bad request Method'},400
     return redirect("/firebase-api/userprofile")
-
 
 #
 # =================== COMMENTPOSTS ===================
@@ -685,7 +685,7 @@ def get_all_commentposts():
     all_commentposts = CommentPost.query.all()
     results_arr = commentposts_schema.dump(all_commentposts)
     print(results_arr)
-    if any(filter(None, results_arr)) and request.args.get('mapAsFields') == 'true':
+    if any(filter(None,results_arr)) and request.args.get('mapAsFields') == 'true':
         # print("Mapped fields into dict instead of array of obj!")
         response_fieldsdict = dict(map(lambda kv: (kv[0], [kv[1]]), results_arr[0].items()))
 
@@ -701,10 +701,10 @@ def get_all_commentposts():
         # values: list of all keys e.g list of all postedDate
         return jsonify(response_fieldsdict)
 
-    return jsonify(results_arr)  # **{'Hello' : 'World'})
+    return jsonify(results_arr)#**{'Hello' : 'World'})
 
 
-@app.route('/add', methods=['POST'])  # methods = [list http reqs methods]
+@app.route('/add', methods=['POST']) # methods = [list http reqs methods]
 @cross_origin()
 def add_commentpost():
     """
@@ -723,13 +723,14 @@ def add_commentpost():
     return commentpost_schema.jsonify(commentpost)
 
 
-@app.route("/get/<_id>/", methods=['GET'])
+@app.route("/get/<_id>/",methods=['GET'])
 def get_commentpost(_id):
     commentpost = CommentPost.query.get(_id)
     return commentpost_schema.jsonify(commentpost)
 
 
-@app.route("/update/<_id>/", methods=['PUT'])
+
+@app.route("/update/<_id>/",methods=['PUT'])
 def update_commentpost(_id):
     commentpost = CommentPost.query.get(_id)
 
@@ -743,9 +744,7 @@ def update_commentpost(_id):
     db.session.commit()
 
     return commentpost_schema.jsonify(commentpost)
-
-
-@app.route("/delete/<_id>/", methods=['DELETE'])
+@app.route("/delete/<_id>/",methods=['DELETE'])
 def delete_commentpost(_id):
     commentpost = CommentPost.query.get(_id)
 
@@ -754,7 +753,6 @@ def delete_commentpost(_id):
     db.session.commit()
 
     return commentpost_schema.jsonify(commentpost)
-
 
 #
 # =================== JOBPOSTS ===================
@@ -771,7 +769,7 @@ def get_all_jobposts():
     all_jobposts = JobPost.query.all()
     results_arr = jobposts_schema.dump(all_jobposts)
 
-    if any(filter(None, results_arr)) and request.args.get('mapAsFields') == 'true':
+    if any(filter(None,results_arr)) and request.args.get('mapAsFields') == 'true':
         # print("Mapped fields into dict instead of array of obj!")
         response_fieldsdict = dict(map(lambda kv: (kv[0], [kv[1]]), results_arr[0].items()))
 
@@ -790,31 +788,29 @@ def get_jobpost(_jobid):
     jobpost = JobPost.query.get(_jobid)
     return jobpost_schema.jsonify(jobpost)
 
-
-@app.route("/addjob", methods=['POST'], endpoint='addJobPost')
+@app.route("/addjob", methods=['POST'],endpoint='addJobPost')
 @cross_origin()
-@authorized(employer=True, admin=False)
+@authorized(employer=True,admin=False)
 def addJobPost():
-    jobtype, title, location, salary, description, tags, employerUid = request.json['jobtype'], request.json['title'], \
-                                                                       request.json[
-                                                                           'location'], request.json['salary'], \
-                                                                       request.json['description'], request.json[
-                                                                           'tags'], request.json['employerUid']
+    jobtype, title, location, salary, description, tags,employerUid = request.json['jobtype'], request.json['title'], request.json[
+        'location'], request.json['salary'], request.json['description'], request.json['tags'],request.json['employerUid']
 
     if request.args.get("random-fields"):
         title = ''.join(random.choice(string.digits + string.ascii_letters) for _ in range(11))
-        salary = random.randint(500, 12000)
+        salary = random.randint(500,12000)
         description = ''.join(random.choice(string.printable) for _ in range(140))
 
-    jobpost = JobPost(jobtype, title, location, salary, description, tags, employerUid)
+
+    jobpost = JobPost(jobtype, title, location, salary, description, tags,employerUid)
     db.session.add(jobpost)
     db.session.commit()
 
     return jobpost_schema.jsonify(jobpost)
 
 
-@app.route("/updatejob/<_jobid>/", methods=['PUT'], endpoint='update_jobpost')
-@authorized(employer=True, myself=True)  # admin is not set to false, so admins can also do this
+
+@app.route("/updatejob/<_jobid>/", methods=['PUT'],endpoint='update_jobpost')
+@authorized(employer=True,myself=True)#admin is not set to false, so admins can also do this
 def update_jobpost(_jobid):
     jobpost = JobPost.query.get(_jobid)
 
@@ -902,7 +898,7 @@ def rejectedMail():
 
 @app.route("/addapplication", methods=['POST'], endpoint='addApplication')
 @cross_origin()
-@authorized(applicant=True)
+@authorized(applicant=True,admin=False)
 def addApplication():
     jobPostId, applicantUid, coverLetter = request.json['jobPostId'], request.json['applicantUid'], request.json[
         'coverLetter']
@@ -913,10 +909,9 @@ def addApplication():
 
     return application_schema.jsonify(application)
 
-
-@app.route("/getapplication/<_id>/", methods=['GET'])
-def get_application(_id):
-    application = Application.query.get(_id)
+@app.route("/getapplication/<_applyid>/", methods=['GET'])
+def get_application(_applyid):
+    application = Application.query.get(_applyid)
     return application_schema.jsonify(application)
 
 
@@ -943,10 +938,9 @@ def get_all_applications():
 
     return jsonify(results_arr)
 
-
-@app.route("/deleteapplication/<_id>/", methods=['DELETE'], endpoint='delete_application')
-def delete_application(_id):
-    application = Application.query.get(_id)
+@app.route("/deleteapplication/<_applyid>/", methods=['DELETE'],endpoint='delete_application')
+def delete_application(_applyid):
+    application = Application.query.get(_applyid)
 
     db.session.delete(application)
 

@@ -56,10 +56,10 @@ const Apply = props => {
         <container className='main_container'>
             <container className='box'>
                 <h1 className='name'>{data.title}</h1>
-                <h1 className='description'>{"Job Type: " + data.jobtype}</h1>
-                <h1 className='description'>{"Location: " + data.location}</h1>
-                <h1 className='description'>{"Salary: " + data.salary + "$"}</h1>
-                <h1 className='description'>{"Tags: " + data.tags}</h1>
+                <h1 className='jobtype'>{"Job Type: " + data.jobtype}</h1>
+                <h1 className='loca'>{"Location: " + data.location}</h1>
+                <h1 className='sal'>{"Salary: " + data.salary + "$"}</h1>
+                <h1 className='tagg'>{"Tags: " + data.tags}</h1>
                 <h1 className='description'>{"Description: " + data.description}</h1>
                 <form className='formstyle' onSubmit={submitApplication}>
                         <label>Your profile information will be sent to the employer, including your resume.<br/> You may inculde a cover letter.</label>
@@ -73,7 +73,7 @@ const Apply = props => {
                             value={coverLetter}
                             onChange={handleCoverLetterChange}
                         />
-                    <input type="submit" value="Submit Application"/>
+                    <input className='submitButton' type="submit" value="Submit Application"/>
                 </form>
             </container>
 

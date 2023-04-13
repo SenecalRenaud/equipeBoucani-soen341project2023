@@ -11,8 +11,11 @@ import {useUserContext} from "../../context/UserContext";
 //TODO Optimization: use .bind() to bind to very user profile to result on current load !!!
 
 
+/**
+ * Contact author: Antoine Cantin @ChiefsBestPal
+ * Before making any changes here. Report bugs immediately.
+ */
 const UserDropDownMenu = ({triggerMenuMarkup,triggeredUserUid}) => {
-
     const {state} = useUserContext();
 
     //const counter = useRef(0);
@@ -71,13 +74,13 @@ const UserDropDownMenu = ({triggerMenuMarkup,triggeredUserUid}) => {
           <nav ref={dropDownRef} className={`menu ${isToggled ? 'active' : 'inactive'}`}>
             <ul>
                 {
-                    isNotUndetermined && <div>
+                    isNotUndetermined && <>
 
               <li><Link to={`/profile/${triggeredUserUid}`}> View Profile </Link></li>
               {/*<li><a href="/preferences"> Settings & Preferences</a></li>*/}
               <li><Link to={`/notifications/${triggeredUserUid}`}> Notifications </Link></li>
 
-                    </div>
+                    </>
                 }
                 {permissionBasedMenuOptionsMarkup}
                 <LogOutTab condition={

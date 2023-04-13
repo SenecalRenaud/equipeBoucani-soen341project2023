@@ -49,11 +49,15 @@ const ApplicationCard = ({applicationId, jobPostId,applicantUid, coverLetter, da
             response => response.json()
         ).then(
             data => {
+                console.log("APPLICANT")
+                console.log(data)
                 setJobData(data);
                 setEmployerUid(jobData.employerUid);
                 return CommentAPIService.GetUserDetails(data.employerUid);
             }
         ).then(data => {
+            console.log("EMPLOYER")
+            console.log(data)
             setEmployerUser(data);
         })
             .catch(function(error){

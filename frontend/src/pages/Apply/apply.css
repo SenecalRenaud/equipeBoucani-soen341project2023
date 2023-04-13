@@ -6,15 +6,18 @@
     margin-top: 75px;
 
     margin-left: 0;
+    margin-bottom: 100px;
 }
 .box{
     display:flex;
     justify-content: center;
-    flex-direction: row;
+    flex-direction: column;
     flex-wrap:wrap;
     background: white;
     border-radius: 10px;
     width: 1000px;
+    margin-left: 50px;
+    margin-right:50px;
 
 }
 .img_logo{
@@ -37,10 +40,13 @@
     font-size: 17px;
     text-align: left;
     color:black;
+    font-weight: 500;
 }
 
 .formstyle{
     margin-bottom: 50px;
+    margin-left: 70px;
+    margin-right: 90px;
 }
 
 
@@ -48,9 +54,54 @@
 .resume{
  margin-bottom: 20px;
     background: white;
+
 }
 .coverletter{
+    margin-left: 20px;
+    width: 100%;
     margin-bottom: 70px;
     height: 500px;
     font-size:14px;
+    background: #d9d7d7;
+}
+
+
+
+
+
+.jobtype{
+margin-left: 70px;
+    margin-right:70px;
+    font-size: 17px;
+    text-align: left;
+    color:black;
+}
+.loca{
+margin-left: 70px;
+    margin-right:70px;
+    font-size: 17px;
+    text-align: left;
+    color:black;
+
+}
+.sal{
+    margin-left: 70px;
+    margin-right:70px;
+    font-size: 17px;
+    text-align: left;
+    color:black;
+
+}
+.tagg{
+    margin-left: 70px;
+    margin-right:70px;
+    font-size: 17px;
+    text-align: left;
+    color:black;
+
+}
+
+.submitButton{
+    background: white;
+    padding: 10px;
 }

@@ -4,6 +4,7 @@
 
 }
 .menu {
+  z-index: 1000;
   background: #ffffff;
   border-radius: 8px;
   position: absolute;
@@ -11,9 +12,18 @@
   /*top: 80px;*/
   /*right: 0;*/
   /*width: 500px;*/
-  width: min(17em,140%); /* Important line for different type of component to use the menu */
 
-  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+  /*width: min(17em,140%); !* Important line for different type of component to use the menu *!*/
+
+  display: table;
+  table-layout: fixed;
+  width: auto;
+
+  /*box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);*/
+  /*box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.05);*/
+  /*-webkit-box-shadow: #FFF 0 -1px 4px, #ff0 0 -2px 10px, #ff8000 0 -10px 20px, red 0 -18px 40px, 16px 11px 14px 0px rgba(0,0,0,0.28);*/
+  box-shadow: rgba(255, 255, 255, 0.5) 0 -1px 4px, rgba(255, 255, 0, 0.5) 0 -2px 10px, rgba(255, 128, 0, 0.5) 0 -10px 20px, rgba(255, 0, 0, 0.5) 0 -18px 40px, 16px 11px 14px 0px rgba(0,0,0,0.28);
+
   opacity: 0;
   visibility: hidden;
   transform: translateY(-20px);
@@ -33,15 +43,20 @@
 }
 
 .menu li {
+  display: table-row;
+  width: 100%;
   border-bottom: 1px solid #dddddd;
+
 }
 
-.menu li > a,Link,b {
+.menu li > a,Link,b,.menu li > b {
   text-decoration: none;
   color: #333333;
   padding: 15px 20px;
-  display: block;
+  /*display: block;*/
+  display: table-cell;
   cursor: pointer;
+  width: max-content;
 }
 .menu li:hover {
   background-color: rgba(184, 74, 0, 0.72);

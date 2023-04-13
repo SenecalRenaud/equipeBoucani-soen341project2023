@@ -14,7 +14,7 @@ import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import SignUp from "./pages/SignUp/SignUpForm";
 import SignIn from "./pages/SignIn/SignInForm";
 import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
-import JobPosting from "./pages/JobPostings/JobPosting";
+
 import ViewMyApplications from "./pages/ViewMyApplications/ViewMyApplications";
 import ApplyJob from "./pages/ApplyJob/ApplyJob";
 import Notifications from "./pages/Notifications/Notifications"
@@ -35,6 +35,7 @@ import Apply from "./pages/Apply/Apply";
 //import AboutUs from "./pages/AboutUs/aboutus";
 import EditProfilePage from "./pages/ProfilePage/EditProfilePage";
 import CommentSection from "./components/CommentSection/CommentSection";
+import ViewMyApplicationsCopy from "./pages/ViewMyApplications/ViewMyApplicationsCopy";
 // import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
 
 
@@ -144,7 +145,7 @@ return (
         <Route path="*" element={<PageNotFound/>}/>
         <Route exact path='/'  element={<Home />} />
         <Route path='/jobposting' element={<JobPostingForm postedJob={postedJob}/>} />
-        <Route path='/jobs' element={<JobPosting/>} />
+
         <Route path='/apply' element={<Apply/>} />
         <Route path='/BACKEND_DEBUG' element={<PostCommentForm postedComment={postedComment} />}/>
         <Route path='/signup'
@@ -159,15 +160,17 @@ return (
            } />
 
         <Route path='/viewjobposts' element={<ViewJobPosts postedJob={postedJob} />} />
+        <Route exact path='/viewjobposts/:uid' element={<MyJobPosts postedJob={postedJob} />}/>
+
 
         <Route path="/commentsection_test" element={<CommentSection/>}/>
 
-        <Route path='/viewApplications' element={<ViewMyApplications />} />
+        <Route exact path='/viewapplications/:uid' element={<ViewMyApplications />} />
+
         <Route exact path='/profile/:uid' element={<ProfilePage/>} />
         <Route path='/profile/:uid/edit' element={<EditProfilePage/>}/>
-        <Route exact path='current/jobpostings' element={<MyJobPosts postedJob={postedJob} />}/>
-        {/*TODO: Make path:  /viewjobposts/:uid
-           TODO  and use useParams() hook like such: params.uid in useEffect dependencies */}
+
+
         {/*<Route path='/SESSION_COOKIES_DEBUG' element={<SESSION_COOKIES_DEBUG/>}/>*/}
 
         <Route path='/notifications/:uid' element={<Notifications/>}/>
@@ -175,6 +178,8 @@ return (
         <Route path='/loading' element={<LoadingScreen/>} />
 
         <Route path='/ApplyJob' element={<ApplyJob/>} />
+
+        <Route path='/ViewMyApplicationsCopy' element={<ViewMyApplicationsCopy/>} />
 
     </Routes>
     <Footer />

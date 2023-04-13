@@ -5,19 +5,17 @@ import JobPostCard from "../../components/JobPostCard";
 import SearchBar from "../../components/PostingsSearchBar/SearchBar";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFilter} from "@fortawesome/free-solid-svg-icons";
-import {useUserContext} from "../../context/UserContext";
+import {useParams} from "react-router-dom";
 
 // let loadNum = 1;
 function MyJobPosts (props)   {
     // const refCounter = useRef(0);
+    const url_params = useParams();
+
     const filteredIndicesHashSet = new Set();
     const [data,setData] = useState([{}]); //TODO: REPLACE WITH partialData state hook, directly handled in the filter alg/funciton
     const [defaultData,setDefaultData] = useState([{}]);
     const [searchBarInput, setSearchBarInput] = useState('');
-
-    const { state } = useUserContext();
-    let userObj = state.userData; // This will be the Object with all user info...
-    //So... userObj.uid, userObj.firstName, userObj.email, etc...
 
     let [er,setEr] = useState(false);
     let [errorString, setErrorString] = useState("");
@@ -37,7 +35,7 @@ function MyJobPosts (props)   {
                     if (fieldVal != null &&
                         fieldVal.toString().toLowerCase().includes(searchBarInput.toLowerCase()))
                         filteredIndicesHashSet.add(dataIx);
-                    if (defaultData.employerUid[dataIx] !== window.localStorage.getItem("uid"))
+                    if (defaultData.employerUid[dataIx] !== url_params.uid)
                         filteredIndicesHashSet.delete(dataIx);
 
                 }
@@ -53,7 +51,7 @@ function MyJobPosts (props)   {
         );
 
         setSearchBarInput(searchBarInput);
-        setData( //TODO CLOUD MAKE MORE EFFICIENT DATA-STRUCTURE/FUNCTIONAL PROGRAMMING WISE... BUT THIS STILL WORKS FOR THE PROJECT
+        setData( //TODO COULD MAKE MORE EFFICIENT DATA-STRUCTURE/FUNCTIONAL PROGRAMMING WISE... BUT THIS STILL WORKS FOR THE PROJECT
             Object.keys(defaultData).reduce(
                 (obj, key, index) => ({ ...obj, [key]: filtered[index] }), {})
         );
@@ -72,11 +70,11 @@ function MyJobPosts (props)   {
             response => response.json()
         ).then(
             data => {
-                console.log(userObj.uid)
+
                 let otherEmployerIxToRemove = []; //Must be list, since splice needs to avoid indices shifting
                 data.employerUid.forEach(
                     (employerUid, postingIx) => {
-                        if( employerUid !== userObj.uid)
+                        if( employerUid !== url_params.uid)
                             otherEmployerIxToRemove.push(postingIx)
                     }
                 )
@@ -110,7 +108,7 @@ function MyJobPosts (props)   {
         // loadNum ^= 0b11;
 
 
-    },[])
+    },[url_params.uid])
 
 
 
@@ -120,9 +118,9 @@ function MyJobPosts (props)   {
             return (
                 <div className="post-comment-container">
                     <header className="Debug-header">
-                        <h1> JobPost CRUD Debug Ozan Branch Migrating From Antoine CommentPostBranch </h1>
+                    <h1> My Job Postings </h1>
                     </header>
-                    <h1>Job Posts</h1>
+
                     <div className="job-posts">
                         <p align="center" style={{color: "#FF5733"}}>Your API/backend server is not launched. Please ask an admin to launch the server to use this page.</p>
                     </div>
@@ -133,9 +131,8 @@ function MyJobPosts (props)   {
             return (
                 <div className="post-comment-container">
                     <header className="Debug-header">
-                        <h1> JobPost CRUD Debug Ozan Branch Migrating From Antoine CommentPostBranch </h1>
+                    <h1> My Job Postings </h1>
                     </header>
-                    <h1>Job Posts</h1>
                     <hr/>
                     <h3 align="center" style={{color: "#8B8000"}}>No posts in the job_post table.</h3>
                 </div>
@@ -146,9 +143,8 @@ function MyJobPosts (props)   {
         return (
             <div className="post-comment-container">
                 <header className="Debug-header">
-                    <h1> JobPost CRUD Debug Ozan Branch Migrating From Antoine CommentPostBranch </h1>
-                </header>
-                <h1>Job Posts</h1>
+                     <h1> My Job Postings </h1>
+                    </header>
                 <section style={{display: 'flex', justifyContent:'space-between',alignItems: 'stretch', margin: '1em 0.2em'}}>
                     <span> Search:&ensp; </span>
                     <SearchBar
@@ -180,7 +176,7 @@ function MyJobPosts (props)   {
                     {
 
                         return (
-                        ((window.localStorage.getItem("uid") === data.employerUid[i])) ?
+                        ((url_params.uid === data.employerUid[i])) ?
 
                             <JobPostCard
                                 key={i}
