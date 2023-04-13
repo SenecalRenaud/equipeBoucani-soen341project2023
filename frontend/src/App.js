@@ -14,7 +14,7 @@ import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import SignUp from "./pages/SignUp/SignUpForm";
 import SignIn from "./pages/SignIn/SignInForm";
 import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
-import JobPosting from "./pages/JobPostings/JobPosting";
+
 import ViewMyApplications from "./pages/ViewMyApplications/ViewMyApplications";
 import ApplyJob from "./pages/ApplyJob/ApplyJob";
 
@@ -143,7 +143,7 @@ return (
         <Route path="*" element={<PageNotFound/>}/>
         <Route exact path='/'  element={<Home />} />
         <Route path='/jobposting' element={<JobPostingForm postedJob={postedJob}/>} />
-        <Route path='/jobs' element={<JobPosting/>} />
+
         <Route path='/apply' element={<Apply/>} />
         <Route path='/BACKEND_DEBUG' element={<PostCommentForm postedComment={postedComment} />}/>
         <Route path='/signup'
