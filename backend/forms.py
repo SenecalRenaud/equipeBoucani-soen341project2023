@@ -9,7 +9,7 @@ from flask import g, request, redirect, url_for, jsonify, make_response,session
 
 import logging
 
-from backend.models import JobPost
+from models import JobPost
 
 
 def login_required(f):
