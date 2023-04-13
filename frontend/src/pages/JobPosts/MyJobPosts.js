@@ -5,6 +5,7 @@ import JobPostCard from "../../components/JobPostCard";
 import SearchBar from "../../components/PostingsSearchBar/SearchBar";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFilter} from "@fortawesome/free-solid-svg-icons";
+import {useUserContext} from "../../context/UserContext";
 
 // let loadNum = 1;
 function MyJobPosts (props)   {
@@ -13,6 +14,10 @@ function MyJobPosts (props)   {
     const [data,setData] = useState([{}]); //TODO: REPLACE WITH partialData state hook, directly handled in the filter alg/funciton
     const [defaultData,setDefaultData] = useState([{}]);
     const [searchBarInput, setSearchBarInput] = useState('');
+
+    const { state } = useUserContext();
+    let userObj = state.userData; // This will be the Object with all user info...
+    //So... userObj.uid, userObj.firstName, userObj.email, etc...
 
     let [er,setEr] = useState(false);
     let [errorString, setErrorString] = useState("");
@@ -67,11 +72,11 @@ function MyJobPosts (props)   {
             response => response.json()
         ).then(
             data => {
-                console.log(window.localStorage.getItem("uid"))
+                console.log(userObj.uid)
                 let otherEmployerIxToRemove = []; //Must be list, since splice needs to avoid indices shifting
                 data.employerUid.forEach(
                     (employerUid, postingIx) => {
-                        if( employerUid !== window.localStorage.getItem("uid"))
+                        if( employerUid !== userObj.uid)
                             otherEmployerIxToRemove.push(postingIx)
                     }
                 )

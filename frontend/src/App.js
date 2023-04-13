@@ -17,6 +17,7 @@ import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
 import JobPosting from "./pages/JobPostings/JobPosting";
 import ViewMyApplications from "./pages/ViewMyApplications/ViewMyApplications";
 import ApplyJob from "./pages/ApplyJob/ApplyJob";
+import Notifications from "./pages/Notifications/Notifications"
 
 
 // import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
@@ -168,6 +169,8 @@ return (
         {/*TODO: Make path:  /viewjobposts/:uid
            TODO  and use useParams() hook like such: params.uid in useEffect dependencies */}
         {/*<Route path='/SESSION_COOKIES_DEBUG' element={<SESSION_COOKIES_DEBUG/>}/>*/}
+
+        <Route path='/notifications/:uid' element={<Notifications/>}/>
 
         <Route path='/loading' element={<LoadingScreen/>} />
 

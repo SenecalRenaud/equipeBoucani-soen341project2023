@@ -6,23 +6,27 @@ import SearchBar from "../../components/PostingsSearchBar/SearchBar";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFilter} from "@fortawesome/free-solid-svg-icons";
 import ApplicationCard from "../../components/ApplicationCard";
+import NotificationCard from "../../components/NotificationCard";
 import {useUserContext} from "../../context/UserContext";
+import {useParams} from "react-router-dom";
 
 // let loadNum = 1;
-function ViewMyApplications (props)   {
+function Notifications (props)   {
     // const refCounter = useRef(0);
     const filteredIndicesHashSet = new Set();
     const [data,setData] = useState([{}]); //TODO: REPLACE WITH partialData state hook, directly handled in the filter alg/funciton
     const [defaultData,setDefaultData] = useState([{}]);
-    const [searchBarInput, setSearchBarInput] = useState('');
+    const [employerUid, setEmployerUid] = useState('');
 
     let [er,setEr] = useState(false);
     let [errorString, setErrorString] = useState("");
 
+    const url_params = useParams()
+
     const { state } = useUserContext();
     let userObj = state.userData; // This will be the Object with all user info...
     //So... userObj.uid, userObj.firstName, userObj.email, etc...
-
+    
 
     useEffect(() => {
 
@@ -30,14 +34,28 @@ function ViewMyApplications (props)   {
             response => response.json()
         ).then(
             data => {
-                console.log(userObj.uid)
                 let otherApplicantsToRemove = []; //Must be list, since splice needs to avoid indices shifting
-                data.applicantUid.forEach(
-                    (applicantUid, applicationId) => {
-                        if( applicantUid !== userObj.uid)
-                            otherApplicantsToRemove.push(applicationId)
+
+                data.jobPostId.forEach(
+                    (jobPostId, i) => {
+                        fetch("/getjob/" + jobPostId + "/").then(
+                            response => response.json()
+                        ).then(
+                            data => {
+                                setEmployerUid(data.employerUid)
+                            }
+                        )
+                            .catch(function(error){
+                                console.log("empty db", error.toString());
+                                setErrorString(error.toString())
+                                setEr(true);
+                            })
+                        if( employerUid !== url_params.uid) {
+                            console.log(employerUid)
+                            otherApplicantsToRemove.push(i)
                             console.log(otherApplicantsToRemove)
-                    }
+                        }
+                        }
                 )
 
                 Object.keys(data).forEach(fieldName => {
@@ -69,7 +87,7 @@ function ViewMyApplications (props)   {
         ){
             return (
                 <div className="post-comment-container">
-                    <h1>My Applications</h1>
+                    <h1>Notifications</h1>
                     <div className="job-posts">
                         <p align="center" style={{color: "#FF5733"}}>Your API/backend server is not launched. Please ask an admin to launch the server to use this page.</p>
                     </div>
@@ -79,9 +97,9 @@ function ViewMyApplications (props)   {
         else{
             return (
                 <div className="post-comment-container">
-                    <h1>My Applications</h1>
+                    <h1>Notifications</h1>
                     <hr/>
-                    <h3 align="center" style={{color: "#8B8000"}}>No applications in the job_post table.</h3>
+                    <h3 align="center" style={{color: "#8B8000"}}>No applications in the applications table.</h3>
                 </div>
             );
         }
@@ -89,11 +107,7 @@ function ViewMyApplications (props)   {
     else{
         return (
             <div className="post-comment-container">
-                <h1>My Applications</h1>
-                <span style={{display: 'inline-block' ,fontSize: '.9em' , marginTop: "-1rem"}}>
-                 <b id="searchResultCount"> Found {(data.id ? data.id.length : 0)} results.</b>
-
-            </span>
+                <h1>Notifications</h1>
 
                 <hr  style={{
                     color: '#000000',
@@ -106,9 +120,9 @@ function ViewMyApplications (props)   {
                     {
 
                         return (
-                            ((userObj.uid === data.applicantUid[i])) ?
+                            employerUid === url_params.uid ?
 
-                                <ApplicationCard
+                                <NotificationCard
                                     applicationId={id}
                                     jobPostId={data.jobPostId[i]}
                                     applicantUid={data.applicantUid[i]}
@@ -122,4 +136,4 @@ function ViewMyApplications (props)   {
     }
 }
 
-export default ViewMyApplications;
+export default Notifications;

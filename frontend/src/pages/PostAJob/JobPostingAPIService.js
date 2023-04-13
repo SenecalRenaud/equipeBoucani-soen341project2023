@@ -52,7 +52,31 @@ export default class JobPostingAPIService{
     }
 
     static async sendNotification(request_body){
-        return await fetch('http://localhost:5000/sendmail/', {
+        return await fetch('http://localhost:5000/sendApplicationMail/', {
+            'method': 'PUT',
+            headers : {
+                'Content-Type':'application/json',
+            },
+            body:JSON.stringify(request_body)
+        })
+            .then(response => response.json())
+            .catch(error => console.log("NOTIFICATION (SEND) API CORE EXCEPTION... " + error))
+    }
+
+    static async sendAcceptedNotification(request_body){
+        return await fetch('http://localhost:5000/sendAcceptedMail/', {
+            'method': 'PUT',
+            headers : {
+                'Content-Type':'application/json',
+            },
+            body:JSON.stringify(request_body)
+        })
+            .then(response => response.json())
+            .catch(error => console.log("NOTIFICATION (SEND) API CORE EXCEPTION... " + error))
+    }
+
+    static async sendRejectedNotification(request_body){
+        return await fetch('http://localhost:5000/sendRejectedMail/', {
             'method': 'PUT',
             headers : {
                 'Content-Type':'application/json',

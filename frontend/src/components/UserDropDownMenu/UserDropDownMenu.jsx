@@ -75,7 +75,7 @@ const UserDropDownMenu = ({triggerMenuMarkup,triggeredUserUid}) => {
 
               <li><Link to={`/profile/${triggeredUserUid}`}> View Profile </Link></li>
               {/*<li><a href="/preferences"> Settings & Preferences</a></li>*/}
-              <li><a onClick={(e)=>alert("Notification view page TODO!")}> Notifications </a></li>
+              <li><Link to={`/notifications/${triggeredUserUid}`}> Notifications </Link></li>
 
                     </div>
                 }

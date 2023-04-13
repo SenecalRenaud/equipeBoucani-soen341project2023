@@ -1,20 +1,20 @@
 import datetime
 from io import BytesIO
-from time import strftime,localtime
+from time import strftime, localtime
 
 import google.api_core.exceptions
 import requests
 import sqlalchemy.exc
 from flask import \
-    Flask,\
-    jsonify,\
-    request,\
-    abort,\
-    session,\
-    redirect,\
-    render_template,\
-    url_for,\
-    make_response,\
+    Flask, \
+    jsonify, \
+    request, \
+    abort, \
+    session, \
+    redirect, \
+    render_template, \
+    url_for, \
+    make_response, \
     flash
 from flask_mail import Mail, Message
 
@@ -28,14 +28,13 @@ from werkzeug.utils import secure_filename
 from werkzeug.datastructures import ImmutableMultiDict
 from werkzeug.formparser import parse_form_data
 
-
-from flask_cors import CORS,cross_origin #?  (for cross origin requests)
-from flask_bcrypt import Bcrypt #? (keys and password hashing engine)
-from flask_session import Session #NOTE : Assert Accept certain MIME Types/Subtypes
+from flask_cors import CORS, cross_origin  # ?  (for cross origin requests)
+from flask_bcrypt import Bcrypt  # ? (keys and password hashing engine)
+from flask_session import Session  # NOTE : Assert Accept certain MIME Types/Subtypes
 
 from flask_wtf.csrf import CSRFProtect
 
-import MySQLdb #mysqlclient
+import MySQLdb  # mysqlclient
 
 import logging
 import os
@@ -45,15 +44,17 @@ import itertools
 import operator
 import json
 import string
+
 # import re
 
 app = Flask(__name__)
 
-#*******************************
-from forms import authorized,login_required
+# *******************************
+from forms import authorized, login_required
+
 with app.app_context():
-    from config import ApplicationSessionConfig #env vars + Session configs
-from models import db,ma # SQLAlchemyInterface and MarshmallowSchema objects  to integrate
+    from config import ApplicationSessionConfig  # env vars + Session configs
+from models import db, ma  # SQLAlchemyInterface and MarshmallowSchema objects  to integrate
 from models import CommentPost, CommentPostSchema, JobPost, JobPostSchema, Application, ApplicationSchema
 
 from authentification import fb_config, \
@@ -66,17 +67,14 @@ from authentification import fb_config, \
     mainStorageBucket, \
     firestore_db
 
-
-#*******************************
+# *******************************
 # import pyrebase
 
 from firebase_admin import auth, credentials, storage, firestore
 from firebase_admin.exceptions import FirebaseError, AlreadyExistsError
 from firebase_admin._auth_utils import EmailAlreadyExistsError, EmailNotFoundError, UserNotFoundError
 
-
 app.config.from_object(ApplicationSessionConfig)
-
 
 Session(app)
 
@@ -92,15 +90,15 @@ app.config.from_object(ApplicationSessionConfig)
 bcrypt = Bcrypt(app)
 # Session(app)
 
-db.init_app(app) #TODO: session_options={"autocommit": True, "autoflush": False}
+db.init_app(app)  # TODO: session_options={"autocommit": True, "autoflush": False}
 
 ma.init_app(app)
 
 mail = Mail(app)
 mail.init_app(app)
 
-#todo csrf = CSRFProtect()
-#todo csrf.init_app(app)
+# todo csrf = CSRFProtect()
+# todo csrf.init_app(app)
 
 
 with app.app_context():
@@ -110,9 +108,6 @@ with app.app_context():
     #     if r'localhost' not in failedConn.args[0]:
     #         raise failedConn
     #     os.environ['useLocalInsteadOfHostedDatabase'] = "false"
-
-
-
 
 # TODO Separate once database has scaled... For now, single modules are convenient
 
@@ -125,15 +120,13 @@ jobposts_schema = JobPostSchema(many=True)
 application_schema = ApplicationSchema()
 applications_schema = ApplicationSchema(many=True)
 
-
 app.logger = logging.getLogger("myapp")
 app.logger.setLevel(logging.ERROR)
-#app.logger.addHandler(.....)
+# app.logger.addHandler(.....)
 
 logging.getLogger('werkzeug').setLevel(logging.WARNING)
 
 print("\033[32;7;1m FLASK APP HAS STARTED ! \033[0m")
-
 
 # @app.after_request
 # def after_request(response):
@@ -144,8 +137,11 @@ print("\033[32;7;1m FLASK APP HAS STARTED ! \033[0m")
 
 # TODO Seperate once database has scaled... For now, single modules are convenient
 from models import *
+
 commentpost_schema = CommentPostSchema()
 commentposts_schema = CommentPostSchema(many=True)
+
+
 # userextrainfo_schema = UserExtraInfoSchema()
 
 @app.route("/")
@@ -156,7 +152,6 @@ def index():
     elif 'user' in session:
         print(" User " + session['user']['email'] + " is logged in on server-side session!")
         if query_val == "logout":
-
             return redirect(r"/firebase-api/logout")
         try:
             user_recordinfo = _auth.get_account_info(session['user']['idToken'])['users'][0]
@@ -235,7 +230,6 @@ def signin():
 
         try:
 
-
             # From auth... validity of idToken unchecked however.
             user = auth.get_user_by_email(email)
 
@@ -244,14 +238,14 @@ def signin():
 
             # Can be validated through decoded id tokens. Ensures safe role assignment.
             auth.set_custom_user_claims(user.uid,
-                                {
-                                    firestore_user['userType'].lower(): True
-                                }
-            )
+                                        {
+                                            firestore_user['userType'].lower(): True
+                                        }
+                                        )
 
-            user = _auth.sign_in_with_email_and_password(email,password)
+            user = _auth.sign_in_with_email_and_password(email, password)
 
-            #decoded_claims = auth.verify_id_token(id_token)#TODO
+            # decoded_claims = auth.verify_id_token(id_token)#TODO
             # # Only process if the user signed in within the last 5 minutes.
             # if time.time() - decoded_claims['auth_time'] < 5 * 60:
             #
@@ -260,7 +254,6 @@ def signin():
             # expires = datetime.datetime.now() + expires_in
             # response.set_cookie(
             #     'session', session_cookie, expires=expires, httponly=True, secure=True)
-
 
             pwdHash = firestore_user.pop('pwdHash')
             print("Password bcrypt few-rounds salted hash matched: ", end=" ")
@@ -282,7 +275,6 @@ def signin():
                     lastSeenEpoch=userRecordInfo['lastLoginAt']
                 )
             )
-
 
             print(user, "\n\tJUST SIGNED IN !!!")
 
@@ -322,10 +314,10 @@ def logout():
 
     if 'user' not in session:
         print("No user to logout in the backend!")
-        response =  make_response("No user to logout in the backend!")
+        response = make_response("No user to logout in the backend!")
     else:
         print(session['user'], "\n\tJUST LOGGED OUT !")
-        #TODO: _auth.refresh() if same IpV4 still and if passes other checks. ....
+        # TODO: _auth.refresh() if same IpV4 still and if passes other checks. ....
         loggedout_user = session.pop('user')
         response = make_response(f"Log out : {json.dumps(loggedout_user)} . " + \
                                  "Delete token cookies so frontend knows user is not authentificated or authorized anymore")
@@ -341,22 +333,23 @@ def logout():
         except Exception as e:
             print('Error logging out user from Firebase Auth System:', e)
 
-    if (session_cookie := request.cookies.get('session',None)):
+    if (session_cookie := request.cookies.get('session', None)):
         # print(type(session_cookie))
         # decoded_customclaims = auth.verify_session_cookie(session_cookie)
         # auth.revoke_refresh_tokens(decoded_customclaims['sub']) #Log out user's all other sessions with active idTokens
 
-        response.set_cookie('session',expires=0) # Kill session cookie !
+        response.set_cookie('session', expires=0)  # Kill session cookie !
 
-
-    #TODO CHange once securit with idToken and refresh token has been done !!! Important tokens are in cookies only for DEBUG !
-    userCookiesHashset = {"access_token","refresh_token"}
+    # TODO CHange once securit with idToken and refresh token has been done !!! Important tokens are in cookies only for DEBUG !
+    userCookiesHashset = {"access_token", "refresh_token"}
 
     for tokenAuthCookieToRemove in set(request.cookies.keys()) & userCookiesHashset:
         response.delete_cookie(tokenAuthCookieToRemove)
 
-    return response #redirect(r'/')
-@app.route('/firebase-api/signup',methods=['POST','GET'])
+    return response  # redirect(r'/')
+
+
+@app.route('/firebase-api/signup', methods=['POST', 'GET'])
 def signup():
     """
     Contact: ChiefsBestPal @ Antoine Cantin
@@ -365,7 +358,7 @@ def signup():
     if request.method == "POST":
         email = request.form.get('email')
         password = request.form.get('password')
-        firstName,lastName = request.form.get("firstName"),request.form.get("lastName")
+        firstName, lastName = request.form.get("firstName"), request.form.get("lastName")
         userTypeVal = request.form.get('userType')
 
         uploaded_pdf_resume_file = request.files['uploadedResume']
@@ -379,7 +372,7 @@ def signup():
         resume_blob = mainStorageBucket.blob(r"resumes/" + filename)
         resume_blob.upload_from_filename(resumefilepath)
         os.remove(resumefilepath)
-        resume_blob.make_public() #NOTE: Maybe better if resumes are private ?... right now not necessary
+        resume_blob.make_public()  # NOTE: Maybe better if resumes are private ?... right now not necessary
 
         uploaded_pfp_file = request.files['profilePicture']
         filename = secure_filename(uploaded_pfp_file.filename)
@@ -387,8 +380,8 @@ def signup():
 
             uploaded_pfp_file.save(
                 (pfpfilepath :=
-                os.path.join(
-                    app.config['TEMP_UPLOAD_PATH'],filename))
+                 os.path.join(
+                     app.config['TEMP_UPLOAD_PATH'], filename))
             )
             blob = mainStorageBucket.blob(r"profilePictures/" + filename)
             blob.upload_from_filename(pfpfilepath)
@@ -398,13 +391,12 @@ def signup():
                 f"default{UserType(UserType[userTypeVal].value).name.title()}Pfp.png"
             )
 
-            #return abort(501)
+            # return abort(501)
 
-
-        fb_db.child("") #Pyrebase database standard operation
+        fb_db.child("")  # Pyrebase database standard operation
 
         if email is None or password is None:
-            return {'message': 'Error missing email or password'},400
+            return {'message': 'Error missing email or password'}, 400
         try:
             user_infofields = dict(
                 email=email,
@@ -413,18 +405,18 @@ def signup():
                 photo_url=blob.public_url
             )
             user = auth.create_user(
-                   **user_infofields
+                **user_infofields
             )
             del user_infofields['display_name']
             del user_infofields['password']
             user_infofields.update(
                 dict(
-                    firstName = firstName,
-                    lastName = lastName,
-                    userType = UserType[userTypeVal.upper()].name,
-                    pwdHash = bcrypt.generate_password_hash(password),
-                    resume_url = resume_blob.public_url
-                )#Can add more fields later if update whole 'Users' collection database as well!
+                    firstName=firstName,
+                    lastName=lastName,
+                    userType=UserType[userTypeVal.upper()].name,
+                    pwdHash=bcrypt.generate_password_hash(password),
+                    resume_url=resume_blob.public_url
+                )  # Can add more fields later if update whole 'Users' collection database as well!
             )
 
             user_docref = firestore_db.collection(u'Users').document(
@@ -439,64 +431,65 @@ def signup():
             # db.session.commit()
             # Can be validated through decoded id tokens. Ensures safe role assignment.
             auth.set_custom_user_claims(user.uid,
-                                {
-                                    user_infofields['userType'].lower(): True
-                                }
-                        )
+                                        {
+                                            user_infofields['userType'].lower(): True
+                                        }
+                                        )
 
-            print( {'message': f'Successfully created user {user.uid}'},200)
+            print({'message': f'Successfully created user {user.uid}'}, 200)
             session['user'] = _auth.sign_in_with_email_and_password(email, password)
 
             return redirect(url_for("index"))
         except EmailAlreadyExistsError as userAlreadyExists:
-            print(userAlreadyExists.__str__().replace("email ","email [" + str(email) + "]"))
-            return {'message' : 'Email ' + str(email) + ' is already taken !'},403
+            print(userAlreadyExists.__str__().replace("email ", "email [" + str(email) + "]"))
+            return {'message': 'Email ' + str(email) + ' is already taken !'}, 403
         except ValueError as validatorErr:
             return {'message': 'Property value error in user creation fields... ',
                     'error-traceback': validatorErr.__traceback__.tb_frame.__str__(),
-                    'error-cause':validatorErr.__cause__.__str__(),
-                    'error-context': validatorErr.__context__.__str__()},400
+                    'error-cause': validatorErr.__cause__.__str__(),
+                    'error-context': validatorErr.__context__.__str__()}, 400
         except FirebaseError as privateFirebaseErr:
-            print(privateFirebaseErr,type(privateFirebaseErr))
-            return {'message': 'Firebase Error while creating user'},403 #Api route to get a new token for a valid user
-        except (RuntimeError,Exception,InterruptedError) as err :
+            print(privateFirebaseErr, type(privateFirebaseErr))
+            return {
+                       'message': 'Firebase Error while creating user'}, 403  # Api route to get a new token for a valid user
+        except (RuntimeError, Exception, InterruptedError) as err:
             print(err)
-            return {'message': 'Unlogged failure, unknown reason. Contact admin or developer.'},406
+            return {'message': 'Unlogged failure, unknown reason. Contact admin or developer.'}, 406
 
     return render_template("signuptest.html")
 
-@app.route('/firebase-api/userprofile') #todo put a @login_required decorator
-def account_profile_view():
 
+@app.route('/firebase-api/userprofile')  # todo put a @login_required decorator
+def account_profile_view():
     user_recordinfo = _auth.get_account_info(session['user']['idToken'])['users'][0]
 
-    #userextrainfo = UserExtraInfo.query.get(user_recordinfo['localId'])
+    # userextrainfo = UserExtraInfo.query.get(user_recordinfo['localId'])
     user_docref = firestore_db.collection('Users').document(user_recordinfo['localId'])
     user_doc = user_docref.get()
 
-    fname,lname = user_recordinfo['displayName'].split(' ',maxsplit=1)
+    fname, lname = user_recordinfo['displayName'].split(' ', maxsplit=1)
     context = dict(
-        firstName = fname,lastName=lname,
-        email = user_recordinfo['email'],
-        profilePictureURL = user_doc.to_dict()['photo_url'],#user_recordinfo['photoUrl'],
-        joinDate = strftime("%A %B %d %Y", localtime(
-                            float(user_recordinfo['createdAt'])/ 1000)),
-        lastSeenDatetime =  strftime("%A %B %d %Y, %H:%M:%S", localtime(
-                            float(user_recordinfo['lastLoginAt'])/ 1000)),
-        userType = str(user_doc.to_dict()['userType']).title(),
+        firstName=fname, lastName=lname,
+        email=user_recordinfo['email'],
+        profilePictureURL=user_doc.to_dict()['photo_url'],  # user_recordinfo['photoUrl'],
+        joinDate=strftime("%A %B %d %Y", localtime(
+            float(user_recordinfo['createdAt']) / 1000)),
+        lastSeenDatetime=strftime("%A %B %d %Y, %H:%M:%S", localtime(
+            float(user_recordinfo['lastLoginAt']) / 1000)),
+        userType=str(user_doc.to_dict()['userType']).title(),
         uploadedResumeURL=user_doc.to_dict()['resume_url']
     )
 
-    return render_template("profiletest.html",**context)
+    return render_template("profiletest.html", **context)
 
 
-@app.route('/firebase-api/authenticate', methods=['GET'],endpoint="authenticate")
+@app.route('/firebase-api/authenticate', methods=['GET'], endpoint="authenticate")
 @cross_origin()
-@authorized(applicant=True,myself=True)
+@authorized(applicant=True, myself=True)
 def authenticate():
     print("GOT AUTHORIZED !")
 
-    print(request.headers,end="\n\n\r")
+    print(request.headers, end="\n\n\r")
 
     if request.environ.get('HTTP_X_FORWARDED_FOR') is None:
         print(request.environ['REMOTE_ADDR'])
@@ -504,7 +497,6 @@ def authenticate():
     else:
         print(request.environ['HTTP_X_FORWARDED_FOR'])
         return jsonify({'ip': request.environ['HTTP_X_FORWARDED_FOR']}), 200
-
 
     # Verify the ID token
     # decoded_token = auth.verify_id_token(id_token)
@@ -516,10 +508,10 @@ def authenticate():
     #                     httponly=True, secure=True)
     # #auth.set_custom_user_claims()
 
+    # return response
 
-    #return response
 
-@app.route("/firebase-api/get-user/<_uid>/",methods=['GET'],endpoint='get_user_details')
+@app.route("/firebase-api/get-user/<_uid>/", methods=['GET'], endpoint='get_user_details')
 @cross_origin()
 def get_user_details(_uid):
     """
@@ -527,7 +519,7 @@ def get_user_details(_uid):
     before changing
     """
     _uid = _uid.strip()
-    #TODO CACHE THESE USER DETAILS MAYBE?!
+    # TODO CACHE THESE USER DETAILS MAYBE?!
     if _uid == "current":
         if 'user' in session:
             user_recordinfo = _auth.get_account_info(session['user']['idToken'])['users'][0]
@@ -540,25 +532,25 @@ def get_user_details(_uid):
     doc_ref = firestore_db.collection(u'Users').document(_uid)
     doc = doc_ref.get()
     if not doc.exists:
-        return {'message': 'firebase auth user id Requested to backend was not found !'},404
+        return {'message': 'firebase auth user id Requested to backend was not found !'}, 404
 
     user_fields = doc.to_dict()
     userrecord_metadata = auth.get_user(_uid).user_metadata
 
     user_fields.update(
         dict(
-    lastSeenEpoch = max(userrecord_metadata.last_refresh_timestamp,userrecord_metadata.last_sign_in_timestamp),
-    creationEpoch = userrecord_metadata.creation_timestamp,
-            uid = _uid
-        ) # JS Epoch format... for some datetime modules, may need to divide by 1000, etc..
+            lastSeenEpoch=max(userrecord_metadata.last_refresh_timestamp, userrecord_metadata.last_sign_in_timestamp),
+            creationEpoch=userrecord_metadata.creation_timestamp,
+            uid=_uid
+        )  # JS Epoch format... for some datetime modules, may need to divide by 1000, etc..
     )
-    #COULD ADD A CRYPT SALT AND/OR IV FOR UUID ENCRYPTION ALG TO BE USED WITH CRYPTO JS
-    del user_fields['pwdHash'] #do not need/want pass bcrypt hash bytes-string in requests
+    # COULD ADD A CRYPT SALT AND/OR IV FOR UUID ENCRYPTION ALG TO BE USED WITH CRYPTO JS
+    del user_fields['pwdHash']  # do not need/want pass bcrypt hash bytes-string in requests
 
     return jsonify(user_fields)
 
 
-@app.route("/firebase-api/edit-user/<_uid>/",methods=['PATCH','POST'])
+@app.route("/firebase-api/edit-user/<_uid>/", methods=['PATCH', 'POST'])
 @authorized(myself=True)
 def update_user_details(_uid):
     """
@@ -579,15 +571,16 @@ def update_user_details(_uid):
     #     return {'message' : "Firebase user update >Not implemented< with PATCH requests. Must make a client-side REST API that fetches with PATCH REQUEST.\n\r "
     #                         "Native backend only uses POST to update users " }
 
-    if request.method in ['PATCH','POST']:
+    if request.method in ['PATCH', 'POST']:
         try:
             user = auth.get_user(_uid)
-            firstName,lastName = user.display_name.strip().split(' ',1)
+            firstName, lastName = user.display_name.strip().split(' ', 1)
             pfp_publicurl = user.photo_url
 
             user_docref = firestore_db.collection(u'Users').document(
                 str(_uid))
-            resume_url = None if 'resume_url' in user_docref.get().to_dict() else user_docref.get().to_dict()['resume_url']
+            resume_url = None if 'resume_url' in user_docref.get().to_dict() else user_docref.get().to_dict()[
+                'resume_url']
             print(request.form)
             print(request.files)
             # data = request.get_data()
@@ -598,7 +591,7 @@ def update_user_details(_uid):
                 firstName = request.form['firstName']
             if 'lastName' in request.form:
                 lastName = request.form['lastName']
-            if 'profilePicture' in request.files:#request.json:
+            if 'profilePicture' in request.files:  # request.json:
                 uploaded_pfp_file = request.files['profilePicture']
 
                 filename = secure_filename(uploaded_pfp_file.filename)
@@ -644,10 +637,10 @@ def update_user_details(_uid):
                              photo_url=pfp_publicurl)
 
             user_firestore_data = dict(
-                    firstName=firstName,
-                    lastName=lastName,
-                    photo_url=pfp_publicurl,
-                    resume_url=resume_url
+                firstName=firstName,
+                lastName=lastName,
+                photo_url=pfp_publicurl,
+                resume_url=resume_url
             )
             if 'uploadedResume' not in request.files:
                 del user_firestore_data['resume_url']
@@ -662,19 +655,20 @@ def update_user_details(_uid):
 
         except ValueError as badUid:
             print(badUid)
-            return {'message': 'Uid is invalid'},400
+            return {'message': 'Uid is invalid'}, 400
         except UserNotFoundError as userNotFound:
-            return {'message': str(userNotFound)},404
+            return {'message': str(userNotFound)}, 404
         except FirebaseError as serverFirebaseErr:
             print(serverFirebaseErr)
-            return {'message': 'Firebase error, contact developpers.'},403
+            return {'message': 'Firebase error, contact developpers.'}, 403
 
-        print((success_response :=({'message': f'Sucessfully updated user profile {_uid}'}, 200)))
-        if request.method == 'PATCH':#Most common, because from frontend. POST is for test template backend interface only
+        print((success_response := ({'message': f'Sucessfully updated user profile {_uid}'}, 200)))
+        if request.method == 'PATCH':  # Most common, because from frontend. POST is for test template backend interface only
             return success_response
     else:
-        return {'message': 'Bad request Method'},400
+        return {'message': 'Bad request Method'}, 400
     return redirect("/firebase-api/userprofile")
+
 
 #
 # =================== COMMENTPOSTS ===================
@@ -691,7 +685,7 @@ def get_all_commentposts():
     all_commentposts = CommentPost.query.all()
     results_arr = commentposts_schema.dump(all_commentposts)
     print(results_arr)
-    if any(filter(None,results_arr)) and request.args.get('mapAsFields') == 'true':
+    if any(filter(None, results_arr)) and request.args.get('mapAsFields') == 'true':
         # print("Mapped fields into dict instead of array of obj!")
         response_fieldsdict = dict(map(lambda kv: (kv[0], [kv[1]]), results_arr[0].items()))
 
@@ -707,10 +701,10 @@ def get_all_commentposts():
         # values: list of all keys e.g list of all postedDate
         return jsonify(response_fieldsdict)
 
-    return jsonify(results_arr)#**{'Hello' : 'World'})
+    return jsonify(results_arr)  # **{'Hello' : 'World'})
 
 
-@app.route('/add', methods=['POST']) # methods = [list http reqs methods]
+@app.route('/add', methods=['POST'])  # methods = [list http reqs methods]
 @cross_origin()
 def add_commentpost():
     """
@@ -729,14 +723,13 @@ def add_commentpost():
     return commentpost_schema.jsonify(commentpost)
 
 
-@app.route("/get/<_id>/",methods=['GET'])
+@app.route("/get/<_id>/", methods=['GET'])
 def get_commentpost(_id):
     commentpost = CommentPost.query.get(_id)
     return commentpost_schema.jsonify(commentpost)
 
 
-
-@app.route("/update/<_id>/",methods=['PUT'])
+@app.route("/update/<_id>/", methods=['PUT'])
 def update_commentpost(_id):
     commentpost = CommentPost.query.get(_id)
 
@@ -750,7 +743,9 @@ def update_commentpost(_id):
     db.session.commit()
 
     return commentpost_schema.jsonify(commentpost)
-@app.route("/delete/<_id>/",methods=['DELETE'])
+
+
+@app.route("/delete/<_id>/", methods=['DELETE'])
 def delete_commentpost(_id):
     commentpost = CommentPost.query.get(_id)
 
@@ -759,6 +754,7 @@ def delete_commentpost(_id):
     db.session.commit()
 
     return commentpost_schema.jsonify(commentpost)
+
 
 #
 # =================== JOBPOSTS ===================
@@ -775,7 +771,7 @@ def get_all_jobposts():
     all_jobposts = JobPost.query.all()
     results_arr = jobposts_schema.dump(all_jobposts)
 
-    if any(filter(None,results_arr)) and request.args.get('mapAsFields') == 'true':
+    if any(filter(None, results_arr)) and request.args.get('mapAsFields') == 'true':
         # print("Mapped fields into dict instead of array of obj!")
         response_fieldsdict = dict(map(lambda kv: (kv[0], [kv[1]]), results_arr[0].items()))
 
@@ -794,29 +790,31 @@ def get_jobpost(_jobid):
     jobpost = JobPost.query.get(_jobid)
     return jobpost_schema.jsonify(jobpost)
 
-@app.route("/addjob", methods=['POST'],endpoint='addJobPost')
+
+@app.route("/addjob", methods=['POST'], endpoint='addJobPost')
 @cross_origin()
-@authorized(employer=True,admin=False)
+@authorized(employer=True, admin=False)
 def addJobPost():
-    jobtype, title, location, salary, description, tags,employerUid = request.json['jobtype'], request.json['title'], request.json[
-        'location'], request.json['salary'], request.json['description'], request.json['tags'],request.json['employerUid']
+    jobtype, title, location, salary, description, tags, employerUid = request.json['jobtype'], request.json['title'], \
+                                                                       request.json[
+                                                                           'location'], request.json['salary'], \
+                                                                       request.json['description'], request.json[
+                                                                           'tags'], request.json['employerUid']
 
     if request.args.get("random-fields"):
         title = ''.join(random.choice(string.digits + string.ascii_letters) for _ in range(11))
-        salary = random.randint(500,12000)
+        salary = random.randint(500, 12000)
         description = ''.join(random.choice(string.printable) for _ in range(140))
 
-
-    jobpost = JobPost(jobtype, title, location, salary, description, tags,employerUid)
+    jobpost = JobPost(jobtype, title, location, salary, description, tags, employerUid)
     db.session.add(jobpost)
     db.session.commit()
 
     return jobpost_schema.jsonify(jobpost)
 
 
-
-@app.route("/updatejob/<_jobid>/", methods=['PUT'],endpoint='update_jobpost')
-@authorized(employer=True,myself=True)#admin is not set to false, so admins can also do this
+@app.route("/updatejob/<_jobid>/", methods=['PUT'], endpoint='update_jobpost')
+@authorized(employer=True, myself=True)  # admin is not set to false, so admins can also do this
 def update_jobpost(_jobid):
     jobpost = JobPost.query.get(_jobid)
 
@@ -842,8 +840,8 @@ def update_jobpost(_jobid):
     return jobpost_schema.jsonify(jobpost)
 
 
-@app.route("/deletejob/<_jobid>/", methods=['DELETE'],endpoint='delete_jobpost')
-@authorized(employer=True,myself=True)#admin is not set to false, so admins can also do this
+@app.route("/deletejob/<_jobid>/", methods=['DELETE'], endpoint='delete_jobpost')
+@authorized(employer=True, myself=True)  # admin is not set to false, so admins can also do this
 def delete_jobpost(_jobid):
     jobpost = JobPost.query.get(_jobid)
 
@@ -855,30 +853,59 @@ def delete_jobpost(_jobid):
 
 
 #
-# =================== FLASK MAIL TESTS ===================
+# =================== FLASK MAIL ===================
 #
 # TODO Unit tests might be needed for the notification system(s) soon.
-@app.route("/sendmail/", methods=['PUT'])
-def flask_mail_send_test():
+@app.route("/sendApplicationMail/", methods=['PUT'])
+def applicationMail():
     try:
-        msg = Message("Flask-Mail Test message",
+        msg = Message("A user has applied to your job posting!",
                       sender="equipeboucani@gmail.com",
                       recipients=[request.json['email']])
-        msg.body = request.json['applicant_name'] + " has applied to your job posting for " + request.json['job_title'] + "!"
+        msg.body = request.json['applicant_name'] + " has applied to your job posting for " + request.json[
+            'job_title'] + "!"
         mail.send(msg)
         return "Sent"
     except Exception as e:
         return str(e)
 
+
+@app.route("/sendAcceptedMail/", methods=['PUT'])
+def acceptedMail():
+    try:
+        msg = Message("Your application was accepted!",
+                      sender="equipeboucani@gmail.com",
+                      recipients=[request.json['email']])
+        msg.body = "Your application for " + request.json['job_title'] + " has been accepted!"
+        mail.send(msg)
+        return "Sent"
+    except Exception as e:
+        return str(e)
+
+
+@app.route("/sendRejectedMail/", methods=['PUT'])
+def rejectedMail():
+    try:
+        msg = Message("Your application was rejected.",
+                      sender="equipeboucani@gmail.com",
+                      recipients=[request.json['email']])
+        msg.body = "Your application for " + request.json['job_title'] + " has been rejected."
+        mail.send(msg)
+        return "Sent"
+    except Exception as e:
+        return str(e)
+
+
 #
 # =================== Applications ===================
 #
 
-@app.route("/addapplication", methods=['POST'],endpoint='addApplication')
+@app.route("/addapplication", methods=['POST'], endpoint='addApplication')
 @cross_origin()
 @authorized(applicant=True)
 def addApplication():
-    jobPostId, applicantUid, coverLetter = request.json['jobPostId'], request.json['applicantUid'], request.json['coverLetter']
+    jobPostId, applicantUid, coverLetter = request.json['jobPostId'], request.json['applicantUid'], request.json[
+        'coverLetter']
 
     application = Application(jobPostId, applicantUid, coverLetter)
     db.session.add(application)
@@ -886,10 +913,12 @@ def addApplication():
 
     return application_schema.jsonify(application)
 
+
 @app.route("/getapplication/<_id>/", methods=['GET'])
 def get_application(_id):
     application = Application.query.get(_id)
     return application_schema.jsonify(application)
+
 
 @app.route('/getapplications', methods=['GET'])  # methods = [list http reqs methods]
 def get_all_applications():
@@ -902,7 +931,7 @@ def get_all_applications():
     all_applications = Application.query.all()
     results_arr = applications_schema.dump(all_applications)
 
-    if any(filter(None,results_arr)) and request.args.get('mapAsFields') == 'true':
+    if any(filter(None, results_arr)) and request.args.get('mapAsFields') == 'true':
         # print("Mapped fields into dict instead of array of obj!")
         response_fieldsdict = dict(map(lambda kv: (kv[0], [kv[1]]), results_arr[0].items()))
 
@@ -914,8 +943,8 @@ def get_all_applications():
 
     return jsonify(results_arr)
 
-@app.route("/deleteapplication/<_id>/", methods=['DELETE'],endpoint='delete_application')
-@authorized(applicant=True)#,admin=True enabled automatically in wrapped
+
+@app.route("/deleteapplication/<_id>/", methods=['DELETE'], endpoint='delete_application')
 def delete_application(_id):
     application = Application.query.get(_id)
 
@@ -925,7 +954,7 @@ def delete_application(_id):
 
     return jobpost_schema.jsonify(application)
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(debug=True,load_dotenv=True)
+    app.run(debug=True, load_dotenv=True)
