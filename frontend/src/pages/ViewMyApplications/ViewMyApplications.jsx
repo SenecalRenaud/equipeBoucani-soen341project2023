@@ -6,6 +6,7 @@ import SearchBar from "../../components/PostingsSearchBar/SearchBar";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFilter} from "@fortawesome/free-solid-svg-icons";
 import ApplicationCard from "../../components/ApplicationCard";
+import ApplicationCardCopy from "../../components/ApplicationCard/indexCopy";
 
 // let loadNum = 1;
 function ViewMyApplications (props)   {
@@ -46,6 +47,7 @@ function ViewMyApplications (props)   {
 
                 setData(data);
                 setDefaultData(data)
+
 
             }
         ).catch(function(error){
@@ -102,7 +104,7 @@ function ViewMyApplications (props)   {
                         return (
                             ((window.localStorage.getItem("uid") === data.applicantUid[i])) ?
 
-                                <ApplicationCard
+                                <ApplicationCardCopy
                                     applicationId={id}
                                     jobPostId={data.jobPostId[i]}
                                     applicantUid={data.applicantUid[i]}

@@ -34,6 +34,7 @@ import Apply from "./pages/Apply/Apply";
 //import AboutUs from "./pages/AboutUs/aboutus";
 import EditProfilePage from "./pages/ProfilePage/EditProfilePage";
 import CommentSection from "./components/CommentSection/CommentSection";
+import ViewMyApplicationsCopy from "./pages/ViewMyApplications/ViewMyApplicationsCopy";
 // import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
 
 
@@ -172,6 +173,7 @@ return (
         <Route path='/loading' element={<LoadingScreen/>} />
 
         <Route path='/ApplyJob' element={<ApplyJob/>} />
+        <Route path='/ViewMyApplicationsCopy' element={<ViewMyApplicationsCopy/>} />
 
     </Routes>
     <Footer />
