@@ -40,12 +40,12 @@ export default function UserRelationPermsFSM(user1,user2){
       return <></>
     case 0b10101: //Applicant views itself
       return <>
-        <li> <Link to="/current/applications"> My Applications </Link> </li>
+        <li> <Link to={"/viewapplications/" + user1.uid} > My Applications </Link> </li>
         <li> <Link to="/current/interviews"> My Interviews </Link> </li>
     </>
     case 0b01001: //Applicant views Employer
       return <>
-        <li> <Link to={"/" + user2.uid +  "/jobpostings"}>
+        <li> <Link to={"/viewjobposts/" + user2.uid }>
           {user2.firstName} {user2.lastName}'s Job Postings </Link> </li>
       </>
     case 0b01101: //Applicant views Admin
@@ -58,24 +58,24 @@ export default function UserRelationPermsFSM(user1,user2){
       </>
     case 0b01010: //Employer views other Employer
       return <>
-      <li> <Link to={"/" + user2.uid +  "/jobpostings"}>
+      <li> <Link to={"/viewjobposts/" + user2.uid }>
           {user2.firstName} {user2.lastName}'s Job Postings </Link> </li>
       </>
     case 0b11010: //Employer views itself
       return <>
-        <li> <Link to="/current/jobpostings"> My Job Postings </Link></li>
+        <li> <Link to={"/viewjobposts/" + user1.uid}> My Job Postings </Link></li>
         <li> <Link to="/current/interviews"> My Interviews </Link></li>
       </>
     case 0b01110: //Employer views Admin
       return <></>
     case 0b00111: //Admin views Applicant
       return <>
-        <li> <Link to={"/" + user2.uid +  "/applications"}> {user2.email}'s Applications </Link> </li>
+        <li> <Link to={"/viewapplications/" + user2.uid}> {user2.email}'s Applications </Link> </li>
         <li> <Link to={"/" + user2.uid +  "/interviews"}> {user2.email}'s Interviews </Link> </li>
       </>
     case 0b01011: //Admin views Employer
       return <>
-        <li> <Link to={"/" + user2.uid +  "/jobpostings"}> {user2.email}'s Job Postings </Link> </li>
+        <li> <Link to={"/viewjobposts/" + user2.uid}> {user2.email}'s Job Postings </Link> </li>
         <li> <Link to={"/" + user2.uid +  "/interviews"}> {user2.email}'s Interviews </Link> </li>
       </>
     case 0b01111: //Admin views other Admin
