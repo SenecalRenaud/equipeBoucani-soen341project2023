@@ -37,11 +37,12 @@ function Notifications (props)   {
                 let otherApplicantsToRemove = []; //Must be list, since splice needs to avoid indices shifting
 
                 data.jobPostId.forEach(
-                    (jobPostId, i) => {
-                        fetch("/getjob/" + jobPostId + "/").then(
+                    async (jobPostId, i) => {
+                        await fetch("/getjob/" + jobPostId + "/").then(
                             response => response.json()
                         ).then(
                             data => {
+
                                 setEmployerUid(data.employerUid)
                             }
                         )
@@ -50,6 +51,7 @@ function Notifications (props)   {
                                 setErrorString(error.toString())
                                 setEr(true);
                             })
+
                         if( employerUid !== url_params.uid) {
                             console.log(employerUid)
                             otherApplicantsToRemove.push(i)
