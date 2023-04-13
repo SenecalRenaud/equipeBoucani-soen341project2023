@@ -6,6 +6,8 @@
     margin-top: 50px;
     margin-left: 0;
 
+    font-family: Noto Sans,Helvetica Neue,Helvetica,Arial,Liberation Sans,Roboto,Noto,sans-serif!important;
+
 
 }
 .StepOne{
@@ -82,7 +84,7 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 
-    font-size: 62px;
+    font-size: 55px;
     margin-bottom: 5px;
     align-self: center;
 
