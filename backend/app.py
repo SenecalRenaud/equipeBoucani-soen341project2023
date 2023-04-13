@@ -876,7 +876,7 @@ def flask_mail_send_test():
 
 @app.route("/addapplication", methods=['POST'],endpoint='addApplication')
 @cross_origin()
-@authorized(applicant=True)
+@authorized(applicant=True,admin=False)
 def addApplication():
     jobPostId, applicantUid, coverLetter = request.json['jobPostId'], request.json['applicantUid'], request.json['coverLetter']
 
@@ -886,9 +886,9 @@ def addApplication():
 
     return application_schema.jsonify(application)
 
-@app.route("/getapplication/<_id>/", methods=['GET'])
-def get_application(_id):
-    application = Application.query.get(_id)
+@app.route("/getapplication/<_applyid>/", methods=['GET'])
+def get_application(_applyid):
+    application = Application.query.get(_applyid)
     return application_schema.jsonify(application)
 
 @app.route('/getapplications', methods=['GET'])  # methods = [list http reqs methods]
@@ -914,10 +914,10 @@ def get_all_applications():
 
     return jsonify(results_arr)
 
-@app.route("/deleteapplication/<_id>/", methods=['DELETE'],endpoint='delete_application')
-@authorized(applicant=True)#,admin=True enabled automatically in wrapped
-def delete_application(_id):
-    application = Application.query.get(_id)
+@app.route("/deleteapplication/<_applyid>/", methods=['DELETE'],endpoint='delete_application')
+@authorized(applicant=True,myself=True)#,admin=True enabled automatically in wrapped
+def delete_application(_applyid):
+    application = Application.query.get(_applyid)
 
     db.session.delete(application)
 
