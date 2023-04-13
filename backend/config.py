@@ -9,6 +9,14 @@ from abc import ABC, ABCMeta,abstractmethod
 from flask import Flask,current_app
 from sqlalchemy import create_engine,exc as sqlalchemy_exceptions
 
+
+from argparser_cli import parser
+
+parsed_cli_args = parser.parse_args()
+
+print("PARSED_CLI_ARGS config",parsed_cli_args.config_options)
+print("PARSED_CLI_ARGS sqldb",parsed_cli_args.specified_sqldb)
+
 @enum.unique
 class DialectDBAPI(enum.Enum):
     MYSQLCLIENT = "mysqldb" # C-library, fast... but if external sys req not met, might be issues
@@ -23,6 +31,13 @@ DATABASES_ENV_FILE_NAME = ".env.local" #Currently holds API key values for Fireb
 
 useLocalInsteadOfHostedDatabase = (os.environ['useLocalInsteadOfHostedDatabase'] == "true") if 'useLocalInsteadOfHostedDatabase' in os.environ else True
 
+if parsed_cli_args.specified_sqldb == "local":
+    useLocalInsteadOfHostedDatabase = True
+elif parsed_cli_args.specified_sqldb == "hosted":
+    useLocalInsteadOfHostedDatabase = False
+elif parsed_cli_args.specified_sqldb is not None:
+    parser.error("Invalid value for --sqldb cli arg. Must be 'local' or 'hosted', else leave flag unspecified")
+
 try:
 
     assert load_dotenv(WDIR + os.sep + FLASK_ENV_FILE_NAME)
@@ -31,7 +46,9 @@ try:
     # AND
     # ( Neither flaskapp or Flaskenvar indicate debug/developement mode
     #   OR WERKZEUG IS ON FIRST NONDEBUG RUN of app)
-    if useLocalInsteadOfHostedDatabase and \
+    if parsed_cli_args.specified_sqldb is not None:
+        pass
+    elif useLocalInsteadOfHostedDatabase and \
         (not (current_app.debug or os.environ.get("FLASK_ENV") == "development")
         or os.environ.get("WERKZEUG_RUN_MAIN") == "true"):
         useLocalInsteadOfHostedDatabase = input(
@@ -265,3 +282,7 @@ class ApplicationSessionConfig:
     MAIL_USE_SSL = True
 
     # todo SQLALCHEMY_BINDS for cors or many db?
+
+if parsed_cli_args.config_options is not None:
+    for config_name,config_value in parsed_cli_args.config_options.items():
+        setattr(ApplicationSessionConfig,config_name,config_value)
