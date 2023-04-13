@@ -162,7 +162,8 @@ return (
 
         <Route path="/commentsection_test" element={<CommentSection/>}/>
 
-        <Route path='/viewApplications' element={<ViewMyApplications />} />
+        <Route exact path='/viewapplications/:uid' element={<ViewMyApplications />} />
+
         <Route exact path='/profile/:uid' element={<ProfilePage/>} />
         <Route path='/profile/:uid/edit' element={<EditProfilePage/>}/>
         <Route exact path='current/jobpostings' element={<MyJobPosts postedJob={postedJob} />}/>
@@ -173,6 +174,7 @@ return (
         <Route path='/loading' element={<LoadingScreen/>} />
 
         <Route path='/ApplyJob' element={<ApplyJob/>} />
+
         <Route path='/ViewMyApplicationsCopy' element={<ViewMyApplicationsCopy/>} />
 
     </Routes>

@@ -115,9 +115,9 @@ function MyJobPosts (props)   {
             return (
                 <div className="post-comment-container">
                     <header className="Debug-header">
-                        <h1> JobPost CRUD Debug Ozan Branch Migrating From Antoine CommentPostBranch </h1>
+                    <h1> Job Postings forum </h1>
                     </header>
-                    <h1>Job Posts</h1>
+                    <h2> Start Browsing now ! </h2>
                     <div className="job-posts">
                         <p align="center" style={{color: "#FF5733"}}>Your API/backend server is not launched. Please ask an admin to launch the server to use this page.</p>
                     </div>
@@ -128,9 +128,9 @@ function MyJobPosts (props)   {
             return (
                 <div className="post-comment-container">
                     <header className="Debug-header">
-                        <h1> JobPost CRUD Debug Ozan Branch Migrating From Antoine CommentPostBranch </h1>
+                    <h1> Job Postings forum </h1>
                     </header>
-                    <h1>Job Posts</h1>
+                    <h2> Start Browsing now ! </h2>
                     <hr/>
                     <h3 align="center" style={{color: "#8B8000"}}>No posts in the job_post table.</h3>
                 </div>
@@ -141,9 +141,9 @@ function MyJobPosts (props)   {
         return (
             <div className="post-comment-container">
                 <header className="Debug-header">
-                    <h1> JobPost CRUD Debug Ozan Branch Migrating From Antoine CommentPostBranch </h1>
-                </header>
-                <h1>Job Posts</h1>
+                    <h1> Job Postings forum </h1>
+                    </header>
+                    <h2> Start Browsing now ! </h2>
                 <section style={{display: 'flex', justifyContent:'space-between',alignItems: 'stretch', margin: '1em 0.2em'}}>
                     <span> Search:&ensp; </span>
                     <SearchBar

@@ -7,12 +7,16 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFilter} from "@fortawesome/free-solid-svg-icons";
 import ApplicationCard from "../../components/ApplicationCard";
 import ApplicationCardCopy from "../../components/ApplicationCard/indexCopy";
+import {useParams} from "react-router-dom";
 
 // let loadNum = 1;
 function ViewMyApplications (props)   {
     // const refCounter = useRef(0);
+
+    const url_params = useParams();
+
     const filteredIndicesHashSet = new Set();
-    const [data,setData] = useState([{}]); //TODO: REPLACE WITH partialData state hook, directly handled in the filter alg/funciton
+    const [data,setData] = useState([{}]);
     const [defaultData,setDefaultData] = useState([{}]);
     const [searchBarInput, setSearchBarInput] = useState('');
 
@@ -26,11 +30,11 @@ function ViewMyApplications (props)   {
             response => response.json()
         ).then(
             data => {
-                console.log(window.localStorage.getItem("uid"))
+
                 let otherApplicantsToRemove = []; //Must be list, since splice needs to avoid indices shifting
                 data.applicantUid.forEach(
                     (applicantUid, applicationId) => {
-                        if( applicantUid !== window.localStorage.getItem("uid"))
+                        if( applicantUid !== url_params.uid)
                             otherApplicantsToRemove.push(applicationId)
                     }
                 )
@@ -56,7 +60,7 @@ function ViewMyApplications (props)   {
             setEr(true);
         })
 
-    },[])
+    },[url_params.uid])
 
 
 
@@ -102,9 +106,9 @@ function ViewMyApplications (props)   {
                     {
 
                         return (
-                            ((window.localStorage.getItem("uid") === data.applicantUid[i])) ?
+                            ((url_params.uid === data.applicantUid[i])) ?
 
-                                <ApplicationCardCopy
+                                <ApplicationCard
                                     applicationId={id}
                                     jobPostId={data.jobPostId[i]}
                                     applicantUid={data.applicantUid[i]}
