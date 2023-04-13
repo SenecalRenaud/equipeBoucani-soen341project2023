@@ -12,7 +12,8 @@
     background-image: url("../../assets/logo2.png");
     filter: drop-shadow(10px 7px 2px rgba(223,100,0,0.61));
     background-repeat: no-repeat;
-    background-position: center top;
+    background-position: 50% 25%;
+    background-attachment: fixed;
     background-color: var(--gradient-bar)!important;
     background-clip: content-box;
     -webkit-background-clip: content;
@@ -20,9 +21,25 @@
     z-index: 10;
     text-shadow: var(--gradient-text);
     /*filter: sepia(55%) drop-shadow(10px 7px 2px rgba(223,100,0,0.61)) ;*/
-
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
 }
+
+/*#spinner {*/
+/*    position: absolute;*/
+/*    display: inherit;*/
+/*    top: 50vh;*/
+/*    left: 50vw;*/
+/*    transform: translate(-50%, -50%);*/
+/*}*/
+/*#spinner > span:after {*/
+/*    content: "BOUCANI";*/
+/*    !*background: var(--gradient-bar)!important;*!*/
+/*}*/
+
 /*:root {*/
 /*    backdrop-filter: saturate(123,421,43);*/
 /*     blur(10px) brightness(90%);*/
@@ -38,14 +55,3 @@
 
 /*    filter: blur(4px) brightness(70%) !important;*/
 /*}*/
-#spinner {
-    display: inherit;
-    top: 50vh;
-    left: 50vw;
-    transform: translate(-50%, -50%);
-}
-/*#spinner > span:after {*/
-/*    content: "BOUCANI";*/
-/*    !*background: var(--gradient-bar)!important;*!*/
-/*}*/
-

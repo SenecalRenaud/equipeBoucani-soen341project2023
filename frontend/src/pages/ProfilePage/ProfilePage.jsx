@@ -15,9 +15,10 @@ import {useUserContext} from "../../context/UserContext";
 //TODO: useLocation() to do page view count inside a useEffect(,deps:[location])
 
 
+export const DATETIME_OPTIONS = {hour: '2-digit',minute: '2-digit', weekday: 'short',month: 'long',day: 'numeric', year: 'numeric'};
+
 const ProfilePage = () => {
     const {state} = useUserContext();
-    const currentViewerUser = state.userData;
 
     const [userProfileData,setUserProfileData] = useState({});
     const url_params = useParams(); //Todo CryptoJS.AES.decrypt(ciphertext.toString(), 'secret key 123') decode bytes
@@ -25,7 +26,6 @@ const ProfilePage = () => {
     //Antoine context load, avoids useless props-based reloads of components
     // const {loggedInUser} = useContext(LoggedInUserContext);
 
-    const DATETIME_OPTIONS = {hour: '2-digit',minute: '2-digit', weekday: 'short',month: 'long',day: 'numeric', year: 'numeric'}
     String.prototype.toTitleCase = (str) => toTitleCase(str)
 
       useEffect(() => {
@@ -59,6 +59,12 @@ const ProfilePage = () => {
             return item;
         }
         return "no user logged in"
+    }
+    function checkIfObjExists(obj) {
+        if (obj != null) {
+            return obj;
+        }
+        return {};
     }
     return (
 
@@ -96,7 +102,7 @@ const ProfilePage = () => {
 
                     <Link
                         to={{ pathname: `/profile/${url_params.uid}/edit`,
-                                search : `?editor=${currentViewerUser.uid}`}}>
+                                search : `?editor=${checkIfObjExists(state.userData).uid}`}}>
                     <button className="update-profile-btn"
                             onClick={()=> {
                                 window.caches.open('profileEditing')
@@ -106,6 +112,7 @@ const ProfilePage = () => {
                                     })
                             }}
                     >Edit my profile</button>
+                        <span className='hoverMessage'> Update your user profile information </span>
                         </Link>
                 </footer>
                 }

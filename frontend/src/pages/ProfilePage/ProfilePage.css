@@ -5,14 +5,17 @@
     align-self: center;
     margin-left: 25px;
     margin-right: 25px;
-
-
+    object-fit: cover;
 }
+
+
 
 .profile_container_1{
     display:flex;
     flex-direction: column;
     align-self: center;
+
+    flex-basis: 27%;
 
     background-color:white;
     border-radius : 10px;
@@ -32,7 +35,9 @@
     flex-direction: column;
     align-self: center;
 
-    background-color:white;
+    flex-basis: 27%;
+
+    background-color: white;
     border-radius : 10px;
     margin:25px;
 
@@ -66,6 +71,8 @@
     flex-direction: column;
     align-self: center;
 
+    flex-basis: 27%;
+
     background-color:white;
     border-radius : 10px;
     margin:25px;
@@ -80,7 +87,7 @@
 .profile_resume {
     display: flex;
     /*position: relative;*/
-    width: 600px;
+    width: auto;
     flex-grow: 1;
 }
 
@@ -92,7 +99,14 @@
     justify-content: center;
     margin-top: 50px;
 }
-
+form.daddyContainer {
+    border: 3px dashed #2f4667;
+    margin-top: 0px;
+}
+form.daddyContainer > container[class^='profile_container'] {
+    margin: 15px;
+    background-color: rgb(239, 240, 243);
+}
 .profile-content-username {
 
     align-self: center;
@@ -204,9 +218,15 @@
     margin-top:3px;
     margin-bottom: 3px;
 }
-
+form.daddyContainer .profile-content-introduction {
+    color: darkslategrey !important;
+    margin-left: 0px;
+    margin-right: 0px;
+}
 .profile-content-introduction{
     align-self: left;
+    width: available;
+    height: auto;
     padding-top: 5px;
     font-family: var(--font-family);
     font-weight: 600;
@@ -219,7 +239,9 @@
 }
 
 
-button.update-profile-btn {
+button.update-profile-btn,
+input[type='submit'].update-profile-btn
+{
   width: 48%;
   display: block;
   margin: 0 auto;
@@ -233,9 +255,73 @@ button.update-profile-btn {
               0 2px 0 0 rgba(203, 135, 57, 0.5);
   transition: 0.5s ease;
 }
-button.update-profile-btn:hover{
+button.update-profile-btn:hover,
+input[type='submit'].update-profile-btn:hover{
   background-color: rgb(203, 123, 57);
 }
+
+
+.editDisabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    /*pointer-events: none;*/
+    color: #3d3d3d;
+}
+
+.editChanged {
+  color: orangered !important;
+  border: 5px dotted blue !important;
+
+}
+
+.editSave { /* Filter allows to change them based on overall profile page themes*/
+    position: relative;
+    color: inherit;
+    filter: brightness(0) saturate(100%) invert(16%) sepia(95%) saturate(3484%) hue-rotate(148deg) brightness(91%) contrast(98%);
+    /*backdrop-filter: hue-rotate(105deg);*/
+
+}
+.editCancel { /* Filter allows to change them based on overall profile page themes*/
+    position: relative;
+    color: inherit;
+    filter: brightness(0) saturate(100%) invert(22%)
+    sepia(63%) saturate(2795%) hue-rotate(336deg) brightness(93%) contrast(111%);
+}
+.hoverMessage {
+  display: none;
+  position: absolute;
+  padding: 10px;
+  background-color: #000;
+  color: #fff;
+  border-radius: 5px;
+  font-size: 16px;
+  z-index: 1;
+}
+
+.update-profile-btn:hover + span.hoverMessage {
+    display: inline-block;
+
+    /*opacity: 1;*/
+}
+
+.profile_container_4 {
+    flex-basis: 100%;
+    flex-grow: 3;
+    display:flex;
+    flex-direction: column;
+    align-self: center;
+    justify-content: stretch;
+    min-width: available;
+    background-color: rgb(181, 211, 246);
+    border-radius : 10px;
+    margin:5px;
+
+    padding-top: 50px;
+    padding-bottom: 50px;
+
+    min-height: calc(900px / 4);
+}
+
 /*.update-profile-btn:after {*/
 /*  content: "World";*/
 /*  position: absolute;*/

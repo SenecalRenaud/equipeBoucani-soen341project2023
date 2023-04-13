@@ -1,0 +1,161 @@
+.apply-job-container {
+    font-family: 'Calibri', sans-serif;
+    width: 60%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.apply-job-card h1 {
+    margin-bottom: 2rem;
+    font-size: 24px;
+    text-align: center;
+}
+
+.apply-job-field {
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.apply-job-field label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.apply-job-card-input {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1.2rem;
+    box-sizing: border-box;
+}
+
+.apply-job-card-input::placeholder {
+    color: #999;
+}
+
+.apply-job-card-input:focus {
+    outline: none;
+    border-color: #da5b00;
+}
+
+.resume-input-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 2px dashed #da5b00;
+    border-radius: 8px;
+}
+
+.resume-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+}
+
+.resume-overlay {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    min-height: 100px;
+    border-radius: 8px;
+}
+
+.resume-file-remove {
+    background-color: transparent;
+    border: none;
+    color: #da5b00;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-left: 10px;
+    padding: 0;
+    cursor: pointer;
+}
+
+.resume-file-remove:hover {
+    color: #b04a00;
+}
+
+
+.resume-overlay-text {
+    margin: 0;
+    font-size: 1.2rem;
+    text-align: center;
+    color: #da5b00;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+
+.resume-files-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    z-index: 2;
+    position: relative;
+}
+
+.resume-file {
+    font-size: 1.2rem;
+    color: #da5b00;
+}
+
+.resume-file-icon::before {
+    content: '\1F4C4';
+    margin-right: 5px;
+}
+
+.apply-button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.apply-button {
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    background-color: #da5b00;
+    width: 10rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.apply-button:hover {
+    background-color: #b04a00;
+}
+
+.apply-job-card textarea {
+    resize: none;
+}
+
+.apply-job-card textarea:focus {
+    outline: none;
+    border-color: #da5b00;
+}
+
+.apply-job-field label.error {
+    color: #d8000c;
+    display: inline-block;
+    margin-top: 5px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: normal;
+}

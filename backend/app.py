@@ -1,6 +1,9 @@
 import datetime
+from io import BytesIO
 from time import strftime,localtime
 
+import google.api_core.exceptions
+import requests
 import sqlalchemy.exc
 from flask import \
     Flask,\
@@ -22,6 +25,9 @@ from requests import HTTPError
 
 # from werkzeug.local import LocalProxy,WSGIApplication
 from werkzeug.utils import secure_filename
+from werkzeug.datastructures import ImmutableMultiDict
+from werkzeug.formparser import parse_form_data
+
 
 from flask_cors import CORS,cross_origin #?  (for cross origin requests)
 from flask_bcrypt import Bcrypt #? (keys and password hashing engine)
@@ -48,7 +54,7 @@ from forms import authorized,login_required
 with app.app_context():
     from config import ApplicationSessionConfig #env vars + Session configs
 from models import db,ma # SQLAlchemyInterface and MarshmallowSchema objects  to integrate
-from models import CommentPost, CommentPostSchema, JobPost, JobPostSchema
+from models import CommentPost, CommentPostSchema, JobPost, JobPostSchema, Application, ApplicationSchema
 
 from authentification import fb_config, \
     fb_adminsdk_cred, \
@@ -115,6 +121,9 @@ commentposts_schema = CommentPostSchema(many=True)
 
 jobpost_schema = JobPostSchema()
 jobposts_schema = JobPostSchema(many=True)
+
+application_schema = ApplicationSchema()
+applications_schema = ApplicationSchema(many=True)
 
 
 app.logger = logging.getLogger("myapp")
@@ -215,7 +224,10 @@ def cookies_test():
 
 @app.route('/firebase-api/signin', methods=['POST', 'GET'])
 def signin():
-
+    """
+    Contact: ChiefsBestPal @ Antoine Cantin
+    before changing
+    """
     if request.method == "POST":
 
         email = request.form.get('email')
@@ -302,6 +314,10 @@ def signin():
 
 @app.route('/firebase-api/logout')
 def logout():
+    """
+    Contact: ChiefsBestPal @ Antoine Cantin
+    before changing
+    """
     print("TRYING TO LOGOUT")
 
     if 'user' not in session:
@@ -342,6 +358,10 @@ def logout():
     return response #redirect(r'/')
 @app.route('/firebase-api/signup',methods=['POST','GET'])
 def signup():
+    """
+    Contact: ChiefsBestPal @ Antoine Cantin
+    before changing
+    """
     if request.method == "POST":
         email = request.form.get('email')
         password = request.form.get('password')
@@ -470,9 +490,9 @@ def account_profile_view():
     return render_template("profiletest.html",**context)
 
 
-#todo @authorized(admin=True)
-@app.route('/firebase-api/authenticate', methods=['POST'])
+@app.route('/firebase-api/authenticate', methods=['GET'],endpoint="authenticate")
 @cross_origin()
+@authorized(applicant=True,myself=True)
 def authenticate():
     print("GOT AUTHORIZED !")
 
@@ -502,6 +522,10 @@ def authenticate():
 @app.route("/firebase-api/get-user/<_uid>/",methods=['GET'],endpoint='get_user_details')
 @cross_origin()
 def get_user_details(_uid):
+    """
+    Contact: ChiefsBestPal @ Antoine Cantin
+    before changing
+    """
     _uid = _uid.strip()
     #TODO CACHE THESE USER DETAILS MAYBE?!
     if _uid == "current":
@@ -528,30 +552,34 @@ def get_user_details(_uid):
             uid = _uid
         ) # JS Epoch format... for some datetime modules, may need to divide by 1000, etc..
     )
-    #TODO: ADD A CRYPT SALT AND/OR IV FOR UUID ENCRYPTION ALG TO BE USED WITH CRYPTO JS
+    #COULD ADD A CRYPT SALT AND/OR IV FOR UUID ENCRYPTION ALG TO BE USED WITH CRYPTO JS
     del user_fields['pwdHash'] #do not need/want pass bcrypt hash bytes-string in requests
 
     return jsonify(user_fields)
 
 
 @app.route("/firebase-api/edit-user/<_uid>/",methods=['PATCH','POST'])
+@authorized(myself=True)
 def update_user_details(_uid):
+    """
+    Contact: ChiefsBestPal @ Antoine Cantin
+    before changing
+    """
     print("UPDATING USER!!!")
-    # TODO: Checked logged in user: Only Admins and the user at uuid can edit user at uuid
-    # TODO: Checked logged in user: Only Admins and the user at uuid can edit user at uuid
+
     _uid = _uid.strip()
     if _uid == "current" and 'user' in session:
         # print("USER IN SESSION !")
         user_recordinfo = _auth.get_account_info(session['user']['idToken'])['users'][0]
         _uid = user_recordinfo['localId']
 
-    if request.method == "PATCH":
-        print(request.form)
-        print(NotImplementedError("Not Implemented: client side PATCH request to update firebase user"))
-        return {'message' : "Firebase user update >Not implemented< with PATCH requests. Must make a client-side REST API that fetches with PATCH REQUEST.\n\r "
-                            "Native backend only uses POST to update users " }
+    # if request.method == "PATCH":
+    #     print(request.form)
+    #     print(NotImplementedError("Not Implemented: client side PATCH request to update firebase user"))
+    #     return {'message' : "Firebase user update >Not implemented< with PATCH requests. Must make a client-side REST API that fetches with PATCH REQUEST.\n\r "
+    #                         "Native backend only uses POST to update users " }
 
-    elif request.method == 'POST':
+    if request.method in ['PATCH','POST']:
         try:
             user = auth.get_user(_uid)
             firstName,lastName = user.display_name.strip().split(' ',1)
@@ -560,7 +588,12 @@ def update_user_details(_uid):
             user_docref = firestore_db.collection(u'Users').document(
                 str(_uid))
             resume_url = None if 'resume_url' in user_docref.get().to_dict() else user_docref.get().to_dict()['resume_url']
-
+            print(request.form)
+            print(request.files)
+            # data = request.get_data()
+            # print(request.get_data(parse_form_data=True))
+            # formfiles = parse_form_data(BytesIO(data))#content_type=request.content_type
+            # print(formfiles)
             if 'firstName' in request.form:
                 firstName = request.form['firstName']
             if 'lastName' in request.form:
@@ -578,9 +611,12 @@ def update_user_details(_uid):
                     blob = mainStorageBucket.blob(r"profilePictures/" + filename)
                     blob.upload_from_filename(pfpfilepath)
                     blob.make_public()  # public access URL to download and view PFPs externally
-                    mainStorageBucket.delete_blob(
-                        "profilePictures/" + pfp_publicurl.rsplit('/', 1)[-1]
-                    )
+                    try:
+                        mainStorageBucket.delete_blob(
+                            "profilePictures/" + pfp_publicurl.rsplit('/', 1)[-1]
+                        )
+                    except google.api_core.exceptions.NotFound:
+                        pass
                     pfp_publicurl = blob.public_url
             if 'uploadedResume' in request.files:
                 uploaded_pdf_resume_file = request.files['uploadedResume']
@@ -593,9 +629,12 @@ def update_user_details(_uid):
 
                 resume_blob = mainStorageBucket.blob(r"resumes/" + filename)
                 resume_blob.upload_from_filename(resumefilepath)
-                mainStorageBucket.delete_blob(
-                    "resumes/" + pfp_publicurl.rsplit('/', 1)[-1]
-                )
+                try:
+                    mainStorageBucket.delete_blob(
+                        "resumes/" + pfp_publicurl.rsplit('/', 1)[-1]
+                    )
+                except google.api_core.exceptions.NotFound:
+                    pass
                 os.remove(resumefilepath)
                 resume_blob.make_public()
                 resume_url = resume_blob.public_url
@@ -604,15 +643,21 @@ def update_user_details(_uid):
                              display_name=firstName + ' ' + lastName,
                              photo_url=pfp_publicurl)
 
-            firestore_db.collection(u'Users').document(
-                str(_uid)
-            ).update(
-                dict(
+            user_firestore_data = dict(
                     firstName=firstName,
                     lastName=lastName,
                     photo_url=pfp_publicurl,
                     resume_url=resume_url
-                )
+            )
+            if 'uploadedResume' not in request.files:
+                del user_firestore_data['resume_url']
+            if 'profilePicture' not in request.files:
+                del user_firestore_data['photo_url']
+
+            firestore_db.collection(u'Users').document(
+                str(_uid)
+            ).update(
+                user_firestore_data
             )
 
         except ValueError as badUid:
@@ -624,7 +669,11 @@ def update_user_details(_uid):
             print(serverFirebaseErr)
             return {'message': 'Firebase error, contact developpers.'},403
 
-        print({'message': f'Sucessfully updated user profile {_uid}'}, 200)
+        print((success_response :=({'message': f'Sucessfully updated user profile {_uid}'}, 200)))
+        if request.method == 'PATCH':#Most common, because from frontend. POST is for test template backend interface only
+            return success_response
+    else:
+        return {'message': 'Bad request Method'},400
     return redirect("/firebase-api/userprofile")
 
 #
@@ -686,7 +735,7 @@ def get_commentpost(_id):
     return commentpost_schema.jsonify(commentpost)
 
 
-#TODO Use ['PATCH'] to partially update existing commentpost, only selected json/req header fields !
+
 @app.route("/update/<_id>/",methods=['PUT'])
 def update_commentpost(_id):
     commentpost = CommentPost.query.get(_id)
@@ -740,14 +789,14 @@ def get_all_jobposts():
     return jsonify(results_arr)  # **{'Hello' : 'World'})
 
 
-@app.route("/getjob/<_id>/", methods=['GET'])
-def get_jobpost(_id):
-    jobpost = JobPost.query.get(_id)
+@app.route("/getjob/<_jobid>/", methods=['GET'])
+def get_jobpost(_jobid):
+    jobpost = JobPost.query.get(_jobid)
     return jobpost_schema.jsonify(jobpost)
 
 @app.route("/addjob", methods=['POST'],endpoint='addJobPost')
 @cross_origin()
-@authorized(employer=True)
+@authorized(employer=True,admin=False)
 def addJobPost():
     jobtype, title, location, salary, description, tags,employerUid = request.json['jobtype'], request.json['title'], request.json[
         'location'], request.json['salary'], request.json['description'], request.json['tags'],request.json['employerUid']
@@ -766,10 +815,10 @@ def addJobPost():
 
 
 
-@app.route("/updatejob/<_id>/", methods=['PUT'],endpoint='update_jobpost')
-@authorized(employer=True)#,admin=True enabled automatically in wrapped
-def update_jobpost(_id):
-    jobpost = JobPost.query.get(_id)
+@app.route("/updatejob/<_jobid>/", methods=['PUT'],endpoint='update_jobpost')
+@authorized(employer=True,myself=True)#admin is not set to false, so admins can also do this
+def update_jobpost(_jobid):
+    jobpost = JobPost.query.get(_jobid)
 
     if 'jobtype' in request.json:
         jobpost.jobtype = request.json['jobtype']
@@ -793,10 +842,10 @@ def update_jobpost(_id):
     return jobpost_schema.jsonify(jobpost)
 
 
-@app.route("/deletejob/<_id>/", methods=['DELETE'],endpoint='delete_jobpost')
-@authorized(employer=True)#,admin=True enabled automatically in wrapped
-def delete_jobpost(_id):
-    jobpost = JobPost.query.get(_id)
+@app.route("/deletejob/<_jobid>/", methods=['DELETE'],endpoint='delete_jobpost')
+@authorized(employer=True,myself=True)#admin is not set to false, so admins can also do this
+def delete_jobpost(_jobid):
+    jobpost = JobPost.query.get(_jobid)
 
     db.session.delete(jobpost)
 
@@ -821,6 +870,60 @@ def flask_mail_send_test():
     except Exception as e:
         return str(e)
 
+#
+# =================== Applications ===================
+#
+
+@app.route("/addapplication", methods=['POST'],endpoint='addApplication')
+@cross_origin()
+@authorized(applicant=True)
+def addApplication():
+    jobPostId, applicantUid, coverLetter = request.json['jobPostId'], request.json['applicantUid'], request.json['coverLetter']
+
+    application = Application(jobPostId, applicantUid, coverLetter)
+    db.session.add(application)
+    db.session.commit()
+
+    return application_schema.jsonify(application)
+
+@app.route("/getapplication/<_id>/", methods=['GET'])
+def get_application(_id):
+    application = Application.query.get(_id)
+    return application_schema.jsonify(application)
+
+@app.route('/getapplications', methods=['GET'])  # methods = [list http reqs methods]
+def get_all_applications():
+    """
+    GET request to view all table entries directly from 'many' mode sql schema
+    :return: json response
+    Antoine Cantin@ChiefsBestPal
+    """
+
+    all_applications = Application.query.all()
+    results_arr = applications_schema.dump(all_applications)
+
+    if any(filter(None,results_arr)) and request.args.get('mapAsFields') == 'true':
+        # print("Mapped fields into dict instead of array of obj!")
+        response_fieldsdict = dict(map(lambda kv: (kv[0], [kv[1]]), results_arr[0].items()))
+
+        for k, v in itertools.chain.from_iterable(map(operator.methodcaller('items'), results_arr[1:])):
+            if response_fieldsdict.setdefault(k, None):
+                response_fieldsdict[k].append(v)
+        assert all(len(listed_fields_v) == len(results_arr) for listed_fields_v in response_fieldsdict.values())
+        return jsonify(response_fieldsdict)
+
+    return jsonify(results_arr)
+
+@app.route("/deleteapplication/<_id>/", methods=['DELETE'],endpoint='delete_application')
+@authorized(applicant=True)#,admin=True enabled automatically in wrapped
+def delete_application(_id):
+    application = Application.query.get(_id)
+
+    db.session.delete(application)
+
+    db.session.commit()
+
+    return jobpost_schema.jsonify(application)
 
 if __name__ == '__main__':
 

@@ -16,6 +16,7 @@ const JobPostingForm = (props) => {
     const [wordCount, setWordCount] = useState(0);
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
+    const [jobTypeError, setJobTypeError] = useState('');
 
     const handleJobTypeChange = (type) => {
         setJobType(type);
@@ -79,7 +80,12 @@ const JobPostingForm = (props) => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
+        if (!jobType) {
+            setJobTypeError('Please select a job type.');
+            return;
+        } else {
+            setJobTypeError('');
+        }
         console.log("DECODED TOKEN CLAIMS: ", decoded_token_claims.user_id)
         await JobPostingAPIService.AddJobPosting({"jobtype" : jobType, "title" : jobTitle, "location" : location, "salary" : salary, "tags" : industryTags.toString(), "description" : jobDescription,
 
@@ -234,6 +240,7 @@ const JobPostingForm = (props) => {
                         required
                     />
                     <p className="word-count">{wordCount}/350 words</p>
+                    {jobTypeError && <p className="job-type-error">{jobTypeError}</p>}
                     <div className="apply-button-container">
                         <button className="apply-button">Submit</button>
                     </div>

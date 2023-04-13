@@ -20,11 +20,14 @@ const LoadingScreen = (props) => {
     //
     useEffect(() => {
         const navbarEl = document.getElementsByClassName("gpt3__navbar")[0];
+        const footerEl = document.getElementsByClassName("bigFoot")[0];
+
         mounted.current = true;
         navbarEl.classList.add("hidden");
-
+        footerEl.classList.add("hidden")
         return () => {
             navbarEl.classList.remove("hidden")
+            footerEl.classList.remove("hidden")
             mounted.current = false;
 
         };
@@ -34,7 +37,7 @@ const LoadingScreen = (props) => {
 
   return ( <>
 
-    <div className="sweet-loading">
+    <div className="sweet-loading" >
       <reactSpinners.BounceLoader color={'#81AFDD'} loading={true} id="spinner" size={120} />
     </div>
       </>

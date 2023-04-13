@@ -20,14 +20,20 @@ const NavMenu = () => {
 
     //can use activestyle={{}}
     return (<>
-        <Nav className='whitespace'>
-		<NavLink  to="/" >
-			Home
-		</NavLink>
+        <Nav>
+		{/*<NavLink className='whitespace' to="/" >*/}
+		{/*	Home*/}
+		{/*</NavLink>*/}
 		{
                 (state.userData && state.userData.userType === "EMPLOYER") &&
                 <NavLink className='whitespace' to="/jobposting" >
                     Post a Job
+                </NavLink>
+            }
+            {
+                (state.userData && state.userData.userType === "APPLICANT") &&
+                <NavLink className='whitespace' to="/viewApplications" >
+                    My Applications
                 </NavLink>
             }
         <NavLink className='whitespace' to="/BACKEND_DEBUG" >
@@ -60,6 +66,7 @@ const LoginOrSeeAccount = () => {
     //         }
     //     )
     // }
+
     // console.log(userRecordInfo)
     return (uid !== undefined && uid && state.userData ?
             <>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState,useEffect} from "react";
 import './App.css';
 
 import {Footer, Navbar} from './components';
@@ -15,6 +15,8 @@ import SignUp from "./pages/SignUp/SignUpForm";
 import SignIn from "./pages/SignIn/SignInForm";
 import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
 import JobPosting from "./pages/JobPostings/JobPosting";
+import ViewMyApplications from "./pages/ViewMyApplications/ViewMyApplications";
+import ApplyJob from "./pages/ApplyJob/ApplyJob";
 
 
 // import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
@@ -31,6 +33,7 @@ import PageNotFound from "./pages/Err404Screen/Err404Screen";
 import Apply from "./pages/Apply/Apply";
 //import AboutUs from "./pages/AboutUs/aboutus";
 import EditProfilePage from "./pages/ProfilePage/EditProfilePage";
+import CommentSection from "./components/CommentSection/CommentSection";
 // import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
 
 
@@ -129,6 +132,7 @@ function App() {
         ,[]
     )
     //NOTE: </UserContextProvider> is wrapped in the App's index.js ...
+
 return (
     <Router>
     <Navbar />
@@ -155,6 +159,9 @@ return (
 
         <Route path='/viewjobposts' element={<ViewJobPosts postedJob={postedJob} />} />
 
+        <Route path="/commentsection_test" element={<CommentSection/>}/>
+
+        <Route path='/viewApplications' element={<ViewMyApplications />} />
         <Route exact path='/profile/:uid' element={<ProfilePage/>} />
         <Route path='/profile/:uid/edit' element={<EditProfilePage/>}/>
         <Route exact path='current/jobpostings' element={<MyJobPosts postedJob={postedJob} />}/>
@@ -163,6 +170,8 @@ return (
         {/*<Route path='/SESSION_COOKIES_DEBUG' element={<SESSION_COOKIES_DEBUG/>}/>*/}
 
         <Route path='/loading' element={<LoadingScreen/>} />
+
+        <Route path='/ApplyJob' element={<ApplyJob/>} />
 
     </Routes>
     <Footer />

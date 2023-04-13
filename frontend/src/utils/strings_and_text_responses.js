@@ -1,4 +1,6 @@
 function toTitleCase (str) {
+    if (str == null)
+        return '';
   str = str.toLowerCase()
            .split(' ')
            .map(function(word) {

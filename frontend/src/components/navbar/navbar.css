@@ -1,19 +1,22 @@
 .gpt3__navbar {
     display: flex;
-    justify-content: space-between;
+    width: 100%;
+    justify-content: center;
     align-items: center;
-
-    padding: 2rem 6rem;
+    padding: 2rem 4rem;
 }
 .hidden {
     display: none;
 }
+
+
 .gpt3__navbar-links {
     flex: 1;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
 }
+
 .whitespace{
     white-space: pre;
 }
@@ -91,7 +94,7 @@
     justify-content: flex-end;
     align-items: flex-end;
     flex-direction: column;
-    
+
     text-align: end;
     background: var(--color-footer); /*we can find the colors in index.css*/
     padding: 2rem;
@@ -124,13 +127,13 @@
 
 @media screen and (max-width: 700px) {
     .gpt3__navbar {
-        padding: 2rem 4rem;
+        padding: 2rem 2rem;
     }
 }
 
 @media screen and (max-width: 550px) {
     .gpt3__navbar {
-        padding: 2rem;
+        padding: 4rem;
     }
 
     .gpt3__navbar-sign {
@@ -166,6 +169,7 @@ img#navbarLoggedInPfp {
     position: relative;
     margin-left: .75em;
     background-size:auto 100%;
+    object-fit: cover;
     /*width:65px;*/
     /*height:65px;*/
     display: block;
