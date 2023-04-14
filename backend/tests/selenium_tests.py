@@ -3,17 +3,17 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.common.keys import Keys
 
 
 def test_multiple_browsers():
     # Chrome
 
     options = Options()
-    options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
-    # options.add_experimental_option("detach", True)
+    # options.add_argument('--headless')
+    # options.add_argument('--no-sandbox')
+    # options.add_argument('--disable-dev-shm-usage')
+    options.add_experimental_option("detach", True)
 
     driver = webdriver.Chrome(options=options)
 
@@ -30,6 +30,7 @@ def test_multiple_browsers():
     if len(navLinks) == 0:
         assert False, "missing navbar elements on main page"
 
+    # LOGIN TEST + MAIN PAGE
     signIn = driver.find_elements(By.CLASS_NAME, 'whitespace')
     signIn[1].click()  # navigates to sign in page
 
@@ -41,10 +42,28 @@ def test_multiple_browsers():
     driver.find_element(By.CLASS_NAME, 'sign-in-button').click()  # clicks login
     time.sleep(5)
 
-    if driver.find_element(By.ID, 'navbarLoggedInName').text != "Equipe Boucani":  # checking that we have successfully logged in
+    if driver.find_element(By.ID,
+                           'navbarLoggedInName').text != "Equipe Boucani":  # checking that we have successfully logged in
         assert False
     print(driver.find_element(By.ID, 'navbarLoggedInName').text)
     print(driver.current_url)  # redirected to home page after login
+
+    # POST A JOB TEST
+    driver.get("http://localhost:3000/jobposting")  # navigate to posting page
+    driver.find_element(By.ID, "Full-Time").click()
+    driver.find_element(By.ID, "job-title-input").send_keys("Job Title")
+    driver.find_element(By.ID, "location-input").send_keys("Location")
+    salarySlider = driver.find_element(By.ID, "salary-input")
+    for i in range(30):
+        salarySlider.send_keys(Keys.ARROW_RIGHT)
+    driver.find_element(By.ID, "IT").click()
+    driver.find_element(By.ID, "Marketing").click()
+    driver.find_element(By.ID, "job-description-input").send_keys("TestingTheSubmitFeature")
+    driver.find_element(By.CLASS_NAME, "apply-button").click()  # filled form is submitted
+
+    driver.get("http://localhost:3000/viewjobposts")
+    description = driver.find_elements(By.XPATH, "//p[@class='sc-dIfARi cHVhso']")
+    print(description)
 
     driver.quit()
 

@@ -134,18 +134,21 @@ const JobPostingForm = (props) => {
                 <div className="job-type-section">
                     <h3>Job Type</h3>
                     <button
+                        id='Full-Time'
                         className={jobType === 'Full-Time' ? 'active' : ''}
                         onClick={() => handleJobTypeChange('Full-Time')}
                     >
                         Full-Time
                     </button>
                     <button
+                        id='Part-Time'
                         className={jobType === 'Part-Time' ? 'active' : ''}
                         onClick={() => handleJobTypeChange('Part-Time')}
                     >
                         Part-Time
                     </button>
                     <button
+                        id='Time-Period'
                         className={jobType === 'Time-Period' ? 'active' : ''}
                         onClick={() => handleJobTypeChange('Time-Period')}
                     >
@@ -205,16 +208,16 @@ const JobPostingForm = (props) => {
                     <label htmlFor="industry-tags-input">Industry Tags</label>
                     <div className="industry-tags-section">
                         <div className="industry-tags-example">
-                            <span onClick={() => handleExampleTagClick('IT')}>IT</span>
-                            <span onClick={() => handleExampleTagClick('Tutoring')}>Tutoring</span>
-                            <span onClick={() => handleExampleTagClick('Engineering')}>Engineering</span>
-                            <span onClick={() => handleExampleTagClick('Finance')}>Finance</span>
-                            <span onClick={() => handleExampleTagClick('Marketing')}>Marketing</span>
-                            <span onClick={() => handleExampleTagClick('Design')}>Design</span>
-                            <span onClick={() => handleExampleTagClick('Healthcare')}>Healthcare</span>
-                            <span onClick={() => handleExampleTagClick('Education')}>Education</span>
-                            <span onClick={() => handleExampleTagClick('Food')}>Food</span>
-                            <span onClick={() => handleExampleTagClick('Travel')}>Travel</span>
+                            <span id='IT' onClick={() => handleExampleTagClick('IT')}>IT</span>
+                            <span id='Tutoring' onClick={() => handleExampleTagClick('Tutoring')}>Tutoring</span>
+                            <span id='Engineering' onClick={() => handleExampleTagClick('Engineering')}>Engineering</span>
+                            <span id='Finance' onClick={() => handleExampleTagClick('Finance')}>Finance</span>
+                            <span id='Marketing' onClick={() => handleExampleTagClick('Marketing')}>Marketing</span>
+                            <span id='Design' onClick={() => handleExampleTagClick('Design')}>Design</span>
+                            <span id='Healthcare' onClick={() => handleExampleTagClick('Healthcare')}>Healthcare</span>
+                            <span id='Education' onClick={() => handleExampleTagClick('Education')}>Education</span>
+                            <span id='Food' onClick={() => handleExampleTagClick('Food')}>Food</span>
+                            <span id='Travel' onClick={() => handleExampleTagClick('Travel')}>Travel</span>
                         </div>
                         <div className="industry-tags-input-wrapper">
                             {industryTags.map((tag, index) => (
