@@ -9,6 +9,8 @@ import ApplicationCard from "../../components/ApplicationCard";
 import ApplicationCardCopy from "../../components/ApplicationCard/indexCopy";
 
 // let loadNum = 1;
+
+
 function ViewMyApplicationsCopy (props)   {
     // const refCounter = useRef(0);
     const filteredIndicesHashSet = new Set();
@@ -116,12 +118,13 @@ function ViewMyApplicationsCopy (props)   {
                     height: 5.5,
                     borderColor : '#000000'
                 }}/>
-                <div className="job-posts">
+                <div className="job-posts" >
                     { data.id && data.id.map((id, i)  =>
 
                             <ApplicationCardCopy
-                                    applicationId={id}
+
                                     jobPostId={data.jobPostId[i]}
+                                    applicationId={id}
                                     applicantUid={data.applicantUid[i]}
                                     coverLetter={data.coverLetter[i]}
                                     date={data.date[i]}

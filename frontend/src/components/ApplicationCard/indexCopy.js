@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import styled from "styled-components";
+import './quickcss.css'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPen, faTrashCan} from '@fortawesome/free-solid-svg-icons';
 import JobPostingAPIService from "../../pages/PostAJob/JobPostingAPIService";
@@ -11,23 +12,35 @@ import CommentAPIService from "../../pages/BACKEND_DEBUG/CommentAPIService";
 // import Cookies from 'js-cookie'
 import {useUserContext} from "../../context/UserContext";
 import { useNavigate } from 'react-router-dom';
+import pdf_img from "../../assets/pdf.png";
+import cl_img from "../../assets/cover.png";
 
 export const CardTitle = styled.h1`
-    font-size: 2em;
+    font-size: 1.25em;
+    text-align: left !important;
+   margin-left: 20px;
 `;
 export const CardGivenTitle = styled.h4`
-    font-size: 1.25em;
+    font-size: 2em;
+  text-align: center;
+  margin-top:10px;
 `;
 export const CardArticle = styled.div`
-    border: 1px solid darkblue;
-    margin: 10px;
-    width: 100%;
-    align-self: stretch;
+  border: 1px solid #4d4d4d;
+  margin-top: 10px;
+  width: 100%;
+  align-self: stretch;
+  
+  
+
 `;
 export const CardText = styled.p`
+    margin-left: 20px;
 `;
 export const CardDate = styled.b`
 `;
+
+
 
 
 const ApplicationCardCopy = ({applicationId, jobPostId=420,applicantUid, coverLetter ="COVER LETTER", date="SOME date"}) => {
@@ -93,9 +106,11 @@ const ApplicationCardCopy = ({applicationId, jobPostId=420,applicantUid, coverLe
                 UserAvatarWithText(employerUser,0)
             }
 
-            <CardTitle>Job post ID#{jobPostId} </CardTitle>
+
 
             <CardGivenTitle >{jobData.title}</CardGivenTitle>
+
+            <CardTitle>Job post ID#{jobPostId} </CardTitle>
 
             <CardText>Type: {jobData.jobtype}</CardText>
 
@@ -105,15 +120,16 @@ const ApplicationCardCopy = ({applicationId, jobPostId=420,applicantUid, coverLe
 
             <CardText>Tags: {jobData.tags}</CardText>
 
-            <CardText>Description: {jobData.description}</CardText>
+
             <CardText></CardText>
-            <CardGivenTitle>Your Application Info:</CardGivenTitle>
+            {/*<CardGivenTitle>Your Application Info:</CardGivenTitle>*/}
             <CardDate>Date Applied: {date}
             </CardDate>
             <CardText></CardText>
-            <CardText>Your Cover Letter: {coverLetter}</CardText>
-            <CardText></CardText>
-
+            <div className='imgHolder'>
+            <img  className='cardimagepdf' src={pdf_img} alt="resume"/>
+            <img  className='cardimagecl' src={cl_img} alt="coverletter"/>
+            </div>
         </CardArticle>
 
     </>);};
