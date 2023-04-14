@@ -10,10 +10,10 @@ def test_multiple_browsers():
     # Chrome
 
     options = Options()
-    # options.add_argument('--headless')
-    # options.add_argument('--no-sandbox')
-    # options.add_argument('--disable-dev-shm-usage')
-    options.add_experimental_option("detach", True)
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+    # options.add_experimental_option("detach", True)
 
     driver = webdriver.Chrome(options=options)
 
@@ -39,8 +39,11 @@ def test_multiple_browsers():
     passwordInput.send_keys("boucani12")
 
     driver.find_element(By.CLASS_NAME, 'sign-in-button').click()  # clicks login
-    WebDriverWait(driver, 10).until(lambda localDriver: localDriver.current_url == "http://localhost:3000")
+    time.sleep(5)
 
+    if driver.find_element(By.ID, 'navbarLoggedInName').text != "Equipe Boucani":  # checking that we have successfully logged in
+        assert False
+    print(driver.find_element(By.ID, 'navbarLoggedInName').text)
     print(driver.current_url)  # redirected to home page after login
 
     driver.quit()
