@@ -34,4 +34,4 @@ jobs:
       before_script:
         - "pip install -r ./backend/requirements.txt"
         #- "chmod 0777 ./backend/tests/selenium_tests.py"
-        - "python app.py --sqldb local"
+        - "python ./backend/app.py --sqldb local"
