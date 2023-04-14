@@ -9,7 +9,7 @@ from flask import g, request, redirect, url_for, jsonify, make_response,session
 
 import logging
 
-from models import JobPost
+from models import JobPost, Application
 
 
 def login_required(f):
@@ -77,7 +77,11 @@ def authorized(**permissions):
                         affected_user_uid = JobPost.query.get(
                             request.view_args.get('_jobid')
                         ).employerUid
-                    else: # TODO: Similar handling will be done for interviews, applications, etc...
+                    elif '_applyid' in request.view_args:
+                        affected_user_uid = Application.query.get(
+                            request.view_args.get('_applyid')
+                        ).applicantUid
+                    else: # TODO: Similar handling will be done for interviews, etc...
                         raise auth.UserNotFoundError(
                             f"Critical error and warning: No view arguments tracing back to " + \
                             f"a user were found in flask app route: {request.full_path}. Cant verify myself=... permission.",

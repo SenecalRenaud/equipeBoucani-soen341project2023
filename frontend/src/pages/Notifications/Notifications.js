@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import "../PostAJob/JobPostingForm.css";
 import CoreUICard from "../../components/CoreUICard";
 import JobPostCard from "../../components/JobPostCard";
@@ -6,22 +6,25 @@ import SearchBar from "../../components/PostingsSearchBar/SearchBar";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFilter} from "@fortawesome/free-solid-svg-icons";
 import ApplicationCard from "../../components/ApplicationCard";
-import ApplicationCardCopy from "../../components/ApplicationCard/indexCopy";
+import NotificationCard from "../../components/NotificationCard";
+import {useUserContext} from "../../context/UserContext";
 import {useParams} from "react-router-dom";
+import UserRESTAPI from "../../restAPI/UserAPI";
 
 // let loadNum = 1;
-function ViewMyApplications (props)   {
+function Notifications (props)   {
     // const refCounter = useRef(0);
-
-    const url_params = useParams();
-
     const filteredIndicesHashSet = new Set();
     const [data,setData] = useState([{}]);
     const [defaultData,setDefaultData] = useState([{}]);
-    const [searchBarInput, setSearchBarInput] = useState('');
+    const [employerUid, setEmployerUid] = useState('');
 
     let [er,setEr] = useState(false);
     let [errorString, setErrorString] = useState("");
+
+    const url_params = useParams()
+
+    const { state } = useUserContext();
 
 
     useEffect(() => {
@@ -30,13 +33,30 @@ function ViewMyApplications (props)   {
             response => response.json()
         ).then(
             data => {
-
                 let otherApplicantsToRemove = []; //Must be list, since splice needs to avoid indices shifting
-                data.applicantUid.forEach(
-                    (applicantUid, applicationId) => {
-                        if( applicantUid !== url_params.uid)
-                            otherApplicantsToRemove.push(applicationId)
-                    }
+
+                data.jobPostId.forEach(
+                    async (jobPostId, i) => {
+                        await fetch("/getjob/" + jobPostId + "/").then(
+                            response => response.json()
+                        ).then(
+                            data => {
+
+                                setEmployerUid(data.employerUid)
+                            }
+                        )
+                            .catch(function(error){
+                                console.log("empty db", error.toString());
+                                setErrorString(error.toString())
+                                setEr(true);
+                            })
+
+                        if( employerUid !== url_params.uid) {
+                            console.log(employerUid)
+                            otherApplicantsToRemove.push(i)
+                            console.log(otherApplicantsToRemove)
+                        }
+                        }
                 )
 
                 Object.keys(data).forEach(fieldName => {
@@ -52,7 +72,6 @@ function ViewMyApplications (props)   {
                 setData(data);
                 setDefaultData(data)
 
-
             }
         ).catch(function(error){
             console.log("empty db", error.toString());
@@ -60,16 +79,24 @@ function ViewMyApplications (props)   {
             setEr(true);
         })
 
-    },[url_params.uid])
+    },[employerUid, url_params.uid])
 
+    if (!UserRESTAPI.areAllUserCookiesAvailable() || (state.userData && state.userData.uid !== url_params.uid
+    && state.userData.userType !== "ADMIN") ) {
 
+        return <div style={{color: 'white',textAlign: 'center',fontSize: '6em',fontFamily: 'Impact'}}>
+            <span> Unauthorized access to route to view this persons' notifications: Must log into the right user account to view this page</span>
+            <hr/>
+            <img src="https://i.imgflip.com/5132fw.png" alt="sadge cat"/>
+        </div>
+    }
 
     if (er || typeof data.id === 'undefined'){ // Json request body not loaded properly if not job post ID
         if (errorString.startsWith("SyntaxError")// || errorString === "SyntaxError: Unexpected token 'P', \"Proxy error\"... is not valid JSON"
         ){
             return (
                 <div className="post-comment-container">
-                    <h1>My Applications</h1>
+                    <h1>Notifications</h1>
                     <div className="job-posts">
                         <p align="center" style={{color: "#FF5733"}}>Your API/backend server is not launched. Please ask an admin to launch the server to use this page.</p>
                     </div>
@@ -79,9 +106,9 @@ function ViewMyApplications (props)   {
         else{
             return (
                 <div className="post-comment-container">
-                    <h1>My Applications</h1>
+                    <h1>Notifications</h1>
                     <hr/>
-                    <h3 align="center" style={{color: "#8B8000"}}>No applications in the job_post table.</h3>
+                    <h3 align="center" style={{color: "#8B8000"}}>No applications in the applications table.</h3>
                 </div>
             );
         }
@@ -89,11 +116,7 @@ function ViewMyApplications (props)   {
     else{
         return (
             <div className="post-comment-container">
-                <h1>My Applications</h1>
-                <span style={{display: 'inline-block' ,fontSize: '.9em' , marginTop: "-1rem"}}>
-                 <b id="searchResultCount"> Found {(data.id ? data.id.length : 0)} results.</b>
-
-            </span>
+                <h1>Notifications</h1>
 
                 <hr  style={{
                     color: '#000000',
@@ -106,9 +129,9 @@ function ViewMyApplications (props)   {
                     {
 
                         return (
-                            ((url_params.uid === data.applicantUid[i])) ?
+                            employerUid === url_params.uid ?
 
-                                <ApplicationCard
+                                <NotificationCard
                                     applicationId={id}
                                     jobPostId={data.jobPostId[i]}
                                     applicantUid={data.applicantUid[i]}
@@ -122,4 +145,4 @@ function ViewMyApplications (props)   {
     }
 }
 
-export default ViewMyApplications;
+export default Notifications;

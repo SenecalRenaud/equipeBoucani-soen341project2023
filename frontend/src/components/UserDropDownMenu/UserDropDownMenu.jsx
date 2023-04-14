@@ -74,13 +74,13 @@ const UserDropDownMenu = ({triggerMenuMarkup,triggeredUserUid}) => {
           <nav ref={dropDownRef} className={`menu ${isToggled ? 'active' : 'inactive'}`}>
             <ul>
                 {
-                    isNotUndetermined && <div>
+                    isNotUndetermined && <>
 
               <li><Link to={`/profile/${triggeredUserUid}`}> View Profile </Link></li>
               {/*<li><a href="/preferences"> Settings & Preferences</a></li>*/}
-              <li><a onClick={(e)=>alert("Notification view page TODO!")}> Notifications </a></li>
+              <li><Link to={`/notifications/${triggeredUserUid}`}> Notifications </Link></li>
 
-                    </div>
+                    </>
                 }
                 {permissionBasedMenuOptionsMarkup}
                 <LogOutTab condition={

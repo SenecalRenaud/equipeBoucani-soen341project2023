@@ -32,16 +32,16 @@ const NavMenu = () => {
             }
             {
                 (state.userData && state.userData.userType === "APPLICANT") &&
-                <NavLink className='whitespace' to="/viewApplications" >
+                <NavLink className='whitespace' to={`/viewapplications/${state.userData.uid}`} >
                     My Applications
                 </NavLink>
             }
         <NavLink className='whitespace' to="/BACKEND_DEBUG" >
-            [BACKEND CRUDV2 <br></br>DEBUG ANTOINE]
+            Community
         </NavLink>
 
             <NavLink to="/viewjobposts">
-                View Job Posts
+                Job Postings
             </NavLink>
         {/*<NavLink className='whitespace' to='/aboutus'> Something bout us ig </NavLink>*/}
         </Nav>

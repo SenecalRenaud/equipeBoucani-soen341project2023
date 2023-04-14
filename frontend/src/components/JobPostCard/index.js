@@ -12,21 +12,44 @@ import CommentAPIService from "../../pages/BACKEND_DEBUG/CommentAPIService";
 import {useUserContext} from "../../context/UserContext";
 import { useNavigate } from 'react-router-dom';
 
+export const CardContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #d9d9d9;
+  border-radius: 5px;
+  background-color: #ffffff;
+  padding: 20px;
+  margin: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+export const CardHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 export const CardTitle = styled.h1`
-    font-size: 2em;
+  font-size: 1em;
+  font-style: italic;
+  color: #ababab;
+  width: 7rem;
+  margin-bottom: 10px;
 `;
-export const CardGivenTitle = styled.h4`
-    font-size: 1.25em;
+
+export const CardGivenTitle = styled.h2`
+  font-size: 2em;
+  color: #546e7a;
+  margin-bottom: 10px;
+  margin-top: 10px;
 `;
-export const CardArticle = styled.div`
-    border: 1px solid darkblue;
-    margin: 10px;
-    width: 100%;
-    align-self: stretch;
-`;
+
 export const CardText = styled.p`
+  margin-bottom: 10px;
+  font-size: 1rem;
 `;
 export const CardDate = styled.b`
+    margin-bottom: 0;
 `;
 export const CardDeleteButton = styled.button`
     float: right;
@@ -34,16 +57,14 @@ export const CardDeleteButton = styled.button`
     font-size: 2ch;
     background: none;
     color: red;
-    
-    
 `;
+
 export const CardEditButton = styled.button`
     float: right;
     margin-right: 3.5em;
     font-size: 2ch;
     background: none;
     color: green;
-    
 `;
 
 export const SubmitCancelButton = styled.button`
@@ -56,23 +77,20 @@ export const SubmitCancelButton = styled.button`
 
 export const CardApplyButton = styled.button`
   & {
-    box-shadow: 5px 6px 1px -1px #d98c73;
-    background: linear-gradient(to bottom, #ff7b08 5%, #bc3315 100%);
     background-color: #ff7b08;
+    width: 80%;
+    align-self: center;
     border-radius: 3px;
     float: right;
     border: 1px solid #942911;
     display: inline-block;
     cursor: pointer;
     color: #ffffff;font-size: 16px;
-    font-style: italic;
     padding: 15px 24px;
     text-decoration: none;
-    text-shadow: 0px 1px 9px #854629;
   }
 
   &:hover {
-    background: linear-gradient(to bottom, #bc3315 5%, #ff7b08 100%);
     background-color: #bc3315;
   }
 
@@ -85,26 +103,26 @@ export const CardApplyButton = styled.button`
 
 export const CardCommentButton = styled.button`
   & {
-    box-shadow: inset 5px 6px 1px -1px #ba7059;
     background-color: #de8042;
     border-radius: 3px;
+    width: 80%;
     border: 1px solid #ffffff;
     display: inline-block;
     cursor: pointer;
     float: right;
     color: #ffffff;
+    margin-top: 1rem;
+    align-self: center;
     font-family: Arial;
     font-size: 16px;
     font-style: italic;
     padding: 15px 24px;
     margin-bottom: 10px;
-    margin-right: 10px;
     text-decoration: none;
-    text-shadow: 0px 1px 9px #854629;
   }
 
   &:hover {
-    background-color: #db9183;
+    background-color: #bc3315;
   }
 
   &:active {
@@ -115,7 +133,7 @@ export const CardCommentButton = styled.button`
 
 `;
 
-const JobPostCard = ({id, jobtype, title, description, location, salary, tags, date, editDate,employerUid}) => {
+const JobPostCard = ({id, jobtype, title, description, location, salary, tags, date, editDate,employerUid, startDateProp, endDateProp}) => {
 
     const {state} = useUserContext();
 
@@ -126,18 +144,16 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
     const [editIndustryTags, setIndustryTags] = useState(tags.split(","));
     const [editJobDescription, setJobDescription] = useState(description);
     const [wordCount, setWordCount] = useState(0);
-    const [startDate, setStartDate] = useState('');
-    const [endDate, setEndDate] = useState('');
+    const [startDate, setStartDate] = useState(startDateProp);
+    const [endDate, setEndDate] = useState(endDateProp);
     const [toBeEditedID, setToBeEditedID] = useState("");
     const [isOpen, setIsOpen] = useState(false);
     let [er,setEr] = useState(false);
     let [errorString, setErrorString] = useState("");
-
     const [employerUser,setEmployerUser] = useState([{}])
-
     const[listOfApplicants, setListOfApplicants] = useState([{}]);
-
     const navigate = useNavigate();
+
 
     useEffect(() => {
 
@@ -251,40 +267,55 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
     }
 
     return (<>
-        <CardArticle>
-            {
-                                        <UserDropDownMenu
-                    triggerMenuMarkup={UserAvatarWithText(employerUser,0)}
+        <CardContainer>
+            <CardHeader>
+                {<UserDropDownMenu
+                    triggerMenuMarkup={UserAvatarWithText(employerUser, 0)}
                     triggeredUserUid={employerUid}
-                    />
+                />}
+                <CardTitle>Job post ID#{id} </CardTitle>
+                {
+                    (state.userData &&
+                        (state.userData.uid === employerUid ||
+                            state.userData.userType === "ADMIN")) && (
+                        <section>
+                            <CardDeleteButton
+                                onClick={() => handleDelete(id)}
+                            >
+                                <FontAwesomeIcon icon={faTrashCan} />
+                            </CardDeleteButton>
+                            <CardEditButton
+                                onClick={() => {
+                                    setToBeEditedID(id);
+                                    toggleModal();
+                                    setJobTitle(editJobTitle);
+                                    setJobDescription(editJobDescription);
+                                }}
+                            >
+                                <FontAwesomeIcon icon={faPen} />
+                            </CardEditButton>
+                        </section>
+                    )
                 }
+            </CardHeader>
+            <CardGivenTitle>{title}</CardGivenTitle>
+            <CardText><strong>Type:</strong> {jobtype}</CardText>
+            {jobtype === 'Time-Period' && (
+                <>
+                    <CardText>
+                        <strong>Start Date:</strong> {startDate}
+                    </CardText>
+                    <CardText>
+                        <strong>End Date:</strong> {endDate}
+                    </CardText>
+                </>
+            )}
+            <CardText><strong>Location:</strong> {location}</CardText>
+            <CardText><strong>Salary:</strong> {salary}</CardText>
+            <CardText><strong>Tags:</strong> {tags}</CardText>
+            <CardText><strong>Description:</strong> {description}</CardText>
 
-            <CardTitle>Job post ID#{id} </CardTitle>
-            {
-
-                (state.userData && (state.userData.uid === employerUid
-                                    || state.userData.userType === "ADMIN"))
-                &&
-                <section>
-                  <CardDeleteButton onClick={() => handleDelete(id)}><FontAwesomeIcon icon={faTrashCan}/></CardDeleteButton>
-                <CardEditButton onClick={() => {setToBeEditedID(id); toggleModal(); setJobTitle(editJobTitle); setJobDescription(editJobDescription)}}><FontAwesomeIcon icon={faPen}/></CardEditButton>
-            </section>
-            }
-
-
-            <CardGivenTitle >{title}</CardGivenTitle>
-
-            <CardText>Type: {jobtype}</CardText>
-
-            <CardText>Location: {location}</CardText>
-
-            <CardText>Salary: {salary}</CardText>
-
-            <CardText>Tags: {tags}</CardText>
-
-            <CardText>Description: {description}</CardText>
-
-            <CardDate>Date Posted: {date}
+            <CardDate><strong>Date Posted: {date}</strong>
             </CardDate>
             <CardText></CardText>
             <CardDate>{editDate !== "Invalid Date" ? "Date Edited: " + editDate : ""}
@@ -295,16 +326,18 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
                 (state.userData && state.userData.userType === "APPLICANT") &&
                 <CardApplyButton  onClick={(e) => {HandleApply(id, employerUid)}}>  Apply </CardApplyButton>
             }
-            <CardText>{listOfApplicants.length ===0 ?
-                'Be the first to apply. No applicants yet!' :
-                listOfApplicants.length === 1 ?
-                    'Already 1 Applicant!' :
-                    'Received ' + listOfApplicants.length + ' applications!'}</CardText>
-            {UserAvatarGroup([...new Map(listOfApplicants.map(applicant => [applicant.uid, applicant])).values()],
-                5)}
-
-
-        </CardArticle>
+            <CardText>
+                {listOfApplicants.length === 0
+                    ? "Be the first to apply. No applicants yet!"
+                    : listOfApplicants.length === 1
+                        ? "Already 1 Applicant!"
+                        : "Received " + listOfApplicants.length + " applications!"}
+            </CardText>
+            {UserAvatarGroup(
+                [...new Map(listOfApplicants.map((applicant) => [applicant.uid, applicant])).values()],
+                5
+            )}
+        </CardContainer>
         <Modal isOpen={isOpen} onRequestClose={toggleModal} ariaHideApp={false}>
             <form onSubmit={(event) => {handleEdit(event); toggleModal()}}>
                 <br/><br/>
@@ -391,6 +424,7 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
                         />
                     </div>
                 </div>
+
                 <label>
                     Job Description:
                     <textarea
