@@ -28,13 +28,20 @@ class CommentPost(db.Model):
     body = db.Column(db.Text())
     date = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now)
     editDate = db.Column(db.DateTime(timezone=True), default=lambda: None)
+    posterUid = db.Column(db.VARCHAR(28), nullable=False)
 
-    def __init__(self, title, body):
+    #TODO Add Parent Comment Card
+    #TODO Add Parent Post Card
+    #TODO Add reactions, like and dislike.
+
+    def __init__(self, title, body, posterUid):
         self.title = title
         self.body = body
+        self.posterUid =posterUid
 
         self.isEdited = False
         self._editDate = None
+
 
     # @property
     # def editDate(self):
@@ -121,15 +128,6 @@ class JobPost(db.Model):
         self.isEdited = False
         self._editDate = None
 
-    # @property
-    # def editDate(self):
-    #     return self._editDate
-    # @editDate.setter
-    # def editDate(self,_arbitraryDate):
-    #     self.isEdited = True
-    #     if not isinstance(_arbitraryDate,datetime.datetime):
-    #         _arbitraryDate = datetime.datetime.utcfromtimestamp(0)
-    #     self._editDate = _arbitraryDate
 
 
 class JobPostSchema(ma.Schema):

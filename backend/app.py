@@ -674,6 +674,8 @@ def update_user_details(_uid):
 # =================== COMMENTPOSTS ===================
 #
 
+#
+
 @app.route('/get', methods=['GET'])
 def get_all_commentposts():
     """
@@ -714,25 +716,26 @@ def add_commentpost():
     }
     :return:  sql table type schema json response
     """
-    title, body = request.json['title'], request.json['body']
+    title, body, posterUid = request.json['title'], request.json['body'], request.json['posterUid']
 
-    commentpost = CommentPost(title, body)
+    commentpost = CommentPost(title, body, posterUid)
     db.session.add(commentpost)
     db.session.commit()
 
     return commentpost_schema.jsonify(commentpost)
 
 
-@app.route("/get/<_id>/",methods=['GET'])
-def get_commentpost(_id):
-    commentpost = CommentPost.query.get(_id)
+@app.route("/get/<_commentid>/",methods=['GET'])
+def get_commentpost(_commentid):
+    commentpost = CommentPost.query.get(_commentid)
     return commentpost_schema.jsonify(commentpost)
 
 
 
-@app.route("/update/<_id>/",methods=['PUT'])
-def update_commentpost(_id):
-    commentpost = CommentPost.query.get(_id)
+@app.route("/update/<_commentid>/",methods=['PUT'],endpoint="update_commentpost")
+@authorized(myself=True)
+def update_commentpost(_commentid):
+    commentpost = CommentPost.query.get(_commentid)
 
     if 'title' in request.json:
         commentpost.title = request.json['title']
@@ -744,9 +747,10 @@ def update_commentpost(_id):
     db.session.commit()
 
     return commentpost_schema.jsonify(commentpost)
-@app.route("/delete/<_id>/",methods=['DELETE'])
-def delete_commentpost(_id):
-    commentpost = CommentPost.query.get(_id)
+@app.route("/delete/<_commentid>/",methods=['DELETE'],endpoint="delete_commentpost")
+@authorized(myself=True)
+def delete_commentpost(_commentid):
+    commentpost = CommentPost.query.get(_commentid)
 
     db.session.delete(commentpost)
 

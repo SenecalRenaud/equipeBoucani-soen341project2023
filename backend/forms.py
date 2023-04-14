@@ -9,7 +9,7 @@ from flask import g, request, redirect, url_for, jsonify, make_response,session
 
 import logging
 
-from models import JobPost, Application
+from models import JobPost, Application, CommentPost
 
 
 def login_required(f):
@@ -24,6 +24,12 @@ def login_required(f):
 def authorized(**permissions):
     """
     author: ChiefsBestPal@Antoine Cantin
+
+    Epic permissions handling with JWT tokens
+    and secure protocols for session+users cookies
+
+    Very scalable and integration with
+    this decorator factory is a charm
     """
     def decorator(func):
         nonlocal permissions
@@ -81,6 +87,10 @@ def authorized(**permissions):
                         affected_user_uid = Application.query.get(
                             request.view_args.get('_applyid')
                         ).applicantUid
+                    elif '_commentid' in request.view_args:
+                        affected_user_uid = CommentPost.query.get(
+                            request.view_args.get('_commentid')
+                        ).posterUid
                     else: # TODO: Similar handling will be done for interviews, etc...
                         raise auth.UserNotFoundError(
                             f"Critical error and warning: No view arguments tracing back to " + \
