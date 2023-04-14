@@ -24,6 +24,8 @@ import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
 import PdfDialog from "../JobPostCard/PdfDialog";
 import ParagraphDialog from "../JobPostCard/ParagraphDialog";
+import ComponentDialog from "../JobPostCard/ComponentDialog";
+import JobPostCard from "../JobPostCard";
 
 
 
@@ -85,7 +87,14 @@ const ApplicationCard = ({applicationId, jobPostId,applicantUid, coverLetter, da
             <CardGivenTitle >{jobData.title} </CardGivenTitle>
                 <div className='avatarDiv1'>
                 {UserAvatarWithText2(employerUser,0)}
-                <CardTitle>Employer's job post ID #{jobPostId} </CardTitle>
+                <ComponentDialog button_component={
+                    <CardTitle style={{textDecoration: 'underline'}}>View Employer's job post ID #{jobPostId} </CardTitle>
+                                    }
+                                 content_component={
+                                     <JobPostCard {...jobData}/>
+                                 }
+                />
+
             </div>
 
 
