@@ -2,37 +2,46 @@ import React from 'react';
 
 
 
-
-// export const initialState = {
-//   userDetails: "" || user,
-//   token: "" || token,
-//   loading: false,
-//   errorMessage: null
-// };
-
-
-//TODO: ADAPT FOR MORE STATE PROPERTY FIELDS + do ...state
-
 export const defaultState = {
     isAuthenticated : false,
     userData : null,
+    loading : false,
+    errorMsg: ""
 };
 
 export const UserReducer = (state, action) => {
   switch (action.type) {
-    case 'SET_USER':
-        console.log("SETTING USER")
+    case 'REDUXACTION_LOGIN':
+        console.log("CONTEXT REDUCER ACTION: LOGIN AND SET USER")
       return {
+            ...state,
           isAuthenticated: true,
-          userData: action.payload
+          userData: action.payload,
+          loading: false,
+          errorMsg: ""
       };
       //'...state.prop' unpacks previous prop field
-    case 'CLEAR_USER':
-        console.log("CLEARING USER")
+    case 'REDUXACTION_LOGOUT':
+        console.log("CONTEXT REDUCER ACTION: LOGOUT USER")
         return {
+          ...state,
           isAuthenticated: false,
           userData: null
       };
+      case 'REDUXACTION_REQUEST_LOGIN':
+          console.log("CONTEXT REDUCER ACTION: REQUEST LOGIN")
+          return {
+              ...state,
+              loading: true,
+              errorMsg: ""
+          };
+      case 'REDUXACTION_LOGIN_ERROR':
+          console.log("CONTEXT REDUCER ACTION: LOGIN ERROR")
+          return {
+              ...state,
+              loading: false,
+              errorMsg: action.error.message
+          };
     default:
       return state;
       //throw new Error(`Unhandled action type: ${action.type}`);

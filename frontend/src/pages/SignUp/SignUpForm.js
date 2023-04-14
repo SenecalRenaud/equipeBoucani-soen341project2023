@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './SignUpForm.css';
 import CommentAPIService from "../BACKEND_DEBUG/CommentAPIService";
 import {useUserContext} from "../../context/UserContext";
+import LoadingScreen from "../LoadingScreen/LoadingScreen";
 
 const SignUpForm = () => {
     const [firstName, setFirstName] = useState('');
@@ -18,6 +19,8 @@ const SignUpForm = () => {
     const [resumeType,setResumeType] = useState('Resume')
 
     const { dispatch } = useUserContext();
+
+    const [loading, setLoading] = useState(false);
 
     const handleProfilePictureChange = (event) => {
         setProfilePicture(event.target.files[0]);
@@ -46,7 +49,10 @@ const SignUpForm = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+
+
         if (validatePassword()) {
+            setLoading(true)
             const formData = new FormData();
             formData.append('firstName', firstName);
             formData.append('lastName', lastName);
@@ -66,6 +72,9 @@ const SignUpForm = () => {
     };
 
     return (
+        <>
+            { loading ? (<LoadingScreen/>
+                ) : (
         <div className="sign-up-container">
             <h1>Sign Up</h1>
             <form onSubmit={
@@ -172,7 +181,8 @@ const SignUpForm = () => {
                 </button>
             </form>
         </div>
-    );
+    )};
+        </>);
 };
 
 export default SignUpForm;

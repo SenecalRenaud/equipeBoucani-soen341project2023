@@ -71,10 +71,10 @@ function App() {
                 // UserRESTAPI.userLoggedInBackendSession = userLoggedInBackendSession;
                 if (isInBackendSession && state === defaultState) {
 
-                    dispatch({type: 'SET_USER', payload: userLoggedInBackendSession})
+                    dispatch({type: 'REDUXACTION_LOGIN', payload: userLoggedInBackendSession})
                 } else if (!isInBackendSession && state !== defaultState) {
 
-                    dispatch({type: 'CLEAR_USER'});
+                    dispatch({type: 'REDUXACTION_LOGOUT'});
                 } else if (!isInBackendSession && state === defaultState) {
 
                     if (UserRESTAPI.areAnyUserCookiesAvailable()) { // MEANS BACKEND IS LOGGED OFF, BUT FRONTEND NOT COMPLETELY
@@ -182,7 +182,7 @@ return (
         <Route path="/companypolicy" element={<PrivacyPolicy/>}/>
         <Route path='/ApplyJob' element={<ApplyJob/>} />
 
-        <Route path='/ViewMyApplicationsCopy' element={<ViewMyApplicationsCopy/>} />
+        {/*<Route path='/ViewMyApplicationsCopy' element={<ViewMyApplicationsCopy/>} />*/}
 
     </Routes>
     <Footer />

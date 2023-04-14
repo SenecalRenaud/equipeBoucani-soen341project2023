@@ -16,20 +16,13 @@ export const UserContextProvider = ({ children }) => {
    const [state, dispatch] = useReducer(UserReducer, defaultState);
 
 
-   const contextValue = useMemo(() => {
-      return { state, dispatch };
-   }, [state, dispatch]);
+   // const contextValue = useMemo(() => {
+   //    return { state, dispatch };
+   // }, [state, dispatch]);
 
 
-  //  function setLoggedInUser (userData) {
-  //   dispatch({ type: 'SET_USER', payload: userData });
-  // }
-  //
-  //  function clearLoggedInUser() {
-  //   dispatch({ type: 'CLEAR_USER' });
-  // }
   return ( //value={{ loggedInUser, setLoggedInUser, clearLoggedInUser }}>
-    <UserContext.Provider value={contextValue} >
+    <UserContext.Provider value={{ state, dispatch }} >
       {children}
     </UserContext.Provider>
   );

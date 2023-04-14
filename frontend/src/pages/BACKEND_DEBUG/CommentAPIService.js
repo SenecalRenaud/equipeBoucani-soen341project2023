@@ -51,39 +51,39 @@ export default class CommentAPIService{
             .catch(error => console.log("API CORE EXCEPTION... " + error))
     }
 
-    static async UserSignIn(reducerDispatch,formData){
+    static async UserSignIn0(reducerDispatch,formData){
         return await fetch(`http://localhost:5000/firebase-api/signin`,{
             'method':'POST',
             body:formData,
             credentials: "include" // To get cookies in AJAX request from backend origin
         })
             .then(response => {
-                //TODO dispatch({ type: 'REQUEST_LOGIN' });
+                reducerDispatch({ type: 'REDUXACTION_REQUEST_LOGIN' });
 
                 if(response.ok){
-                    return response;
+                    return response.json();
                 }else{
-                    console.log('BAD SIGNIN RESPONSE AFTER AJAX FETCH !');
-                    response.json().then(data => {
-                        throw new Error(data.message)
+                    console.log('REFUSED SIGNIN RESPONSE AFTER AJAX FETCH !');
+                    return response.json().then(data => {
+                        return new Error(data.message)
                     }
-                    ).catch(err =>
-                    {
-                        //TODO dispatch({ type: 'LOGIN_ERROR', error: error });
-
-                        alert(err)
-                    })
+                    )
                 }
 
             })
-            .then(data => data.json())
             .then(auth_json => {
+                console.log("HI")
+                console.log(auth_json)
+                if (auth_json instanceof Error){
+                    console.log("THROWING ERROR ?")
+                    reducerDispatch({ type: 'REDUXACTION_LOGIN_ERROR', error: auth_json });
+                    throw auth_json;
+                }
 
                 auth_json.uid = auth_json.localId
                 //delete auth_json.localId
 
                 if (!UserRESTAPI.checkIfObjectIsValidUser(auth_json)){
-                    //TODO auth_json.errors = "ASDPOADOAD"
                     console.log(auth_json)
                     throw new Error("Auth_json not a valid user object... bad json promise")
                 }
@@ -97,7 +97,7 @@ export default class CommentAPIService{
                 // setCookie('loggedin_uid', auth_json.localId, {path: '/', expires})
                 console.log(auth_json)
 
-                reducerDispatch({type: 'SET_USER', payload: auth_json})//TODO
+                reducerDispatch({type: 'REDUXACTION_LOGIN', payload: auth_json})
 
                 window.localStorage.setItem("firstName",auth_json.firstName)
                 window.localStorage.setItem("lastName",auth_json.lastName)
@@ -113,18 +113,78 @@ export default class CommentAPIService{
                 return auth_json
             })
             .then((auth_json)=> {
-                    //TODO dispatch({ type: 'LOGIN_SUCCESS', payload: data });
+                    reducerDispatch({ type: 'REDUXACTION_LOGIN_SUCCESS', payload: auth_json });
 
-                    window.location.replace('http://localhost:3000/')
+                    // window.location.replace('http://localhost:3000/')
                     return auth_json
                 }
             )
             .catch(error =>
             {
-                //TODO dispatch({ type: 'LOGIN_ERROR', error: data.errors[0] });
+                reducerDispatch({ type: 'REDUXACTION_LOGIN_ERROR', error: error });
 
                 console.log('Following error occured after fetching from API: ',error)
             })
+
+    };
+    static async UserSignIn(reducerDispatch,formData){
+        try {
+            const response = await fetch(`http://localhost:5000/firebase-api/signin`, {
+                'method': 'POST',
+                body: formData,
+                credentials: "include" // To get cookies in AJAX request from backend origin
+            })
+            reducerDispatch({type: 'REDUXACTION_REQUEST_LOGIN'});
+
+            let authError = !response.ok;
+
+            const auth_json = await response.json();
+
+            if (authError || auth_json.hasOwnProperty('message')) {
+                console.log('REFUSED SIGNIN RESPONSE AFTER AJAX FETCH !');
+                throw new Error(auth_json.message);
+            }
+
+            auth_json.uid = auth_json.localId
+            //delete auth_json.localId
+
+            if (!UserRESTAPI.checkIfObjectIsValidUser(auth_json)) {
+                console.log(auth_json)
+                throw new Error("Auth_json not a valid user object... bad json promise")
+            }
+            // let expires = new Date();
+            // expires.setTime(expires.getTime() + (auth_json.expires_in * 250 ));
+            Cookies.set('access_token', auth_json.idToken);
+            Cookies.set('refresh_token', auth_json.refreshToken);
+            // Cookies.set('loggedin_uid', auth_json.uid);
+            // setCookie('access_token', auth_json.idToken, { path: '/',  expires})
+            // setCookie('refresh_token', auth_json.refresh_token, {path: '/', expires})
+            // setCookie('loggedin_uid', auth_json.localId, {path: '/', expires})
+            console.log(auth_json)
+
+            window.localStorage.setItem("firstName", auth_json.firstName)
+            window.localStorage.setItem("lastName", auth_json.lastName)
+            window.localStorage.setItem("email", auth_json.email)
+            window.localStorage.setItem("photo_url", auth_json.photo_url)
+            window.localStorage.setItem("resume_url", auth_json.resume_url)
+            window.localStorage.setItem("lastSeenEpoch", auth_json.lastSeenEpoch)
+            window.localStorage.setItem("creationEpoch", auth_json.creationEpoch)
+            window.localStorage.setItem("userType", auth_json.userType)
+            window.localStorage.setItem("uid", auth_json.localId)
+            // CryptoJs. auth_json.uid...
+            reducerDispatch({type: 'REDUXACTION_LOGIN', payload: auth_json})
+            window.location.replace('http://localhost:3000/')
+            return auth_json;
+        }
+        catch (error)
+            {
+                await reducerDispatch({ type: 'REDUXACTION_LOGIN_ERROR', error: error });
+
+                console.log('Following error occured after fetching from API: ',error)
+
+                throw error;
+            }
+
 
     };
 
@@ -176,7 +236,7 @@ export default class CommentAPIService{
             );
         }
 
-        reducerDispatch({type: 'CLEAR_USER'})
+        reducerDispatch({type: 'REDUXACTION_LOGOUT'})
 
         window.localStorage.clear()
 
