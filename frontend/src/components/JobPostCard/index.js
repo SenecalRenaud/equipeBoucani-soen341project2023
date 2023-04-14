@@ -78,7 +78,7 @@ export const SubmitCancelButton = styled.button`
 export const CardApplyButton = styled.button`
   & {
     background-color: #ff7b08;
-    width: 80%;
+    width: 50%;
     align-self: center;
     border-radius: 3px;
     float: right;
@@ -105,7 +105,7 @@ export const CardCommentButton = styled.button`
   & {
     background-color: #de8042;
     border-radius: 3px;
-    width: 80%;
+    width: 50%;
     border: 1px solid #ffffff;
     display: inline-block;
     cursor: pointer;
@@ -319,12 +319,13 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
             <CardText></CardText>
             <CardDate>{editDate !== "Invalid Date" ? "Date Edited: " + editDate : ""}
             </CardDate>
-            <CardCommentButton> Leave a comment </CardCommentButton>
             {
                 //TODO: Make checks to see if already in applied list !
                 (state.userData && state.userData.userType === "APPLICANT") &&
                 <CardApplyButton  onClick={(e) => {HandleApply(id, employerUid)}}>  Apply </CardApplyButton>
             }
+            <CardCommentButton> Leave a comment </CardCommentButton>
+
             <CardText>
                 {listOfApplicants.length === 0
                     ? "Be the first to apply. No applicants yet!"
