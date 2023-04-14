@@ -36,6 +36,8 @@ import Apply from "./pages/Apply/Apply";
 import EditProfilePage from "./pages/ProfilePage/EditProfilePage";
 import CommentSection from "./components/CommentSection/CommentSection";
 import ViewMyApplicationsCopy from "./pages/ViewMyApplications/ViewMyApplicationsCopy";
+import AboutUs from "./pages/AboutUs/aboutus";
+import PrivacyPolicy from "./pages/PolicyAndReviews/PolicyAndReviews";
 // import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
 
 
@@ -176,7 +178,8 @@ return (
         <Route path='/notifications/:uid' element={<Notifications/>}/>
 
         <Route path='/loading' element={<LoadingScreen/>} />
-
+        <Route path="/aboutus" element={<AboutUs/>}/>
+        <Route path="/companypolicy" element={<PrivacyPolicy/>}/>
         <Route path='/ApplyJob' element={<ApplyJob/>} />
 
         <Route path='/ViewMyApplicationsCopy' element={<ViewMyApplicationsCopy/>} />

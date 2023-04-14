@@ -6,6 +6,7 @@ import SearchBar from "../../components/PostingsSearchBar/SearchBar";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFilter} from "@fortawesome/free-solid-svg-icons";
 import {useParams} from "react-router-dom";
+import {DATETIME_OPTIONS} from "../ProfilePage/ProfilePage";
 
 // let loadNum = 1;
 function MyJobPosts (props)   {
@@ -174,6 +175,23 @@ function MyJobPosts (props)   {
                 <div className="job-posts">
                     { data.id && data.id.map((id, i)  =>
                     {
+                        const specifiedDate = new Date(2023, 1, 6);
+
+                        // Get a random number between 1 and 30 (for days)
+                        const randomDays = Math.floor(Math.random() * 30) + 1;
+
+                        // Get a random number between 1 and 4 (for months)
+                        const randomMonths = Math.floor(Math.random() * 4) + 1;
+
+                        // Create a new date object by adding the random days and months to the specified date
+                        const randomDate = new Date(
+                          specifiedDate.getFullYear(),
+                          specifiedDate.getMonth() + randomMonths,
+                          specifiedDate.getDate() + randomDays
+                        );
+                        const randomDateEnd = new Date(randomDate);
+                        // Add 5 months to the random date
+                        randomDateEnd.setMonth(randomDate.getMonth() + 5);
 
                         return (
                         ((url_params.uid === data.employerUid[i])) ?
@@ -190,6 +208,11 @@ function MyJobPosts (props)   {
                                 date={new Date(Date.parse(data.date[i])).toLocaleString()}
                                 editDate={new Date(Date.parse(data.editDate[i])).toLocaleString()}
                                 employerUid={data.employerUid[i]}
+                                startDateProp={new Date(randomDate)
+                    .toLocaleString('us-en',{month: 'long',day: 'numeric', year: 'numeric'})}
+                                endDateProp={new Date(randomDateEnd)
+                    .toLocaleString('us-en', {month: 'long',day: 'numeric', year: 'numeric'})}
+
                             /> : null
                         )})}
                 </div>
