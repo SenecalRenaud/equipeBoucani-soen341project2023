@@ -35,28 +35,16 @@ function Notifications (props)   {
             data => {
                 let otherApplicantsToRemove = []; //Must be list, since splice needs to avoid indices shifting
 
-                data.jobPostId.forEach(
-                    async (jobPostId, i) => {
-                        await fetch("/getjob/" + jobPostId + "/").then(
-                            response => response.json()
-                        ).then(
-                            data => {
+                console.log(data.employerUid)
 
-                                setEmployerUid(data.employerUid)
-                            }
-                        )
-                            .catch(function(error){
-                                console.log("empty db", error.toString());
-                                setErrorString(error.toString())
-                                setEr(true);
-                            })
-
-                        if( employerUid !== url_params.uid) {
+                data.employerUid.forEach(
+                    (employerUid, i) => {
+                        if(employerUid !== url_params.uid) {
                             console.log(employerUid)
                             otherApplicantsToRemove.push(i)
                             console.log(otherApplicantsToRemove)
                         }
-                        }
+                    }
                 )
 
                 Object.keys(data).forEach(fieldName => {
@@ -117,6 +105,9 @@ function Notifications (props)   {
         return (
             <div className="post-comment-container">
                 <h1>Notifications</h1>
+                <span style={{display: 'inline-block' ,fontSize: '.9em' , marginTop: "-1rem"}}>
+                    <b id="searchResultCount"> Found {(data.id ? data.id.length : 0)} results.</b>
+                </span>
 
                 <hr  style={{
                     color: '#000000',
@@ -129,15 +120,13 @@ function Notifications (props)   {
                     {
 
                         return (
-                            employerUid === url_params.uid ?
-
                                 <NotificationCard
                                     applicationId={id}
                                     jobPostId={data.jobPostId[i]}
                                     applicantUid={data.applicantUid[i]}
                                     coverLetter={data.coverLetter[i]}
                                     date={data.date[i]}
-                                /> : null
+                                />
                         )})}
                 </div>
             </div>

@@ -5,8 +5,8 @@ import datetime
 import enum
 
 from uuid import uuid1, uuid4, uuid5
-generate_pr_uuid = lambda: uuid4().hex
 
+generate_pr_uuid = lambda: uuid4().hex
 
 db = SQLAlchemy()
 
@@ -53,7 +53,9 @@ class CommentPostSchema(ma.Schema):
 
     # _links = ma.Hyperlinks(
 
-from sqlalchemy import Integer,DateTime,String,Text,Column,Enum,VARCHAR
+
+from sqlalchemy import Integer, DateTime, String, Text, Column, Enum, VARCHAR
+
 
 class UserType(enum.Enum):
     APPLICANT = 0
@@ -61,6 +63,7 @@ class UserType(enum.Enum):
     JOBSEEKER = 0
     EMPLOYER = 1
     ADMIN = 2
+
     @classmethod
     def _missing_(cls, value: object):
         try:
@@ -69,11 +72,11 @@ class UserType(enum.Enum):
             for member in cls:
 
                 if member.value == value:
-
                     return member
         except:
             pass
         return cls['APPLICANT']
+
 
 # class UserExtraInfo(db.Model):
 #     __tablename__ = "users_extra_info"
@@ -103,7 +106,7 @@ class JobPost(db.Model):
     tags = db.Column(db.Text())
     editDate = db.Column(db.DateTime(timezone=True), default=lambda: None)
     date = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now)
-    employerUid = db.Column(db.VARCHAR(28), nullable=False ) #default firebase uuid used is 28 alphanumerical string
+    employerUid = db.Column(db.VARCHAR(28), nullable=False)  # default firebase uuid used is 28 alphanumerical string
 
     def __init__(self, jobtype, title, location, salary, description, tags, employerUid):
         self.jobtype = jobtype
@@ -131,7 +134,8 @@ class JobPost(db.Model):
 
 class JobPostSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'jobtype', 'title', 'location', 'salary', 'description', 'tags', 'date', 'editDate','employerUid')
+        fields = (
+            'id', 'jobtype', 'title', 'location', 'salary', 'description', 'tags', 'date', 'editDate', 'employerUid')
 
 
 class Application(db.Model):
@@ -143,7 +147,8 @@ class Application(db.Model):
     applicantUid = db.Column(db.VARCHAR(28))
     coverLetter = db.Column(db.Text())
     date = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now)
-    employerUid = db.Column(db.VARCHAR(28)) #avoids using jobpostid with an extra request / cache storage in the frontend
+    employerUid = db.Column(
+        db.VARCHAR(28))  # avoids using jobpostid with an extra request / cache storage in the frontend
 
     def __init__(self, jobPostId, applicantUid, coverLetter):
         self.jobPostId = jobPostId
@@ -154,4 +159,4 @@ class Application(db.Model):
 
 class ApplicationSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'jobPostId', 'applicantUid', 'coverLetter', 'date')
+        fields = ('id', 'jobPostId', 'applicantUid', 'employerUid', 'coverLetter', 'date')

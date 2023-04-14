@@ -171,7 +171,6 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
                 });
                 Promise.all(applicantsList).then(applicants => {
                     setListOfApplicants(applicants);
-                    console.log(applicants);
                 });
                 //setListOfApplicants(applicantsList);
                 // console.log(listOfApplicants);

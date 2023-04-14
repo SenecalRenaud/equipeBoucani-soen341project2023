@@ -33,4 +33,5 @@ jobs:
       cache: pip
       before_script:
         - "pip install -r ./backend/requirements.txt"
-        - "chmod 0777 ./backend/tests/selenium_tests.py"
+        #- "chmod 0777 ./backend/tests/selenium_tests.py"
+        - "python ./backend/app.py --sqldb local"
