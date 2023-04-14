@@ -56,7 +56,7 @@ const SignInForm = () => {
         event.preventDefault();
 
         setLoading(true) //used to be 'true'
-        // setTimeout( () => {
+        setTimeout( () => {
             const formData = new FormData();
             formData.append('email', email);
             formData.append('password', password);
@@ -82,7 +82,7 @@ const SignInForm = () => {
 
             //setLoading(false)
 
-        // }, 1500);
+        }, 1500);
 
     }
 

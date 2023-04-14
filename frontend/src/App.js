@@ -34,7 +34,7 @@ import PageNotFound from "./pages/Err404Screen/Err404Screen";
 import Apply from "./pages/Apply/Apply";
 //import AboutUs from "./pages/AboutUs/aboutus";
 import EditProfilePage from "./pages/ProfilePage/EditProfilePage";
-import CommentSection from "./components/CommentSection/CommentSection";
+import CommentSectionPage from "./components/CommentSection/CommentSectionPage";
 import ViewMyApplicationsCopy from "./pages/ViewMyApplications/ViewMyApplicationsCopy";
 import AboutUs from "./pages/AboutUs/aboutus";
 import PrivacyPolicy from "./pages/PolicyAndReviews/PolicyAndReviews";
@@ -165,7 +165,7 @@ return (
         <Route exact path='/viewjobposts/:uid' element={<MyJobPosts postedJob={postedJob} />}/>
 
 
-        <Route path="/commentsection_test" element={<CommentSection/>}/>
+        <Route path="/commentsection_test" element={<CommentSectionPage/>}/>
 
         <Route exact path='/viewapplications/:uid' element={<ViewMyApplications />} />
 

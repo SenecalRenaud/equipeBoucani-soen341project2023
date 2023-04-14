@@ -1,41 +1,111 @@
-.container {
-  position: relative;
-  width: 400px;
-  height: 300px;
-  margin: 50px auto;
+.app {
+  background: #eead88;
+}
+.card {
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin: 20px;
+  max-width: 600px;
+}
+
+.comment {
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+.toggle-replies {
+  margin-top: 10px;
+  padding: 5px;
   background-color: #eee;
-  border: 2px solid #333;
+  border: none;
+  cursor: pointer;
 }
 
-.container::before,
-.container::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: -1;
+.replies {
+  margin-left: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
 }
 
-.container::before {
-  background: linear-gradient(to bottom, rgba(255, 255, 0, 0.5) 0%, rgba(255, 255, 0, 0.5) 100%);
+.reply-input {
+  margin-top: 10px;
+  padding: 5px;
+  width: 80%;
 }
 
-.container::after {
-  background: linear-gradient(to right, rgba(255, 255, 0, 0.5) 0%, rgba(255, 255, 0, 0.5) 100%);
+.reply-button {
+  margin-top: 10px;
+  padding: 5px;
+  background-color: #eee;
+  border: none;
+  cursor: pointer;
 }
 
-.highlight {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 0;
-  background-color: rgba(255, 255, 0, 0.5);
-  z-index: -2;
+.comment-input {
+  margin-top: 10px;
+  padding: 5px;
+  width: 80%;
 }
 
-textarea {
-  background: #777171;
+.comment-button {
+  margin-top: 10px;
+  padding: 5px;
+  background-color: #eee;
+  border: none;
+  cursor: pointer;
 }
+
+/* Added styling for h2 and h3 headers */
+h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+
+/*.container {*/
+/*  position: relative;*/
+/*  width: 400px;*/
+/*  height: 300px;*/
+/*  margin: 50px auto;*/
+/*  background-color: #eee;*/
+/*  border: 2px solid #333;*/
+/*}*/
+
+/*.container::before,*/
+/*.container::after {*/
+/*  content: "";*/
+/*  position: absolute;*/
+/*  top: 0;*/
+/*  left: 0;*/
+/*  right: 0;*/
+/*  bottom: 0;*/
+/*  z-index: -1;*/
+/*}*/
+
+/*.container::before {*/
+/*  background: linear-gradient(to bottom, rgba(255, 255, 0, 0.5) 0%, rgba(255, 255, 0, 0.5) 100%);*/
+/*}*/
+
+/*.container::after {*/
+/*  background: linear-gradient(to right, rgba(255, 255, 0, 0.5) 0%, rgba(255, 255, 0, 0.5) 100%);*/
+/*}*/
+
+/*.highlight {*/
+/*  position: absolute;*/
+/*  top: 0;*/
+/*  left: 0;*/
+/*  width: 0;*/
+/*  height: 0;*/
+/*  background-color: rgba(255, 255, 0, 0.5);*/
+/*  z-index: -2;*/
+/*}*/
+
+/*textarea {*/
+/*  background: #777171;*/
+/*}*/
