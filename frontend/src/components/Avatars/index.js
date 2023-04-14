@@ -7,6 +7,7 @@ import { StylesProvider, useTheme } from "@material-ui/core/styles";
 import UserDropDownMenu from "../UserDropDownMenu/UserDropDownMenu";
 import {Button, Menu, MenuItem} from "@material-ui/core";
 
+
 const AvatarContainer = styled.div`
   display: flex;
   margin: 0 auto;
@@ -131,31 +132,14 @@ function UserAvatarWithText2(userObj,key=0,avatarSize=6) {
                     alt={userObj.firstName + " " + userObj.lastName}
                     src={userObj.photo_url}
                 />
-                <Typography variant="body2"> {userObj.firstName + " " + userObj.lastName}</Typography>
+                <div style={{display: 'flex', flexDirection: 'column'}}>
+                <Typography variant="body1"> {userObj.email}</Typography>
+                <Typography variant="body2" > {userObj.firstName + " " + userObj.lastName}</Typography>
+                </div>
             </AvatarLabel>
         </AvatarContainer2>
 
     );
-}
-  function UserAvatarWithText3(userObj,key=0,avatarSize=6) {
-
-
-  return (
-
-    <AvatarContainer2>
-      <AvatarLabel>
-        <Avatar
-            key={key}
-          style={{ marginRight: "14px"}}
-          // size={avatarSize}
-          alt={userObj.firstName + " " + userObj.lastName}
-          src={userObj.photo_url}
-        />
-
-      </AvatarLabel>
-    </AvatarContainer2>
-
-  );
 }
 
 function UserAvatarGroup(usersList,maxNumOfUsersShown,useDropDownMenu=true) {
@@ -228,4 +212,4 @@ function AvatarGroupWithClickableAvatars(usersList,maxNumOfUsersShown) {
   );
 }
 
-export {UserAvatarWithText,UserAvatarWithText2,UserAvatarWithText3,UserAvatarGroup, AvatarGroupWithClickableAvatars}
+export {UserAvatarWithText,UserAvatarWithText2,UserAvatarGroup, AvatarGroupWithClickableAvatars}

@@ -1,13 +1,12 @@
 import React, {useEffect, useState} from "react";
 import styled from "styled-components";
-import './quickcss.css'
+import './applicationCardStyle.css'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPen, faTrashCan} from '@fortawesome/free-solid-svg-icons';
 import JobPostingAPIService from "../../pages/PostAJob/JobPostingAPIService";
 import Modal from "react-modal";
 import UserDropDownMenu from "../UserDropDownMenu/UserDropDownMenu";
 import {UserAvatarWithText2} from "../Avatars";
-import {UserAvatarWithText3} from "../Avatars";
 import CommentAPIService from "../../pages/BACKEND_DEBUG/CommentAPIService";
 // import UserRESTAPI from "../../restAPI/UserAPI";
 // import Cookies from 'js-cookie'
@@ -42,7 +41,6 @@ export const CardText = styled.p`
 `;
 export const CardDate = styled.b`
 `;
-
 
 
 
@@ -131,7 +129,7 @@ const ApplicationCardCopy = ({applicationId, jobPostId=420,applicantUid, coverLe
             <CardDate>Date Applied: {date}
             </CardDate>
             <CardText></CardText>
-            <div className='imgHolder'><div className='avatarDiv2'>{UserAvatarWithText3(employerUser,0)}</div>
+            <div className='imgHolder'><div className='avatarDiv2'>{UserAvatarWithText2(employerUser,0)}</div>
             <img  className='cardimagepdf' src={pdf_img} alt="resume"/>
             <img  className='cardimagecl' src={cl_img} alt="coverletter"/>
             </div>
