@@ -38,7 +38,7 @@ function MouseHighlightContainer(){
 
 const MAX_NESTED_LEVEL = 1;
 
-function Comment({ commentObj, nestedLevel = 0 }) {
+function CommentCard({ commentObj, nestedLevel = 0 }) {
 
   const [showReplies, setShowReplies] = useState(false);
   const [newReply, setNewReply] = useState('');
@@ -49,9 +49,9 @@ function Comment({ commentObj, nestedLevel = 0 }) {
     setReplies([...replies, newReply]);
     setNewReply('');
   };
-
+  //TODO: If nestedLevel != 0, do not include a title because its a reply!!!!
   return (
-    <div className="comment">
+    <div className={(nestedLevel !== 0 ? "reply" : "comment") + "-card"}>
       <p>{commentObj}</p>
         {
             nestedLevel < MAX_NESTED_LEVEL && ( <>
@@ -62,10 +62,10 @@ function Comment({ commentObj, nestedLevel = 0 }) {
       {showReplies &&
         <div className="replies">
           {replies.map((reply, index) => (
-            <Comment key={index} commentObj={reply}
+            <CommentCard key={index} commentObj={reply}
                      nestedLevel={nestedLevel + 1} />
           ))}
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="reply-form">
             <input className="reply-input" type="text" value={newReply} onChange={(e) => setNewReply(e.target.value)} />
             <button className="reply-button" type="submit">Reply</button>
           </form>
@@ -90,7 +90,7 @@ function Card({ title, body }) { //TODO PASS COMMENTS DATASTRUCTURE FROM BACKEND
       <p>{body}</p>
       <h3>Comments:</h3>
       {comments.map((comment, index) => (
-        <Comment key={index} commentObj={comment} />
+        <CommentCard key={index} commentObj={comment} />
       ))}
       <PostACommentForm handleNewComment={handleNewComment}/>
     </div>
@@ -112,14 +112,15 @@ function PostACommentForm({handleNewComment}) {
     document.forms[0].reset();
   }
   return (
-      <form onSubmit={handleSubmit}>
-        <input name="comment-input" type="text" placeholder="Add a comment"
+      <form onSubmit={handleSubmit} className={'post-comment-form'}>
+        <textarea name="post-comment-input" placeholder="Add a comment"
         onChange={(event) => setCommentObj(event.target.value)}/>
-        <input className="comment-button" name="comment-button" type="submit"
+        <input className="post-comment-button" name="post-comment-button" type="submit"
         value="Post comment!"/>
       </form>
   )
 }
+
 function CommentSectionPage() {
 
   return (
@@ -133,121 +134,3 @@ function CommentSectionPage() {
 }
 
 export default CommentSectionPage;
-// function CommentSectionPage({ __comments }) {
-//
-//   const [comments,setComments] = useState(
-//       [{
-//       id: 1,
-//       text: 'This is the first comment',
-//       replies: [
-//         {
-//           id: 2,
-//           text: 'This is a reply to the first comment',
-//           replies: [],
-//         },
-//       ],
-//     },
-//     {
-//       id: 3,
-//       text: 'This is the second comment',
-//       replies: [],
-//     },
-//   ]
-//   )
-//
-//   const [newComment, setNewComment] = useState('');
-//   const [replyTo, setReplyTo] = useState(null);
-//
-//   const handleNewComment = (e) => {
-//     setNewComment(e.target.value);
-//   };
-//
-//   const handleReply = (id) => {
-//     if(replyTo == null)
-//       setReplyTo(id);
-//     else
-//       setReplyTo(null)
-//   };
-//
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     // Add new comment to comments list
-//     const updatedComments = [
-//       ...comments,
-//       { id: Date.now(), text: newComment, replies: [] },
-//     ];
-//     setNewComment('');
-//     setReplyTo(null);
-//     // Update comments state with new comment
-//     setComments(updatedComments)
-//     // You can pass this updatedComments state to your API or store it in local storage or database
-//   };
-//
-//   const handleReplySubmit = (e, commentId) => {
-//     e.preventDefault();
-//     // Add new reply to comments list
-//     const updatedComments = comments.map((comment) => {
-//       if (comment.id === commentId) {
-//         return {
-//           ...comment,
-//           replies: [
-//             ...comment.replies,
-//             { id: Date.now(), text: newComment },
-//           ],
-//         };
-//       }
-//       return comment;
-//     });
-//     setNewComment('');
-//     setReplyTo(null);
-//     // Update comments state with new reply
-//     setComments(updatedComments)
-//     // You can pass this updatedComments state to your API or store it in local storage or database
-//   };
-//
-//   return (
-//     <div style={{background: "whitesmoke"}}>
-//       <div className="container">
-//       <h3>Comments</h3>
-//       </div>
-//       <hr/>
-//       <ul>
-//         {comments.map((comment) => (
-//           <li key={comment.id}>
-//             <p>{comment.text}</p>
-//             <button onClick={() => handleReply(comment.id)}>Reply</button>
-//             {replyTo === comment.id && (
-//               <form onSubmit={(e) => handleReplySubmit(e, comment.id)}>
-//                 <textarea value={newComment} onChange={handleNewComment} />
-//                 <button type="submit">Submit Reply</button>
-//               </form>
-//             )}
-//             {comment.replies.length > 0 && (
-//               <ul>
-//                 {comment.replies.map((reply) => (
-//                   <li key={reply.id}>
-//                     <p>{reply.text}</p>
-//                   </li>
-//                 ))}
-//               </ul>
-//             )}
-//           </li>
-//         ))}
-//       </ul>
-//                  <hr  style={{
-//     color: '#441f01',
-//     backgroundColor: '#441f01',
-//     height: 5.5,
-//     borderColor : '#441f01',
-//     margin: '20px 10px'
-// }}/>
-//       <form onSubmit={handleSubmit}>
-//         <textarea value={newComment} onChange={handleNewComment} />
-//         <button type="submit">Submit Comment</button>
-//       </form>
-//     </div>
-//   );
-// }
-//
-// export default CommentSectionPage;
-

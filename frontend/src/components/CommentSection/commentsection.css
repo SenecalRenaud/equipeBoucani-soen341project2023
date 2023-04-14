@@ -8,53 +8,104 @@
   max-width: 600px;
 }
 
-.comment {
-  margin: 10px;
-  padding: 10px;
-  border: 1px solid #ccc;
+.comment-card {
+  border-color: #cccccc;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.19);
+  padding: 16px;
+  margin-bottom: 16px;
+
+}
+.comment-card * {
+  font-family: 'Lato', sans-serif !important;
 }
 
-.toggle-replies {
-  margin-top: 10px;
-  padding: 5px;
-  background-color: #eee;
+.post-comment-form {
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+
+}
+
+.post-comment-form label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.post-comment-form input[type="text"],
+.post-comment-form textarea {
+  background-color: #fff;
+  color: #2f2f2f;
   border: none;
+  border-radius: 4px;
+  padding: 8px;
+  margin-bottom: 16px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.post-comment-form textarea {
+  min-height: 80px;
+}
+
+.post-comment-form input[type="submit"] {
+  background-color: #4cb5f5;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px;
+  font-weight: 500;
   cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.post-comment-form input[type="submit"]:hover {
+  background-color: #3ca4db;
+}
+
+/*.toggle-replies {*/
+/*  margin-top: 10px;*/
+/*  padding: 5px;*/
+/*  background-color: #eee;*/
+/*  border: none;*/
+/*  cursor: pointer;*/
+/*}*/
+.toggle-replies {
+  background-color: #f2f9ff;
+  color: #1e90ff;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.toggle-replies:hover {
+  background-color: #d6eaff;
+}
+
+.toggle-replies:focus {
+  outline: none;
+  box-shadow: 0 0 3px 3px #d6eaff;
+}
+
+.toggle-replies.collapsed {
+  background-color: #1e90ff;
+  color: #fff;
 }
 
 .replies {
   margin-left: 20px;
   padding: 10px;
-  border: 1px solid #ccc;
+  /*border: 1px solid #ccc;*/
 }
 
-.reply-input {
-  margin-top: 10px;
-  padding: 5px;
-  width: 80%;
-}
-
-.reply-button {
-  margin-top: 10px;
-  padding: 5px;
-  background-color: #eee;
-  border: none;
-  cursor: pointer;
-}
-
-.comment-input {
-  margin-top: 10px;
-  padding: 5px;
-  width: 80%;
-}
-
-.comment-button {
-  margin-top: 10px;
-  padding: 5px;
-  background-color: #eee;
-  border: none;
-  cursor: pointer;
-}
 
 /* Added styling for h2 and h3 headers */
 h2 {
@@ -65,6 +116,55 @@ h2 {
 h3 {
   font-size: 18px;
   margin-bottom: 10px;
+}
+
+.reply-card {
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.reply-form {
+  display: flex;
+  flex-direction: column;
+  background-color: #f2f9ff;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.reply-form label {
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #333;
+}
+.reply-form input[type="text"],
+.reply-form textarea {
+  font-size: 16px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  resize: none;
+  flex-grow: 1;
+}
+
+.reply-form button {
+  font-size: 16px;
+  padding: 10px 20px;
+  background-color: #1e90ff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.reply-form button:hover {
+  background-color: #007bff;
+}
+
+.reply-form button:active {
+  background-color: #005cbf;
 }
 
 
