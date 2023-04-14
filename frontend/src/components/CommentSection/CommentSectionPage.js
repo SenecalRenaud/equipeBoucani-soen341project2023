@@ -36,8 +36,10 @@ function MouseHighlightContainer(){
 
 }
 
+const MAX_NESTED_LEVEL = 1;
 
-function Comment({ comment }) {
+function Comment({ commentObj, nestedLevel = 0 }) {
+
   const [showReplies, setShowReplies] = useState(false);
   const [newReply, setNewReply] = useState('');
   const [replies, setReplies] = useState([]);
@@ -50,14 +52,18 @@ function Comment({ comment }) {
 
   return (
     <div className="comment">
-      <p>{comment}</p>
+      <p>{commentObj}</p>
+        {
+            nestedLevel < MAX_NESTED_LEVEL && ( <>
+
       <button className="toggle-replies" onClick={() => setShowReplies(!showReplies)}>
         {showReplies ? 'Hide Replies' : 'Show Replies'}
       </button>
       {showReplies &&
         <div className="replies">
           {replies.map((reply, index) => (
-            <Comment key={index} comment={reply} />
+            <Comment key={index} commentObj={reply}
+                     nestedLevel={nestedLevel + 1} />
           ))}
           <form onSubmit={handleSubmit}>
             <input className="reply-input" type="text" value={newReply} onChange={(e) => setNewReply(e.target.value)} />
@@ -65,6 +71,8 @@ function Comment({ comment }) {
           </form>
         </div>
       }
+      </>)
+  }
     </div>
   );
 }
@@ -82,9 +90,9 @@ function Card({ title, body }) { //TODO PASS COMMENTS DATASTRUCTURE FROM BACKEND
       <p>{body}</p>
       <h3>Comments:</h3>
       {comments.map((comment, index) => (
-        <Comment key={index} comment={comment} />
+        <Comment key={index} commentObj={comment} />
       ))}
-
+      <PostACommentForm handleNewComment={handleNewComment}/>
     </div>
   );
 }
@@ -92,10 +100,23 @@ function PostACommentForm({handleNewComment}) {
 
   const [commentObj,setCommentObj] = useState('')
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    //TODO  BACKEND API REQUESTS AND HANDLING HERE
+
+    handleNewComment(commentObj) //TODO FETCH ASYNC THEN
+
+    setCommentObj('')
+
+    document.forms[0].reset();
+  }
   return (
-      <form onSubmit={}>
-        <input name="comment-input" type="text" placeholder="Add a comment" />
-        <input name="comment-button" type="submit">Comment</input>
+      <form onSubmit={handleSubmit}>
+        <input name="comment-input" type="text" placeholder="Add a comment"
+        onChange={(event) => setCommentObj(event.target.value)}/>
+        <input className="comment-button" name="comment-button" type="submit"
+        value="Post comment!"/>
       </form>
   )
 }
@@ -105,7 +126,7 @@ function CommentSectionPage() {
     <div className="app">
       <Card
         title="Example Card"
-        content="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+        body="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
       />
     </div>
   );
