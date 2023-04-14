@@ -6,7 +6,8 @@ import {faPen, faTrashCan} from '@fortawesome/free-solid-svg-icons';
 import JobPostingAPIService from "../../pages/PostAJob/JobPostingAPIService";
 import Modal from "react-modal";
 import UserDropDownMenu from "../UserDropDownMenu/UserDropDownMenu";
-import {UserAvatarWithText} from "../Avatars";
+import {UserAvatarWithText2} from "../Avatars";
+import {UserAvatarWithText3} from "../Avatars";
 import CommentAPIService from "../../pages/BACKEND_DEBUG/CommentAPIService";
 // import UserRESTAPI from "../../restAPI/UserAPI";
 // import Cookies from 'js-cookie'
@@ -16,14 +17,16 @@ import pdf_img from "../../assets/pdf.png";
 import cl_img from "../../assets/cover.png";
 
 export const CardTitle = styled.h1`
-    font-size: 1.25em;
+    font-size: 0.875rem;
     text-align: left !important;
+  padding-top: 20px;
    margin-left: 20px;
 `;
 export const CardGivenTitle = styled.h4`
     font-size: 2em;
   text-align: center;
   margin-top:10px;
+  color: #FF4820 ;
 `;
 export const CardArticle = styled.div`
   border: 1px solid #4d4d4d;
@@ -103,14 +106,16 @@ const ApplicationCardCopy = ({applicationId, jobPostId=420,applicantUid, coverLe
                 //     triggerMenuMarkup={UserAvatarWithText(employerUser,0)}
                 //     triggeredUserUid={employerUid}
                 // />
-                UserAvatarWithText(employerUser,0)
+
+
             }
 
 
 
-            <CardGivenTitle >{jobData.title}</CardGivenTitle>
 
-            <CardTitle>Job post ID#{jobPostId} </CardTitle>
+            <CardGivenTitle >{jobData.title}</CardGivenTitle>
+            <div className='avatarDiv1'>{UserAvatarWithText2(employerUser,0)}<CardTitle>Employer's job post ID #{jobPostId} </CardTitle></div>
+
 
             <CardText>Type: {jobData.jobtype}</CardText>
 
@@ -126,7 +131,7 @@ const ApplicationCardCopy = ({applicationId, jobPostId=420,applicantUid, coverLe
             <CardDate>Date Applied: {date}
             </CardDate>
             <CardText></CardText>
-            <div className='imgHolder'>
+            <div className='imgHolder'><div className='avatarDiv2'>{UserAvatarWithText3(employerUser,0)}</div>
             <img  className='cardimagepdf' src={pdf_img} alt="resume"/>
             <img  className='cardimagecl' src={cl_img} alt="coverletter"/>
             </div>

@@ -23,6 +23,21 @@ const AvatarContainer = styled.div`
   }
 
 `;
+const AvatarContainer2 = styled.div`
+  display: flex;
+
+
+  background: none !important;
+
+  & > * {
+    margin: 2px;
+  }
+  & .MuiAvatar-root {
+    width: 50px ;
+    height: 50px ;
+  }
+
+`;
 const GroupedAvatarContainer = styled.div`
   display: flex;
   margin: 0 auto;
@@ -101,6 +116,48 @@ function UserAvatarWithText(userObj,key=0,avatarSize=6) {
 
   );
 }
+
+function UserAvatarWithText2(userObj,key=0,avatarSize=6) {
+
+
+    return (
+
+        <AvatarContainer2>
+            <AvatarLabel>
+                <Avatar
+                    key={key}
+                    style={{marginRight: "14px"}}
+                    // size={avatarSize}
+                    alt={userObj.firstName + " " + userObj.lastName}
+                    src={userObj.photo_url}
+                />
+                <Typography variant="body2"> {userObj.firstName + " " + userObj.lastName}</Typography>
+            </AvatarLabel>
+        </AvatarContainer2>
+
+    );
+}
+  function UserAvatarWithText3(userObj,key=0,avatarSize=6) {
+
+
+  return (
+
+    <AvatarContainer2>
+      <AvatarLabel>
+        <Avatar
+            key={key}
+          style={{ marginRight: "14px"}}
+          // size={avatarSize}
+          alt={userObj.firstName + " " + userObj.lastName}
+          src={userObj.photo_url}
+        />
+
+      </AvatarLabel>
+    </AvatarContainer2>
+
+  );
+}
+
 function UserAvatarGroup(usersList,maxNumOfUsersShown,useDropDownMenu=true) {
   return (
     <GroupedAvatarContainer>
@@ -171,4 +228,4 @@ function AvatarGroupWithClickableAvatars(usersList,maxNumOfUsersShown) {
   );
 }
 
-export {UserAvatarWithText,UserAvatarGroup, AvatarGroupWithClickableAvatars}
+export {UserAvatarWithText,UserAvatarWithText2,UserAvatarWithText3,UserAvatarGroup, AvatarGroupWithClickableAvatars}
