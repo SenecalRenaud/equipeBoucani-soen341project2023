@@ -71,11 +71,13 @@ const JobPostingForm = (props) => {
     };
 
     const handleStartDateChange = (event) => {
-        setStartDate(event.target.value);
+        const date = new Date(event.target.value);
+        setStartDate(date.toISOString());
     };
 
     const handleEndDateChange = (event) => {
-        setEndDate(event.target.value);
+        const date = new Date(event.target.value);
+        setEndDate(date.toISOString());
     };
 
     const handleSubmit = async (event) => {
@@ -87,13 +89,19 @@ const JobPostingForm = (props) => {
             setJobTypeError('');
         }
         console.log("DECODED TOKEN CLAIMS: ", decoded_token_claims.user_id)
-        await JobPostingAPIService.AddJobPosting({"jobtype" : jobType, "title" : jobTitle, "location" : location, "salary" : salary, "tags" : industryTags.toString(), "description" : jobDescription,
-
-            'employerUid': decoded_token_claims.user_id
+        await JobPostingAPIService.AddJobPosting({
+            "jobtype": jobType,
+            "title": jobTitle,
+            "location": location,
+            "salary": salary,
+            "tags": industryTags.toString(),
+            "description": jobDescription,
+            'employerUid': decoded_token_claims.user_id,
+            ...(jobType === 'Time-Period' && { startDate, endDate })
         })
             .then((response) => props.postedJob(response))
-                .then((any)=> window.location.reload())
-            .catch(error => console.log('Following error occurred after fetching from API: ',error))
+            .then((any) => window.location.reload())
+            .catch(error => console.log('Following error occurred after fetching from API: ', error))
 
         setJobType('')
         setJobTitle('')
@@ -101,19 +109,11 @@ const JobPostingForm = (props) => {
         setSalary(0)
         setIndustryTags([])
         setJobDescription('')
-        
-        const jobPositionData = {
-            jobType,
-            jobTitle,
-            location,
-            salary,
-            industryTags,
-            jobDescription,
-            ...(jobType === 'Time-Period' && { startDate, endDate }),
-        };
-        console.log(jobPositionData)
+
         window.location.replace("http://localhost:3000/viewjobposts")
     };
+
+
 
     if (!decoded_token_claims.employer){
         // eslint-disable-next-line react-hooks/rules-of-hooks
