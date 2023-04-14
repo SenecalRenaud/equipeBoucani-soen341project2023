@@ -142,12 +142,14 @@ class Application(db.Model):
     jobPostId = db.Column(db.Text())
     applicantUid = db.Column(db.VARCHAR(28))
     coverLetter = db.Column(db.Text())
-    date = date = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now)
+    date = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now)
+    employerUid = db.Column(db.VARCHAR(28)) #avoids using jobpostid with an extra request / cache storage in the frontend
 
     def __init__(self, jobPostId, applicantUid, coverLetter):
         self.jobPostId = jobPostId
         self.applicantUid = applicantUid
         self.coverLetter = coverLetter
+        self.employerUid = JobPost.query.get(jobPostId).employerUid
 
 
 class ApplicationSchema(ma.Schema):

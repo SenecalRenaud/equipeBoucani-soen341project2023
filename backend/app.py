@@ -903,7 +903,7 @@ def addApplication():
     jobPostId, applicantUid, coverLetter = request.json['jobPostId'], request.json['applicantUid'], request.json[
         'coverLetter']
 
-    application = Application(jobPostId, applicantUid, coverLetter)
+    application = Application(jobPostId, applicantUid, coverLetter) #employer Uid automatically set from jobPostId ing hte jobpost model
     db.session.add(application)
     db.session.commit()
 
