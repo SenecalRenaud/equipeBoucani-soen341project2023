@@ -73,7 +73,8 @@ function PostCommentForm  (props)  {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    CommentAPIService.AddCommentPost({"title" : commentTitle, "body" : commentBody})
+    CommentAPIService.AddCommentPost(
+        {"title" : commentTitle, "body" : commentBody, "posterUid" : state.userData.uid})
       .then((response) => props.postedComment(response))
         .then((any)=> window.location.reload())
       .catch(error => console.log('Following error occured after fetching from API: ',error))

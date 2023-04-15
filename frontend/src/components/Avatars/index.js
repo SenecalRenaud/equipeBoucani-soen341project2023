@@ -79,7 +79,6 @@ const GroupedAvatarContainer = styled.div`
 const AvatarLabel = styled.div`
   display: flex;
   align-items: center;
-  
     &:hover {
       cursor: pointer;
       div {
@@ -97,8 +96,9 @@ const BorderedAvatar = styled(Avatar)`
   border: 3px solid lightseagreen;
 `;
 
-function UserAvatarWithText(userObj,key=0,avatarSize=6) {
+function UserAvatarWithText(userObj,key=0,avatarSize=50) {
 
+    let sizeStyle = {width: `${avatarSize}px`,height: `${avatarSize}px`}
 
   return (
 
@@ -118,7 +118,7 @@ function UserAvatarWithText(userObj,key=0,avatarSize=6) {
   );
 }
 
-function UserAvatarWithText2(userObj,key=0,avatarSize=6) {
+function UserAvatarWithText2(userObj,key=0,avatarSize=50) {
 
 
     return (

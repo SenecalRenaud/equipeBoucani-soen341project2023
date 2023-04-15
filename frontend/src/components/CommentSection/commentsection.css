@@ -166,7 +166,10 @@ h3 {
 .reply-form button:active {
   background-color: #005cbf;
 }
-
+.reaction-box {
+  display: inline-flex;
+  flex-direction: row-reverse;
+}
 
 /*.container {*/
 /*  position: relative;*/

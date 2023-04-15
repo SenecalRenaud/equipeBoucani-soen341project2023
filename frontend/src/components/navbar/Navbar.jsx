@@ -21,11 +21,14 @@ const NavMenu = () => {
     //can use activestyle={{}}
     return (<>
         <Nav>
+          <NavLink className='' to="/commentsection_test" >
+			Community
+		</NavLink>
 		<NavLink className='whitespace' to="/aboutus" >
 			About Us
 		</NavLink>
         <NavLink className='whitespace' to="/companypolicy" >
-			Policy & Guide
+			Policy
 		</NavLink>
 		{
                 (state.userData && state.userData.userType === "EMPLOYER") &&
@@ -40,7 +43,7 @@ const NavMenu = () => {
                 </NavLink>
             }
         <NavLink className='whitespace' to="/BACKEND_DEBUG" >
-            Community
+            [Debug]
         </NavLink>
 
             <NavLink to="/viewjobposts">

@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import './commentsection.css'
+import UserDropDownMenu from "../UserDropDownMenu/UserDropDownMenu";
+import {UserAvatarWithText} from "../Avatars";
+import {useUserContext} from "../../context/UserContext";
+import ReactionBox from "./ReactionBox";
 
 const mouseTrackerHandler = (element,event) => {
 
@@ -38,7 +42,13 @@ function MouseHighlightContainer(){
 
 const MAX_NESTED_LEVEL = 1;
 
+  //TODO const [likes, setLikes] = useState(0);
+  //TODO const [dislikes, setDislikes] = useState(0);
+  //TODO const [reaction,setReactions]
+  //TODO: If nestedLevel != 0, do not include a title because its a reply!!!!
+
 function CommentCard({ commentObj, nestedLevel = 0 }) {
+  const {state} = useUserContext(); // TODO ONLY FOR TESTING !!!!!
 
   const [showReplies, setShowReplies] = useState(false);
   const [newReply, setNewReply] = useState('');
@@ -49,30 +59,50 @@ function CommentCard({ commentObj, nestedLevel = 0 }) {
     setReplies([...replies, newReply]);
     setNewReply('');
   };
-  //TODO: If nestedLevel != 0, do not include a title because its a reply!!!!
+  if (state.userData == null){
+    return null;
+  }
   return (
     <div className={(nestedLevel !== 0 ? "reply" : "comment") + "-card"}>
-      <p>{commentObj}</p>
-        {
-            nestedLevel < MAX_NESTED_LEVEL && ( <>
-
-      <button className="toggle-replies" onClick={() => setShowReplies(!showReplies)}>
-        {showReplies ? 'Hide Replies' : 'Show Replies'}
-      </button>
-      {showReplies &&
-        <div className="replies">
-          {replies.map((reply, index) => (
-            <CommentCard key={index} commentObj={reply}
-                     nestedLevel={nestedLevel + 1} />
-          ))}
-          <form onSubmit={handleSubmit} className="reply-form">
-            <input className="reply-input" type="text" value={newReply} onChange={(e) => setNewReply(e.target.value)} />
-            <button className="reply-button" type="submit">Reply</button>
-          </form>
+      <header className="comment-header">
+        <div className="comment-avatar">
+          {<UserDropDownMenu
+                    triggerMenuMarkup={UserAvatarWithText(state.userData, 0,50)}
+                    triggeredUserUid={state.userData.uid}
+                />}
         </div>
+        <div className="comment-info">
+          <span className="comment-date">Created on: {commentObj.date}</span>
+          *
+          {commentObj.editDate && <span className="comment-date">Edited on: {commentObj.editDate}</span>}
+        </div>
+      </header>
+      <article className="comment-content">
+        <title className="comment-title"> {commentObj.title} </title>
+         <p className="comment-body">{commentObj.body}</p>
+      </article>
+      <footer className="comment-footer">
+
+      <ReactionBox/>
+      {
+        nestedLevel < MAX_NESTED_LEVEL && ( <>
+          <button className="toggle-replies" onClick={() => setShowReplies(!showReplies)}>
+            {showReplies ? 'Hide Replies' : 'Show Replies'}
+          </button>
+          {showReplies &&
+            <div className="replies">
+              {replies.map((reply, index) => (
+                <CommentCard key={index} commentObj={reply} nestedLevel={nestedLevel + 1} />
+              ))}
+              <form onSubmit={handleSubmit} className="reply-form">
+                <input className="reply-input" type="text" value={newReply} onChange={(e) => setNewReply(e.target.value)} />
+                <button className="reply-button" type="submit">Reply</button>
+              </form>
+            </div>
+          }
+        </>)
       }
-      </>)
-  }
+      </footer>
     </div>
   );
 }
@@ -98,7 +128,7 @@ function Card({ title, body }) { //TODO PASS COMMENTS DATASTRUCTURE FROM BACKEND
 }
 function PostACommentForm({handleNewComment}) {
 
-  const [commentObj,setCommentObj] = useState('')
+  const [commentObj,setCommentObj] = useState(null)
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -107,7 +137,7 @@ function PostACommentForm({handleNewComment}) {
 
     handleNewComment(commentObj) //TODO FETCH ASYNC THEN
 
-    setCommentObj('')
+    setCommentObj(null)
 
     document.forms[0].reset();
   }

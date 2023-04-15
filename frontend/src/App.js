@@ -165,7 +165,7 @@ return (
         <Route exact path='/viewjobposts/:uid' element={<MyJobPosts postedJob={postedJob} />}/>
 
 
-        <Route path="/commentsection_test" element={<CommentSectionPage/>}/>
+        <Route exact path="/commentsection_test" element={<CommentSectionPage/>}/>
 
         <Route exact path='/viewapplications/:uid' element={<ViewMyApplications />} />
 
