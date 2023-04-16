@@ -6,6 +6,7 @@ node_js:
 cache: npm
 
 install:
+  - "npm install npm@9 --global"
   - "npm ci --prefix ./frontend --force"
 
 script:
