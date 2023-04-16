@@ -22,5 +22,6 @@ module.exports = {
         "github"
     ],
     "rules": {
-    }
+    },
+    ignorePatterns: ["node_modules/"],
 }
