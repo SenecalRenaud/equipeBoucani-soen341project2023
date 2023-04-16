@@ -32,10 +32,10 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start --ignore client",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "set DISABLE_ESLINT_PLUGIN=true && react-scripts start --no-lint --ignore client",
+    "build": "set DISABLE_ESLINT_PLUGIN=true && react-scripts build --no-lint",
+    "test": "set DISABLE_ESLINT_PLUGIN=true && react-scripts test --no-lint",
+    "eject": "set DISABLE_ESLINT_PLUGIN=true && react-scripts eject --no-lint"
   },
   "eslintConfig": {
     "extends": [

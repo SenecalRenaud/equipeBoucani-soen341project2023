@@ -1,8 +1,14 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Typography from "@material-ui/core/Typography";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@material-ui/core";
 import cl_img from "../../assets/cover.png";
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -15,19 +21,18 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
-    content: {
+  content: {
     padding: theme.spacing(3),
-    textAlign: 'justify',
+    textAlign: "justify",
   },
   closeButton: {
-    position: 'absolute',
+    position: "absolute",
     top: theme.spacing(1),
     right: theme.spacing(1),
   },
 }));
 
-
-export default function ParagraphDialog({text_body}) {
+export default function ParagraphDialog({ text_body }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
 
@@ -44,19 +49,19 @@ export default function ParagraphDialog({text_body}) {
         Body:
       </Typography>
       <Typography variant="body1" gutterBottom>
-          {text_body}
+        {text_body}
       </Typography>
     </div>
   );
   return (
     <div>
       <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Letter: <img  className='cardimagecl' src={cl_img} alt="coverletter"/>
+        Letter: <img className="cardimagecl" src={cl_img} alt="coverletter" />
       </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Applicant's Cover Letter</DialogTitle>
         <DialogContent>
-            {body}
+          {body}
           {/*<Typography className={classes.content}>*/}
           {/*    {body}*/}
           {/*</Typography>*/}

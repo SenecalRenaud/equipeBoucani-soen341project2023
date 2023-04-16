@@ -5,7 +5,7 @@ export const Nav = styled.nav`
   height: 85px;
   display: flex;
   justify-content: space-around;
-  
+
   padding: 0.2rem calc((100vw - 1000px) / 2);
   z-index: 12;
 `;
@@ -22,8 +22,8 @@ export const NavLink = styled(Link)`
   &.active {
     color: #4d4dff;
   }
-  &:hover{
-    color: #FF4820;
+  &:hover {
+    color: #ff4820;
   }
 `;
 
@@ -44,7 +44,7 @@ export const NavLinkSignUp = styled(Link)`
   display: flex;
   align-items: center;
   color: #fff;
-  background: #FF4820;
+  background: #ff4820;
   font-family: var(--font-family); /*using the variable found in index.css*/
   font-weight: 500;
   font-size: 18px;

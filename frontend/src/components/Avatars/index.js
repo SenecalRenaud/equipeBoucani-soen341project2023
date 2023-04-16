@@ -1,12 +1,11 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import styled, { ThemeProvider } from "styled-components";
 import Typography from "@material-ui/core/Typography";
 import Avatar from "@material-ui/core/Avatar";
-import {AvatarGroup} from "@material-ui/lab";
+import { AvatarGroup } from "@material-ui/lab";
 import { StylesProvider, useTheme } from "@material-ui/core/styles";
 import UserDropDownMenu from "../UserDropDownMenu/UserDropDownMenu";
-import {Button, Menu, MenuItem} from "@material-ui/core";
-
+import { Button, Menu, MenuItem } from "@material-ui/core";
 
 const AvatarContainer = styled.div`
   display: flex;
@@ -19,14 +18,12 @@ const AvatarContainer = styled.div`
     margin: 2px;
   }
   & .MuiAvatar-root {
-    width: 50px ;
-    height: 50px ;
+    width: 50px;
+    height: 50px;
   }
-
 `;
 const AvatarContainer2 = styled.div`
   display: flex;
-
 
   background: none !important;
 
@@ -34,10 +31,9 @@ const AvatarContainer2 = styled.div`
     margin: 2px;
   }
   & .MuiAvatar-root {
-    width: 50px ;
-    height: 50px ;
+    width: 50px;
+    height: 50px;
   }
-
 `;
 const GroupedAvatarContainer = styled.div`
   display: flex;
@@ -53,7 +49,7 @@ const GroupedAvatarContainer = styled.div`
     border: 0;
     background: none;
   }
-  & .MuiAvatarGroup-root{
+  & .MuiAvatarGroup-root {
     background: none;
     border: none;
   }
@@ -62,11 +58,10 @@ const GroupedAvatarContainer = styled.div`
     background: none;
     box-shadow: none;
     margin-left: -20px;
-    
+
     justify-content: left;
     align-items: flex-start;
   }
-
 `;
 
 // const SizedAvatar = styled(Avatar)`
@@ -79,17 +74,15 @@ const GroupedAvatarContainer = styled.div`
 const AvatarLabel = styled.div`
   display: flex;
   align-items: center;
-  
-    &:hover {
-      cursor: pointer;
-      div {
-        border: 3px solid lightseagreen;
-      }
-      p {
-        color: lightseagreen
-      }
-      
-      
+
+  &:hover {
+    cursor: pointer;
+    div {
+      border: 3px solid lightseagreen;
+    }
+    p {
+      color: lightseagreen;
+    }
   }
 `;
 
@@ -97,86 +90,86 @@ const BorderedAvatar = styled(Avatar)`
   border: 3px solid lightseagreen;
 `;
 
-function UserAvatarWithText(userObj,key=0,avatarSize=6) {
-
-
+function UserAvatarWithText(userObj, key = 0, avatarSize = 6) {
   return (
-
     <AvatarContainer>
       <AvatarLabel>
         <Avatar
-            key={key}
-          style={{ marginRight: "14px"}}
+          key={key}
+          style={{ marginRight: "14px" }}
           // size={avatarSize}
-          alt={userObj.firstName + " " + userObj.lastName}
+          alt={`${userObj.firstName} ${userObj.lastName}`}
           src={userObj.photo_url}
         />
-        <Typography variant="body2"> {userObj.firstName + " " + userObj.lastName}</Typography>
+        <Typography variant="body2">
+          {" "}
+          {`${userObj.firstName} ${userObj.lastName}`}
+        </Typography>
       </AvatarLabel>
     </AvatarContainer>
-
   );
 }
 
-function UserAvatarWithText2(userObj,key=0,avatarSize=6) {
-
-
-    return (
-
-        <AvatarContainer2>
-            <AvatarLabel>
-                <Avatar
-                    key={key}
-                    style={{marginRight: "14px"}}
-                    // size={avatarSize}
-                    alt={userObj.firstName + " " + userObj.lastName}
-                    src={userObj.photo_url}
-                />
-                <div style={{display: 'flex', flexDirection: 'column'}}>
-                <Typography variant="body1"> {userObj.email}</Typography>
-                <Typography variant="body2" > {userObj.firstName + " " + userObj.lastName}</Typography>
-                </div>
-            </AvatarLabel>
-        </AvatarContainer2>
-
-    );
+function UserAvatarWithText2(userObj, key = 0, avatarSize = 6) {
+  return (
+    <AvatarContainer2>
+      <AvatarLabel>
+        <Avatar
+          key={key}
+          style={{ marginRight: "14px" }}
+          // size={avatarSize}
+          alt={`${userObj.firstName} ${userObj.lastName}`}
+          src={userObj.photo_url}
+        />
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <Typography variant="body1"> {userObj.email}</Typography>
+          <Typography variant="body2">
+            {" "}
+            {`${userObj.firstName} ${userObj.lastName}`}
+          </Typography>
+        </div>
+      </AvatarLabel>
+    </AvatarContainer2>
+  );
 }
 
-function UserAvatarGroup(usersList,maxNumOfUsersShown,useDropDownMenu=true) {
+function UserAvatarGroup(
+  usersList,
+  maxNumOfUsersShown,
+  useDropDownMenu = true
+) {
   return (
     <GroupedAvatarContainer>
       <AvatarGroup max={maxNumOfUsersShown}>
-          {
-              usersList.map((userObj,ix) =>
-                  !useDropDownMenu ?
-                      <Avatar
-                        key={ix}
-                        alt={userObj.firstName}
-                        src={userObj.photo_url}
-                        imgProps={{
-        style: { objectFit: 'cover', width: '100%', height: '100%' },
-      }}
-                        />
-                  :
-                    <UserDropDownMenu
-                    triggerMenuMarkup={
-                        <Avatar
-                        key={ix}
-                        alt={userObj.firstName}
-                        src={userObj.photo_url}
-                        />}
-                    triggeredUserUid={userObj.uid}
+        {usersList.map((userObj, ix) =>
+          !useDropDownMenu ? (
+            <Avatar
+              key={ix}
+              alt={userObj.firstName}
+              src={userObj.photo_url}
+              imgProps={{
+                style: { objectFit: "cover", width: "100%", height: "100%" },
+              }}
+            />
+          ) : (
+            <UserDropDownMenu
+              triggerMenuMarkup={
+                <Avatar
+                  key={ix}
+                  alt={userObj.firstName}
+                  src={userObj.photo_url}
                 />
-              )
-          }
-
-
+              }
+              triggeredUserUid={userObj.uid}
+            />
+          )
+        )}
       </AvatarGroup>
     </GroupedAvatarContainer>
   );
 }
 
-function AvatarGroupWithClickableAvatars(usersList,maxNumOfUsersShown) {
+function AvatarGroupWithClickableAvatars(usersList, maxNumOfUsersShown) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedAvatar, setSelectedAvatar] = useState(null);
 
@@ -191,7 +184,7 @@ function AvatarGroupWithClickableAvatars(usersList,maxNumOfUsersShown) {
   };
 
   return (
-     <GroupedAvatarContainer>
+    <GroupedAvatarContainer>
       <AvatarGroup max={maxNumOfUsersShown}>
         {usersList.map((avatar) => (
           <Button key={avatar.uid} onClick={(e) => handleClick(e, avatar)}>
@@ -199,7 +192,7 @@ function AvatarGroupWithClickableAvatars(usersList,maxNumOfUsersShown) {
           </Button>
         ))}
       </AvatarGroup>
-        <Menu
+      <Menu
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}
@@ -208,8 +201,13 @@ function AvatarGroupWithClickableAvatars(usersList,maxNumOfUsersShown) {
         <MenuItem onClick={handleClose}>{selectedAvatar?.firstName}</MenuItem>
         {/* Other menu items */}
       </Menu>
-     </GroupedAvatarContainer>
+    </GroupedAvatarContainer>
   );
 }
 
-export {UserAvatarWithText,UserAvatarWithText2,UserAvatarGroup, AvatarGroupWithClickableAvatars}
+export {
+  UserAvatarWithText,
+  UserAvatarWithText2,
+  UserAvatarGroup,
+  AvatarGroupWithClickableAvatars,
+};

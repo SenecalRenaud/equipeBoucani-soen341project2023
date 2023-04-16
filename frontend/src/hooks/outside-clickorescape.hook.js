@@ -1,13 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export const useDetectOutClickOrEsc = (elementRef, initialState) => {
   const [isToggled, setIsToggled] = useState(initialState);
 
   useEffect(() => {
     const pageOrLinkClickEvent = (event) => {
-
-      if (event.target.tagName === 'A' ||
-          (elementRef.current !== null && !elementRef.current.contains(event.target))) {
+      if (
+        event.target.tagName === "A" ||
+        (elementRef.current !== null &&
+          !elementRef.current.contains(event.target))
+      ) {
         setIsToggled(!isToggled);
       }
     };
@@ -18,16 +20,14 @@ export const useDetectOutClickOrEsc = (elementRef, initialState) => {
     };
 
     if (isToggled) {
-      window.addEventListener('click', pageOrLinkClickEvent,true); //capturing phase. Events will get to this handler before getting to its children.
-      window.addEventListener('keydown', escapePressEvent,true);
+      window.addEventListener("click", pageOrLinkClickEvent, true); //capturing phase. Events will get to this handler before getting to its children.
+      window.addEventListener("keydown", escapePressEvent, true);
     }
-
 
     return () => {
-      window.removeEventListener('click', pageOrLinkClickEvent,true); //capturing phase. Events will get to this handler before getting to its children.
-      window.removeEventListener('keydown', escapePressEvent,true);
-    }
-
+      window.removeEventListener("click", pageOrLinkClickEvent, true); //capturing phase. Events will get to this handler before getting to its children.
+      window.removeEventListener("keydown", escapePressEvent, true);
+    };
   }, [isToggled, elementRef]);
   return [isToggled, setIsToggled];
-}
+};

@@ -1,5 +1,11 @@
-import React, {useState} from "react";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
+import React, { useState } from "react";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@material-ui/core";
 import pdf_img from "../../assets/pdf.png";
 
 export default function PdfDialog(props) {
@@ -16,8 +22,8 @@ export default function PdfDialog(props) {
   return (
     <div>
       <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-          Resume:&nbsp;&nbsp;
-        <img  className='cardimagepdf' src={pdf_img} alt="resume"/>
+        Resume:&nbsp;&nbsp;
+        <img className="cardimagepdf" src={pdf_img} alt="resume" />
       </Button>
       <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
         <DialogTitle>Applicant's resume</DialogTitle>

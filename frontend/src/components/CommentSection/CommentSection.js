@@ -1,64 +1,62 @@
-import React, { useState } from 'react';
-import './commentsection.css'
+import React, { useState } from "react";
+import "./commentsection.css";
 
-const mouseTrackerHandler = (element,event) => {
-
-}
-function MouseHighlightContainer(){
-  var container = document.querySelector(".container");
-  var highlight = document.createElement("div");
+const mouseTrackerHandler = (element, event) => {};
+function MouseHighlightContainer() {
+  const container = document.querySelector(".container");
+  const highlight = document.createElement("div");
   highlight.classList.add("highlight");
   container.appendChild(highlight);
 
-  container.addEventListener("mousemove", function(event) {
-    var rect = container.getBoundingClientRect();
-    var x = event.clientX - rect.left;
-    var y = event.clientY - rect.top;
-    var w = container.offsetWidth;
-    var h = container.offsetHeight;
-    var cx = w / 2;
-    var cy = h / 2;
-    var dx = Math.abs(x - cx);
-    var dy = Math.abs(y - cy);
-    var maxd = Math.sqrt(Math.pow(w / 2, 2) + Math.pow(h / 2, 2));
-    var percent = (maxd - Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2))) / maxd;
-    var size = 100 + percent * 100;
-    highlight.style.width = size + "%";
-    highlight.style.height = size + "%";
-    highlight.style.top = (cy - size / 2) + "px";
-    highlight.style.left = (cx - size / 2) + "px";
-});
+  container.addEventListener("mousemove", function (event) {
+    const rect = container.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const w = container.offsetWidth;
+    const h = container.offsetHeight;
+    const cx = w / 2;
+    const cy = h / 2;
+    const dx = Math.abs(x - cx);
+    const dy = Math.abs(y - cy);
+    const maxd = Math.sqrt(Math.pow(w / 2, 2) + Math.pow(h / 2, 2));
+    const percent =
+      (maxd - Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2))) / maxd;
+    const size = 100 + percent * 100;
+    highlight.style.width = `${size}%`;
+    highlight.style.height = `${size}%`;
+    highlight.style.top = `${cy - size / 2}px`;
+    highlight.style.left = `${cx - size / 2}px`;
+  });
 
-  container.addEventListener("mouseleave", function(event) {
+  container.addEventListener("mouseleave", function (event) {
     highlight.style.width = "0";
     highlight.style.height = "0";
   });
-
 }
 
-function CommentSection({ __comments }) { //TODO PASS COMMENTS DATASTRUCTURE FROM BACKEND API
+function CommentSection({ __comments }) {
+  //TODO PASS COMMENTS DATASTRUCTURE FROM BACKEND API
 
-  const [comments,setComments] = useState(
-      [{
+  const [comments, setComments] = useState([
+    {
       id: 1,
-      text: 'This is the first comment',
+      text: "This is the first comment",
       replies: [
         {
           id: 2,
-          text: 'This is a reply to the first comment',
+          text: "This is a reply to the first comment",
           replies: [],
         },
       ],
     },
     {
       id: 3,
-      text: 'This is the second comment',
+      text: "This is the second comment",
       replies: [],
     },
-  ]
-  )
+  ]);
 
-  const [newComment, setNewComment] = useState('');
+  const [newComment, setNewComment] = useState("");
   const [replyTo, setReplyTo] = useState(null);
 
   const handleNewComment = (e) => {
@@ -66,10 +64,8 @@ function CommentSection({ __comments }) { //TODO PASS COMMENTS DATASTRUCTURE FRO
   };
 
   const handleReply = (id) => {
-    if(replyTo == null)
-      setReplyTo(id);
-    else
-      setReplyTo(null)
+    if (replyTo == null) setReplyTo(id);
+    else setReplyTo(null);
   };
 
   const handleSubmit = (e) => {
@@ -79,10 +75,10 @@ function CommentSection({ __comments }) { //TODO PASS COMMENTS DATASTRUCTURE FRO
       ...comments,
       { id: Date.now(), text: newComment, replies: [] },
     ];
-    setNewComment('');
+    setNewComment("");
     setReplyTo(null);
     // Update comments state with new comment
-    setComments(updatedComments)
+    setComments(updatedComments);
     // You can pass this updatedComments state to your API or store it in local storage or database
   };
 
@@ -93,27 +89,24 @@ function CommentSection({ __comments }) { //TODO PASS COMMENTS DATASTRUCTURE FRO
       if (comment.id === commentId) {
         return {
           ...comment,
-          replies: [
-            ...comment.replies,
-            { id: Date.now(), text: newComment },
-          ],
+          replies: [...comment.replies, { id: Date.now(), text: newComment }],
         };
       }
       return comment;
     });
-    setNewComment('');
+    setNewComment("");
     setReplyTo(null);
     // Update comments state with new reply
-    setComments(updatedComments)
+    setComments(updatedComments);
     // You can pass this updatedComments state to your API or store it in local storage or database
   };
 
   return (
-    <div style={{background: "whitesmoke"}}>
+    <div style={{ background: "whitesmoke" }}>
       <div className="container">
-      <h3>Comments</h3>
+        <h3>Comments</h3>
       </div>
-      <hr/>
+      <hr />
       <ul>
         {comments.map((comment) => (
           <li key={comment.id}>
@@ -137,13 +130,15 @@ function CommentSection({ __comments }) { //TODO PASS COMMENTS DATASTRUCTURE FRO
           </li>
         ))}
       </ul>
-                 <hr  style={{
-    color: '#441f01',
-    backgroundColor: '#441f01',
-    height: 5.5,
-    borderColor : '#441f01',
-    margin: '20px 10px'
-}}/>
+      <hr
+        style={{
+          color: "#441f01",
+          backgroundColor: "#441f01",
+          height: 5.5,
+          borderColor: "#441f01",
+          margin: "20px 10px",
+        }}
+      />
       <form onSubmit={handleSubmit}>
         <textarea value={newComment} onChange={handleNewComment} />
         <button type="submit">Submit Comment</button>
@@ -153,4 +148,3 @@ function CommentSection({ __comments }) { //TODO PASS COMMENTS DATASTRUCTURE FRO
 }
 
 export default CommentSection;
-

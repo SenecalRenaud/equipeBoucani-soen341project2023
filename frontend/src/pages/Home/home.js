@@ -1,16 +1,21 @@
-import React from 'react';
-import {CustomerReview, EmployerGuide, Header, Support, UserGuide} from '../../components';
+import React from "react";
+import {
+  CustomerReview,
+  EmployerGuide,
+  Header,
+  Support,
+  UserGuide,
+} from "../../components";
 
 const Home = () => {
   return (
-      <div>
+    <div>
       <Header />
       <UserGuide />
       <EmployerGuide />
-      <Support/>
+      <Support />
       <CustomerReview />
-      </div>
-
+    </div>
   );
 };
 
