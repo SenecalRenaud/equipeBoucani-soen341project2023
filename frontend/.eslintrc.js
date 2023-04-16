@@ -23,5 +23,5 @@ module.exports = {
     ],
     "rules": {
     },
-    ignorePatterns: ["frontend/node_modules/"],
+    ignorePatterns: ["node_modules/"],
 }
