@@ -25,6 +25,7 @@ before_script:
 script:
   - "npm start --prefix ./frontend"
   - "sleep 10"
+  - "npm run lint --prefix ./frontend -- --ext .js,.jsx ./**"
 
 jobs:
   include:
@@ -35,3 +36,5 @@ jobs:
         - "pip install -r ./backend/requirements.txt"
         #- "chmod 0777 ./backend/tests/selenium_tests.py"
         - "python ./backend/app.py --sqldb local"
+      script:
+        - "npm run lint --prefix ./frontend -- --ext .js,.jsx ./**"
