@@ -23,5 +23,5 @@ module.exports = {
     ],
     "rules": {
     },
-    ignorePatterns: ["node_modules/"],
+    ignorePatterns: ["node_modules/", "./node_modules/big.js"],
 }
