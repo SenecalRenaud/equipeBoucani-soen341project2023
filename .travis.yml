@@ -6,35 +6,8 @@ node_js:
 cache: npm
 
 install:
-  - "npm ci --prefix ./frontend --force"
-services: mysql
-addons:
-  chrome: stable
-
-
-before_install:
   - "npm install npm@9 --global"
-  - sudo mysql -e 'DROP DATABASE IF EXISTS flask_test_mysql_db'
-  - sudo mysql -e "CREATE DATABASE IF NOT EXISTS flask_test_mysql_db"
-  - sudo mysql -u root --default-character-set=utf8 flask_test_mysql_db < backend/"db schemas for test"/comment_post.sql
-  - "google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &"
-before_script:
-  - "npm run build --prefix ./frontend"
-  - "sleep 10"
+  - "npm ci --prefix ./frontend --force"
 
 script:
-  - "npm start --prefix ./frontend"
-  - "sleep 10"
-  - "npm run lint --prefix ./frontend -- --ext .js,.jsx ./**"
-
-jobs:
-  include:
-    - language: python
-      python: 3.9
-      cache: pip
-      before_script:
-        - "pip install -r ./backend/requirements.txt"
-        #- "chmod 0777 ./backend/tests/selenium_tests.py"
-        - "python ./backend/app.py --sqldb local"
-      script:
-        - "npm run lint --prefix ./frontend -- --ext .js,.jsx ./**"
+  - "npx eslint -c ./frontend/.eslintrc.js ./frontend/**/*.js ./frontend/**/*.jsx"
