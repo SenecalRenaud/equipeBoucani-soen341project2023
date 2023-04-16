@@ -9,4 +9,4 @@ install:
   - "npm ci --prefix ./frontend --force"
 
 script:
-  - "npx eslint -c ./frontend/.eslintrc ./frontend/**/*.js ./frontend/**/*.jsx"
+  - "npx eslint -c ./frontend/.eslintrc.js ./frontend/**/*.js ./frontend/**/*.jsx"
