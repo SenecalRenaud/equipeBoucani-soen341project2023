@@ -8,7 +8,9 @@ import UserDropDownMenu from "../UserDropDownMenu/UserDropDownMenu";
 import {Button, Menu, MenuItem} from "@material-ui/core";
 
 
-const AvatarContainer = styled.div`
+const AvatarContainer = styled.div.attrs(
+    {className : 'avatar-container',}
+)`
   display: flex;
   margin: 0 auto;
   align-items: center;
@@ -76,7 +78,9 @@ const GroupedAvatarContainer = styled.div`
 //   `};
 // `;
 
-const AvatarLabel = styled.div`
+const AvatarLabel = styled.div.attrs(
+    {className : 'avatar-label',}
+)`
   display: flex;
   align-items: center;
     &:hover {
@@ -102,7 +106,7 @@ function UserAvatarWithText(userObj,key=0,avatarSize=50) {
 
   return (
 
-    <AvatarContainer>
+    <AvatarContainer className="avatar-container">
       <AvatarLabel>
         <Avatar
             key={key}

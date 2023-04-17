@@ -4,47 +4,17 @@ import UserDropDownMenu from "../UserDropDownMenu/UserDropDownMenu";
 import {UserAvatarWithText} from "../Avatars";
 import {useUserContext} from "../../context/UserContext";
 import ReactionBox from "./ReactionBox";
+import {epochToTimeAgo} from "../../utils/async_and_time_helpers";
 
-const mouseTrackerHandler = (element,event) => {
 
-}
-function MouseHighlightContainer(){
-  var container = document.querySelector(".container");
-  var highlight = document.createElement("div");
-  highlight.classList.add("highlight");
-  container.appendChild(highlight);
-
-  container.addEventListener("mousemove", function(event) {
-    var rect = container.getBoundingClientRect();
-    var x = event.clientX - rect.left;
-    var y = event.clientY - rect.top;
-    var w = container.offsetWidth;
-    var h = container.offsetHeight;
-    var cx = w / 2;
-    var cy = h / 2;
-    var dx = Math.abs(x - cx);
-    var dy = Math.abs(y - cy);
-    var maxd = Math.sqrt(Math.pow(w / 2, 2) + Math.pow(h / 2, 2));
-    var percent = (maxd - Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2))) / maxd;
-    var size = 100 + percent * 100;
-    highlight.style.width = size + "%";
-    highlight.style.height = size + "%";
-    highlight.style.top = (cy - size / 2) + "px";
-    highlight.style.left = (cx - size / 2) + "px";
-});
-
-  container.addEventListener("mouseleave", function(event) {
-    highlight.style.width = "0";
-    highlight.style.height = "0";
-  });
-
+function SqlDatetimeToAgoTime (sqlDatetime){
+    return epochToTimeAgo(Date.parse(sqlDatetime) / 1000)
 }
 
 const MAX_NESTED_LEVEL = 1;
+const MAX_NUMBER_OF_WORDS_BEFORE_HIDE = 150; //TODO
+const MAX_NUMBER_OF_REPLIES_BEFORE_HIDE = 4; //TODO
 
-  //TODO const [likes, setLikes] = useState(0);
-  //TODO const [dislikes, setDislikes] = useState(0);
-  //TODO const [reaction,setReactions]
   //TODO: If nestedLevel != 0, do not include a title because its a reply!!!!
 
 function CommentCard({ commentObj, nestedLevel = 0 }) {
@@ -65,25 +35,23 @@ function CommentCard({ commentObj, nestedLevel = 0 }) {
   return (
     <div className={(nestedLevel !== 0 ? "reply" : "comment") + "-card"}>
       <header className="comment-header">
-        <div className="comment-avatar">
+        <span className="comment-avatar">
           {<UserDropDownMenu
                     triggerMenuMarkup={UserAvatarWithText(state.userData, 0,50)}
                     triggeredUserUid={state.userData.uid}
                 />}
-        </div>
-        <div className="comment-info">
-          <span className="comment-date">Created on: {commentObj.date}</span>
-          *
-          {commentObj.editDate && <span className="comment-date">Edited on: {commentObj.editDate}</span>}
-        </div>
+        </span>
+        <span className="comment-info">
+          <span className="comment-date"> &bull; Posted:&nbsp;{SqlDatetimeToAgoTime(commentObj.date)}</span>
+          {!isNaN(Date.parse(commentObj.editDate)) && <span className="comment-date"> &nbsp; &bull; Edited:&nbsp;
+               { SqlDatetimeToAgoTime(commentObj.editDate) }</span>}
+        </span>
       </header>
       <article className="comment-content">
-        <title className="comment-title"> {commentObj.title} </title>
+        <h2 className="comment-title"> {commentObj.title} </h2>
          <p className="comment-body">{commentObj.body}</p>
       </article>
       <footer className="comment-footer">
-
-      <ReactionBox/>
       {
         nestedLevel < MAX_NESTED_LEVEL && ( <>
           <button className="toggle-replies" onClick={() => setShowReplies(!showReplies)}>
@@ -102,13 +70,30 @@ function CommentCard({ commentObj, nestedLevel = 0 }) {
           }
         </>)
       }
+      <ReactionBox/>
       </footer>
     </div>
   );
 }
 
 function Card({ title, body }) { //TODO PASS COMMENTS DATASTRUCTURE FROM BACKEND API
-  const [comments,setComments] = useState(['Comment 1', 'Comment 2', 'Comment 3']);
+  const [comments,setComments] = useState(
+      [
+          {
+              title: "Comment 1",
+              body:  "Lorem ipsum dolor sit amet, consectetur adipiscing elit.".repeat(20),
+              date : "2023-02-3 13:19:03",
+              editDate: "2023-04-16 23:09:17",
+              posterUid: "RJA0ysCVJCfd9mlFrV31zyMXftF3"
+          }
+          ,
+            {
+              title: "Comment 2",
+              body:  "Lorem ipsum dolor sit amet, consectetur adipiscing elit.".repeat(3),
+              date : "2022-11-6 10:56:47",
+              editDate: "NULL",
+              posterUid: "ahSBM7SDQ4VyKGDnZbIdj2MVbCf2"
+          }]);
 
   const handleNewComment = (newComment) => {
       let newComments = [...comments,newComment]
