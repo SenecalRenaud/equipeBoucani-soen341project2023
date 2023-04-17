@@ -22,9 +22,9 @@ import cl_img from "../../assets/cover.png";
 import {DATETIME_OPTIONS} from "../../pages/ProfilePage/ProfilePage";
 import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
-import PdfDialog from "../JobPostCard/PdfDialog";
-import ParagraphDialog from "../JobPostCard/ParagraphDialog";
-import ComponentDialog from "../JobPostCard/ComponentDialog";
+import PdfDialog from "./PdfDialog";
+import ParagraphDialog from "./ParagraphDialog";
+import ComponentDialog from "./ComponentDialog";
 import JobPostCard from "../JobPostCard";
 
 

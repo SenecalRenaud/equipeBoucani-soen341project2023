@@ -5,6 +5,7 @@ import {UserAvatarWithText} from "../Avatars";
 import {useUserContext} from "../../context/UserContext";
 import ReactionBox from "./ReactionBox";
 import {epochToTimeAgo} from "../../utils/async_and_time_helpers";
+import ThreeDotMoreOptions from "./ThreeDotMoreOptions";
 
 
 function SqlDatetimeToAgoTime (sqlDatetime){
@@ -42,9 +43,10 @@ function CommentCard({ commentObj, nestedLevel = 0 }) {
                 />}
         </span>
         <span className="comment-info">
-          <span className="comment-date"> &bull; Posted:&nbsp;{SqlDatetimeToAgoTime(commentObj.date)}</span>
+          <span className="comment-date"> &bull;&nbsp;{SqlDatetimeToAgoTime(commentObj.date)}</span>
           {!isNaN(Date.parse(commentObj.editDate)) && <span className="comment-date"> &nbsp; &bull; Edited:&nbsp;
                { SqlDatetimeToAgoTime(commentObj.editDate) }</span>}
+          <span className="comment-moreoptions"> <ThreeDotMoreOptions/> </span>
         </span>
       </header>
       <article className="comment-content">
