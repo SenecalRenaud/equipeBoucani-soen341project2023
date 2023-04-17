@@ -2,28 +2,31 @@ import React from "react";
 import styled from "styled-components";
 
 
+
 export const MouseCursorGradientTrackingTag = styled.div`
   & {
   position: relative;
   background: transparent;
   //border-radius: 97%;
-    
+  opacity: var(--opacity);  
   padding: 0.5rem 1rem;
   font-size: 1.2rem;
-  border: none;
-    
+  //border: none;
   color: white;
   cursor: pointer;
   outline: none;
-  overflow: hidden;
-    
+  overflow: visible;
+  border-image-slice: 1;
+  border-image-source: linear-gradient(to bottom, #000, #333);
+  background-clip: padding-box;
+  border-radius: 37px 200px 0px 100px;
+  //fill-opacity: 100%;  
   //border-radius: 50% / 10% 50% 10% 50%;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  //box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 & span {
   position: relative;
-  
 }
 
 &::before {
@@ -34,41 +37,20 @@ export const MouseCursorGradientTrackingTag = styled.div`
   top: var(--y);
   width: var(--size);
   height: var(--size);
+  //background: radial-gradient(circle at top, rgba(255,255,255,1) 50%, rgba(255,255,255,0.5) 50%);
   background: radial-gradient(circle closest-side, pink, transparent);
-  transform: translate(-50%, -50%);
-  transition: width 0.2s ease, height 0.2s ease;
-}
 
-&:hover::before {
-  --size: 200px;
+  transform: translate(-50%, -50%);
+  transition: width 0.5s ease, height 0.5s ease;
+  opacity: var(--opacity);
 }
-//.box::before,
-//.box::after {
-//  content: "";
-//  position: absolute;
-//  top: 0;
-//  left: 0;
-//  right: 0;
-//  bottom: 0;
-//  z-index: -1;
+//&::after {
+//  --opacity: 0.0;
 //}
-//
-//.box::before {
-//  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.5) 100%);
-//}
-//
-//.box::after {
-//  background: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.5) 100%);
-//}
-//
-//.box:hover::before,
-//.box:hover::after {
-//  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
-//}
-//
-//.box:hover {
-//  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-//}
+&:hover::before {
+  --size: 100px;
+  --opacity: 1.0;
+}
 `
 let mouseTrackingHandler = (element,event) => {
   let rect = event.target.getBoundingClientRect();
@@ -76,13 +58,28 @@ let mouseTrackingHandler = (element,event) => {
   let y = event.clientY - rect.top;
   element.style.setProperty('--x', x + 'px');
   element.style.setProperty('--y', y + 'px');
+  var w = element.offsetWidth;
+  var h = element.offsetHeight;
+  var cx = w / 2;
+  var cy = h / 2;
+  var dx = Math.abs(x - cx);
+  var dy = Math.abs(y - cy);
+  var maxd = Math.sqrt(Math.pow(w / 2, 2) + Math.pow(h / 2, 2));
+  var percent = (maxd - Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2))) / maxd;
+
+  var size = percent * 100;
+  // element.style.setProperty('--size', size + "px")
+  element.style.setProperty('--opacity', 1-percent)
 }
 export function MouseCursorGradientTracking({markupContent}) {
 
   React.useEffect(() => {
     let element = document.getElementById("el24123")
     element.addEventListener('mousemove', mouseTrackingHandler.bind(null,element),true);
-
+    element.addEventListener('mouseleave',
+        () => {
+          element.style.setProperty('--opacity', 1.0)
+        },true)
 
     // cleanup this component
 
@@ -95,8 +92,10 @@ export function MouseCursorGradientTracking({markupContent}) {
   }, []);
 
   return <>
+
       <MouseCursorGradientTrackingTag id="el24123">
-          <span> {markupContent}</span>
+          <span> {markupContent} </span>
       </MouseCursorGradientTrackingTag>
+
   </>
 }
