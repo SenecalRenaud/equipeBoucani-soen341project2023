@@ -4,6 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.wait import WebDriverWait
 
 
 def test_multiple_browsers():
@@ -32,7 +33,7 @@ def test_multiple_browsers():
 
     # LOGIN TEST + MAIN PAGE
     signIn = driver.find_elements(By.CLASS_NAME, 'whitespace')
-    signIn[1].click()  # navigates to sign in page
+    signIn[3].click()  # navigates to sign in page
 
     emailInput = driver.find_element(By.ID, 'email-input')  # enters user email
     emailInput.send_keys("equipeboucani@gmail.com")
@@ -42,8 +43,7 @@ def test_multiple_browsers():
     driver.find_element(By.CLASS_NAME, 'sign-in-button').click()  # clicks login
     time.sleep(5)
 
-    if driver.find_element(By.ID,
-                           'navbarLoggedInName').text != "Equipe Boucani":  # checking that we have successfully logged in
+    if driver.find_element(By.ID, 'navbarLoggedInName').text != "Equipe Boucani":  # checking that we have successfully logged in
         assert False
     print(driver.find_element(By.ID, 'navbarLoggedInName').text)
     print(driver.current_url)  # redirected to home page after login
@@ -59,6 +59,8 @@ def test_multiple_browsers():
     driver.find_element(By.ID, "IT").click()
     driver.find_element(By.ID, "Marketing").click()
     driver.find_element(By.ID, "job-description-input").send_keys("TestingTheSubmitFeature")
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+    time.sleep(5)
     driver.find_element(By.CLASS_NAME, "apply-button").click()  # filled form is submitted
 
     driver.get("http://localhost:3000/viewjobposts")
