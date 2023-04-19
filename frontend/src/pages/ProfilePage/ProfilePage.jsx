@@ -96,6 +96,7 @@ const ProfilePage = () => {
                         {checkIfItemExists(new Date(parseInt(userProfileData.creationEpoch))
                     .toLocaleString('us-en',DATETIME_OPTIONS))}
                 </h1>
+
                 {
                     (isViewingOwnProfile || hasAdminTokenClaims)   &&
                 <footer>
@@ -139,6 +140,29 @@ Thank you for reading and I hope to share more of my journey with you soon.</h1>
                 </iframe>
             </iframe>
             </container>
+
+                                {
+
+                    (isViewingOwnProfile && hasAdminTokenClaims)   &&
+                                    <container className="profile_container_4">
+                                        <article style={{margin: "0 auto"}}>
+                        <h2 style={{color: "#FF4820", fontStyle: 'bold'}}> Admin Permissions: </h2>
+                    <dl>
+                        <dt>
+                            Delete:
+                        </dt>
+                        <dd> &emsp;&emsp;Applications, Jobs, Notifs, comments</dd>
+                        <dt>
+                            Edit:
+                        </dt>
+                        <dd> &emsp;&emsp;User profiles, Applications, Jobs, comments</dd>
+                        <dt> Token-secure View: </dt>
+                        <dd> &emsp;&emsp;Any user private Reads </dd>
+                    </dl>
+                    </article>
+                                        </container>
+                }
+
         </container>
 
   )
