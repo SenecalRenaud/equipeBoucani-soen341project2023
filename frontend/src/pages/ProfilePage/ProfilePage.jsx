@@ -45,7 +45,7 @@ const ProfilePage = () => {
     let isViewingOwnProfile;
     let hasAdminTokenClaims;
     try {
-        let jwtdecoded = jwtDecode(Cookies.get("access_token"));
+        const jwtdecoded = jwtDecode(Cookies.get("access_token"));
         isViewingOwnProfile = jwtdecoded.user_id === url_params.uid || url_params.uid  === "current"
         hasAdminTokenClaims = jwtdecoded.hasOwnProperty('admin');
 
