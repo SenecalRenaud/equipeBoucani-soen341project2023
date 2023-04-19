@@ -39,7 +39,6 @@ def test_multiple_browsers():
     emailInput.send_keys("equipeboucani@gmail.com")
     passwordInput = driver.find_element(By.ID, 'password-input')  # enters user password
     passwordInput.send_keys("boucani12")
-
     driver.find_element(By.CLASS_NAME, 'sign-in-button').click()  # clicks login
     time.sleep(5)
 
@@ -60,12 +59,29 @@ def test_multiple_browsers():
     driver.find_element(By.ID, "Marketing").click()
     driver.find_element(By.ID, "job-description-input").send_keys("TestingTheSubmitFeature")
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight)")
-    time.sleep(5)
+    time.sleep(2)
     driver.find_element(By.CLASS_NAME, "apply-button").click()  # filled form is submitted
+    posting_description = ["Type: Full-Time ", "Location: Location ", "Salary: 4000 ", "Tags: IT,Marketing ",
+                           "Description: TestingTheSubmitFeature ", " ", "Be the first to apply. No applicants yet! "]
+    time.sleep(4)
 
     driver.get("http://localhost:3000/viewjobposts")
-    description = driver.find_elements(By.XPATH, "//p[@class='sc-dIfARi cHVhso']")
-    print(description)
+    time.sleep(5)
+    jobs = driver.find_elements(By.CLASS_NAME, "chEvcT")
+    indexOfJob = 0;
+    for index, posting in enumerate(jobs):
+        if(posting.find_elements(By.CLASS_NAME, "cHVhso")[1].text == "Location: Location"):
+            indexOfJob = index
+            break
+    job = driver.find_elements(By.CLASS_NAME, "chEvcT")[indexOfJob]
+    description = job.find_elements(By.CLASS_NAME, "cHVhso")
+    for index, element in enumerate(description):
+        if element.text == posting_description[index]:
+            assert False, "mismatch on job posting description: " + str(index) + " " + element.text
+    driver.execute_script("window.scrollTo(0, 3000)")
+    time.sleep(2)
+    job.find_element(By.CLASS_NAME, "gXAvNs").click()
+    time.sleep(2)
 
     driver.quit()
 
