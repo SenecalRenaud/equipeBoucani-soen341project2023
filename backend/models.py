@@ -1,12 +1,20 @@
-from flask_sqlalchemy import SQLAlchemy
-from flask_marshmallow import Marshmallow
+"""models.py module
 
+SQLalchemy SQL tables models
+"""
 import datetime
 import enum
 
-from uuid import uuid1, uuid4, uuid5
+# from sqlalchemy import Integer, DateTime, String, Text, Column, Enum, VARCHAR
+from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow
 
-generate_pr_uuid = lambda: uuid4().hex
+from uuid import uuid4  # , uuid1, uuid5
+
+
+def generate_pr_uuid():
+    return uuid4().hex
+
 
 db = SQLAlchemy()
 
@@ -20,6 +28,7 @@ class CommentPost(db.Model):
     //>>> from app import db
     //>>> db.create_all()
     """
+
     __slots__ = ()
     __tablename__ = "comment_post"
 
@@ -49,12 +58,8 @@ class CommentPost(db.Model):
 
 class CommentPostSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'title', 'body', 'date', 'editDate')
-
-    # _links = ma.Hyperlinks(
-
-
-from sqlalchemy import Integer, DateTime, String, Text, Column, Enum, VARCHAR
+        fields = ("id", "title", "body", "date", "editDate")
+        # _links = ma.Hyperlinks(
 
 
 class UserType(enum.Enum):
@@ -70,12 +75,11 @@ class UserType(enum.Enum):
             value = value.upper()
 
             for member in cls:
-
                 if member.value == value:
                     return member
         except:
             pass
-        return cls['APPLICANT']
+        return cls["APPLICANT"]
 
 
 # class UserExtraInfo(db.Model):
@@ -93,6 +97,7 @@ class UserType(enum.Enum):
 #     class Meta:
 #         fields = ('firebaseUUID','userType')
 
+
 class JobPost(db.Model):
     __slots__ = ()
     __tablename__ = "job_post"
@@ -106,9 +111,13 @@ class JobPost(db.Model):
     tags = db.Column(db.Text())
     editDate = db.Column(db.DateTime(timezone=True), default=lambda: None)
     date = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now)
-    employerUid = db.Column(db.VARCHAR(28), nullable=False)  # default firebase uuid used is 28 alphanumerical string
+    employerUid = db.Column(
+        db.VARCHAR(28), nullable=False
+    )  # default firebase uuid used is 28 alphanumerical string
 
-    def __init__(self, jobtype, title, location, salary, description, tags, employerUid):
+    def __init__(
+        self, jobtype, title, location, salary, description, tags, employerUid
+    ):
         self.jobtype = jobtype
         self.title = title
         self.location = location
@@ -135,7 +144,17 @@ class JobPost(db.Model):
 class JobPostSchema(ma.Schema):
     class Meta:
         fields = (
-            'id', 'jobtype', 'title', 'location', 'salary', 'description', 'tags', 'date', 'editDate', 'employerUid')
+            "id",
+            "jobtype",
+            "title",
+            "location",
+            "salary",
+            "description",
+            "tags",
+            "date",
+            "editDate",
+            "employerUid",
+        )
 
 
 class Application(db.Model):
@@ -148,7 +167,8 @@ class Application(db.Model):
     coverLetter = db.Column(db.Text())
     date = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now)
     employerUid = db.Column(
-        db.VARCHAR(28))  # avoids using jobpostid with an extra request / cache storage in the frontend
+        db.VARCHAR(28)
+    )  # avoids using jobpostid with an extra request / cache storage in the frontend
 
     def __init__(self, jobPostId, applicantUid, coverLetter):
         self.jobPostId = jobPostId
@@ -159,4 +179,11 @@ class Application(db.Model):
 
 class ApplicationSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'jobPostId', 'applicantUid', 'employerUid', 'coverLetter', 'date')
+        fields = (
+            "id",
+            "jobPostId",
+            "applicantUid",
+            "employerUid",
+            "coverLetter",
+            "date",
+        )
