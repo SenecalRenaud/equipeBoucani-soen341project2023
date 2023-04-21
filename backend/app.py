@@ -670,20 +670,13 @@ def update_user_details(_uid):
         return {'message': 'Bad request Method'},400
     return redirect("/firebase-api/userprofile")
 
-#
-# =================== COMMENTPOSTS ===================
-#
 
-@app.route('/get', methods=['GET'])
-def get_all_commentposts():
+def parseRequest_to_get_all_tablemodel_entries(results_arr):
     """
     GET request to view all table entries directly from 'many' mode sql schema
     :return: json response
     Antoine Cantin@ChiefsBestPal
     """
-
-    all_commentposts = CommentPost.query.all()
-    results_arr = commentposts_schema.dump(all_commentposts)
     print(results_arr)
     if any(filter(None,results_arr)) and request.args.get('mapAsFields') == 'true':
         # print("Mapped fields into dict instead of array of obj!")
@@ -702,6 +695,21 @@ def get_all_commentposts():
         return jsonify(response_fieldsdict)
 
     return jsonify(results_arr)#**{'Hello' : 'World'})
+#
+# =================== COMMENTPOSTS ===================
+#
+
+@app.route('/get', methods=['GET'])
+def get_all_commentposts():
+    """
+    GET request to view all table entries directly from 'many' mode sql schema
+    :return: json response
+    Antoine Cantin@ChiefsBestPal
+    """
+
+    all_commentposts = CommentPost.query.all()
+    results_arr = commentposts_schema.dump(all_commentposts)
+    return parseRequest_to_get_all_tablemodel_entries(results_arr)
 
 
 @app.route('/add', methods=['POST']) # methods = [list http reqs methods]
@@ -769,18 +777,7 @@ def get_all_jobposts():
     all_jobposts = JobPost.query.all()
     results_arr = jobposts_schema.dump(all_jobposts)
 
-    if any(filter(None,results_arr)) and request.args.get('mapAsFields') == 'true':
-        # print("Mapped fields into dict instead of array of obj!")
-        response_fieldsdict = dict(map(lambda kv: (kv[0], [kv[1]]), results_arr[0].items()))
-
-        for k, v in itertools.chain.from_iterable(map(operator.methodcaller('items'), results_arr[1:])):
-            if response_fieldsdict.setdefault(k, None):
-                response_fieldsdict[k].append(v)
-
-        assert all(len(listed_fields_v) == len(results_arr) for listed_fields_v in response_fieldsdict.values())
-        return jsonify(response_fieldsdict)
-
-    return jsonify(results_arr)  # **{'Hello' : 'World'})
+    return parseRequest_to_get_all_tablemodel_entries(results_arr)
 
 
 @app.route("/getjob/<_jobid>/", methods=['GET'])
@@ -926,17 +923,7 @@ def get_all_applications():
     all_applications = Application.query.all()
     results_arr = applications_schema.dump(all_applications)
 
-    if any(filter(None, results_arr)) and request.args.get('mapAsFields') == 'true':
-        # print("Mapped fields into dict instead of array of obj!")
-        response_fieldsdict = dict(map(lambda kv: (kv[0], [kv[1]]), results_arr[0].items()))
-
-        for k, v in itertools.chain.from_iterable(map(operator.methodcaller('items'), results_arr[1:])):
-            if response_fieldsdict.setdefault(k, None):
-                response_fieldsdict[k].append(v)
-        assert all(len(listed_fields_v) == len(results_arr) for listed_fields_v in response_fieldsdict.values())
-        return jsonify(response_fieldsdict)
-
-    return jsonify(results_arr)
+    return parseRequest_to_get_all_tablemodel_entries(results_arr)
 
 @app.route("/deleteapplication/<_applyid>/", methods=['DELETE'],endpoint='delete_application')
 def delete_application(_applyid):
