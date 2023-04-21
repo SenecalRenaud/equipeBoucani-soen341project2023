@@ -115,25 +115,35 @@ function Card({ title, body }) { //TODO PASS COMMENTS DATASTRUCTURE FROM BACKEND
 }
 function PostACommentForm({handleNewComment}) {
 
-  const [commentObj,setCommentObj] = useState(null)
-
+  const [commentTitle,setCommentTitle] = useState("")
+  const [commentBody,setCommentBody] = useState("")
   const handleSubmit = (event) => {
     event.preventDefault();
 
     //TODO  BACKEND API REQUESTS AND HANDLING HERE
 
-    handleNewComment(commentObj) //TODO FETCH ASYNC THEN
+    handleNewComment(
 
-    setCommentObj(null)
+      {
+        title: commentTitle,
+        body: commentBody
+      }
+    ) //TODO FETCH ASYNC THEN
+
+    setCommentTitle("")
+    setCommentBody("")
 
     document.forms[0].reset();
   }
   return (
       <form onSubmit={handleSubmit} className={'post-comment-form'}>
-        <textarea name="post-comment-input" placeholder="Add a comment"
-        onChange={(event) => setCommentObj(event.target.value)}/>
+        <input type="text" name="post-comment-input-title"
+               placeholder="Your comment title..."
+               onChange={(event) => setCommentTitle(event.target.value)} required/>
+        <textarea name="post-comment-input-body" placeholder="Your comment..."
+        onChange={(event) => setCommentBody(event.target.value)} required/>
         <input className="post-comment-button" name="post-comment-button" type="submit"
-        value="Post comment!"/>
+        value="Post comment!" required/>
       </form>
   )
 }
