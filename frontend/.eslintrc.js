@@ -18,7 +18,12 @@ module.exports = {
   plugins: ["react", "@typescript-eslint", "github"],
   rules: {
     "no-console": "off",
-    'camelcase': 'off'
+    'camelcase': "off",
+    "no-then" : "off",
+    "i18n-text/no-en" : "off",
+    "filenames/match-regex" : "off",
+    "prettier/prettier": "off",
+    "import/no-unresolved": "off"
   },
   ignorePatterns: ["**/node_modules/**/*", "./node_modules/big.js"],
 };

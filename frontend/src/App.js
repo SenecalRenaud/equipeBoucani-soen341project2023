@@ -17,7 +17,6 @@ import PostCommentForm from "./pages/BACKEND_DEBUG/PostCommentForm";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import SignUp from "./pages/SignUp/SignUpForm";
 import SignIn from "./pages/SignIn/SignInForm";
-import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
 
 import ViewMyApplications from "./pages/ViewMyApplications/ViewMyApplications";
 import ApplyJob from "./pages/ApplyJob/ApplyJob";
@@ -38,7 +37,7 @@ import Apply from "./pages/Apply/Apply";
 //import AboutUs from "./pages/AboutUs/aboutus";
 import EditProfilePage from "./pages/ProfilePage/EditProfilePage";
 import CommentSection from "./components/CommentSection/CommentSection";
-import ViewMyApplicationsCopy from "./pages/ViewMyApplications/ViewMyApplicationsCopy";
+// import ViewMyApplicationsCopy from "./pages/ViewMyApplications/ViewMyApplicationsCopy";
 import AboutUs from "./pages/AboutUs/aboutus";
 import PrivacyPolicy from "./pages/PolicyAndReviews/PolicyAndReviews";
 // import SESSION_COOKIES_DEBUG from "./pages/SESSION_COOKIES_DEBUG";
