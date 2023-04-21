@@ -16,6 +16,9 @@ module.exports = {
     sourceType: "module",
   },
   plugins: ["react", "@typescript-eslint", "github"],
-  rules: {},
+  rules: {
+    "no-console": "off",
+    'camelcase': 'off'
+  },
   ignorePatterns: ["**/node_modules/**/*", "./node_modules/big.js"],
 };
