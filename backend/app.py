@@ -676,7 +676,7 @@ def update_user_details(_uid):
 
 #
 
-@app.route('/get', methods=['GET'])
+@app.route('/getcomment', methods=['GET'])
 def get_all_commentposts():
     """
     GET request to view all table entries directly from 'many' mode sql schema
@@ -686,7 +686,7 @@ def get_all_commentposts():
 
     all_commentposts = CommentPost.query.all()
     results_arr = commentposts_schema.dump(all_commentposts)
-    print(results_arr)
+    # print(all_commentposts,results_arr)
     if any(filter(None,results_arr)) and request.args.get('mapAsFields') == 'true':
         # print("Mapped fields into dict instead of array of obj!")
         response_fieldsdict = dict(map(lambda kv: (kv[0], [kv[1]]), results_arr[0].items()))
@@ -706,7 +706,7 @@ def get_all_commentposts():
     return jsonify(results_arr)#**{'Hello' : 'World'})
 
 
-@app.route('/add', methods=['POST']) # methods = [list http reqs methods]
+@app.route('/addcomment', methods=['POST']) # methods = [list http reqs methods]
 @cross_origin()
 def add_commentpost():
     """
@@ -744,14 +744,14 @@ def add_commentpost():
     return commentpost_schema.jsonify(comment)
 
 
-@app.route("/get/<_commentid>/",methods=['GET'])
+@app.route("/getcomment/<_commentid>/",methods=['GET'])
 def get_commentpost(_commentid):
     commentpost = CommentPost.query.get(_commentid)
     return commentpost_schema.jsonify(commentpost)
 
 
 
-@app.route("/update/<_commentid>/",methods=['PUT'],endpoint="update_commentpost")
+@app.route("/updatecomment/<_commentid>/",methods=['PUT'],endpoint="update_commentpost")
 def update_commentpost(_commentid):#TODO @authorized(myself=True) or original poster
     commentpost = CommentPost.query.get(_commentid)
 
@@ -765,7 +765,7 @@ def update_commentpost(_commentid):#TODO @authorized(myself=True) or original po
     db.session.commit()
 
     return commentpost_schema.jsonify(commentpost)
-@app.route("/delete/<_commentid>/",methods=['DELETE'],endpoint="delete_commentpost")
+@app.route("/deletecomment/<_commentid>/",methods=['DELETE'],endpoint="delete_commentpost")
 def delete_commentpost(_commentid):#TODO @authorized(myself=True) or original poster
     commentpost = CommentPost.query.get(_commentid)
 

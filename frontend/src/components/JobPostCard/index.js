@@ -150,8 +150,8 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
     const [isOpen, setIsOpen] = useState(false);
     let [er,setEr] = useState(false);
     let [errorString, setErrorString] = useState("");
-    const [employerUser,setEmployerUser] = useState([{}])
-    const[listOfApplicants, setListOfApplicants] = useState([{}]);
+    const [employerUser,setEmployerUser] = useState({})
+    const[listOfApplicants, setListOfApplicants] = useState([]);
     const navigate = useNavigate();
 
 
@@ -163,6 +163,7 @@ const JobPostCard = ({id, jobtype, title, description, location, salary, tags, d
             data => {
                 let count = 0;
                 let applicantsList = [];
+
                 data.jobPostId.forEach(job => {
                     if (job == id) {
                         applicantsList.push(CommentAPIService.GetUserDetails(data.applicantUid[count]));

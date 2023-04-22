@@ -26,7 +26,7 @@ function PostCommentForm  (props)  {
   let [defaultData,setDefaultData] = useState([{}]);
 
     useEffect(() => {
-        fetch("/get?mapAsFields=true").then(
+        fetch("/getcomment?mapAsFields=true").then(
             response => response.json()
         ).then(
             data => {

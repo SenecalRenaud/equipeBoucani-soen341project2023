@@ -4,7 +4,7 @@ import UserRESTAPI from "../../restAPI/UserAPI";
 export default class CommentAPIService{
 
     static async AddCommentPost(request_body){
-        return await fetch(`http://localhost:5000/add`,{
+        return await fetch(`http://localhost:5000/addcomment`,{
             //'mode': "no-cors",//remove this line if troublesome in environment where deployed
             'method':'POST',
              headers : {
@@ -18,7 +18,7 @@ export default class CommentAPIService{
     }
 
     static async DeleteComment(comment_id){
-        return await fetch(`http://localhost:5000/delete/${comment_id}/`,{
+        return await fetch(`http://localhost:5000/deletecomment/${comment_id}/`,{
             'method':'DELETE',
             headers : {
                 'Authorization': `Bearer ${Cookies.get('access_token')}`,
@@ -30,7 +30,7 @@ export default class CommentAPIService{
     }
 
     static async UpdateCommentPut(comment_id, request_body){
-        return await fetch(`http://localhost:5000/update/${comment_id}/`,{
+        return await fetch(`http://localhost:5000/updatecomment/${comment_id}/`,{
             //'mode': "no-cors",//remove this line if troublesome in environment where deployed
             'method':'PUT',
             headers : {
