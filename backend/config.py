@@ -6,16 +6,24 @@ import os
 import enum
 from abc import ABC, ABCMeta,abstractmethod
 
+import configparser
+
 from flask import Flask,current_app
 from sqlalchemy import create_engine,exc as sqlalchemy_exceptions
 
-
 from argparser_cli import parser
+
+FLASK_ENV_FILE_NAME = ".flaskenv"
+DATABASES_ENV_FILE_NAME = ".env.local" #Currently holds API key values for Firebase and MySql databases
+MIGRATION_INI_FILE_NAME = "alembic.ini"
 
 parsed_cli_args = parser.parse_args()
 
 print("PARSED_CLI_ARGS config",parsed_cli_args.config_options)
 print("PARSED_CLI_ARGS sqldb",parsed_cli_args.specified_sqldb)
+
+dbmigration_alembic_config = configparser.ConfigParser()
+dbmigration_alembic_config.read(MIGRATION_INI_FILE_NAME)#migration ini config file
 
 @enum.unique
 class DialectDBAPI(enum.Enum):
@@ -26,8 +34,6 @@ class DialectDBAPI(enum.Enum):
 
 WDIR = os.path.abspath(os.path.dirname(__file__))
 
-FLASK_ENV_FILE_NAME = ".flaskenv"
-DATABASES_ENV_FILE_NAME = ".env.local" #Currently holds API key values for Firebase and MySql databases
 
 useLocalInsteadOfHostedDatabase = (os.environ['useLocalInsteadOfHostedDatabase'] == "true") if 'useLocalInsteadOfHostedDatabase' in os.environ else True
 
@@ -283,6 +289,13 @@ class ApplicationSessionConfig:
 
     # todo SQLALCHEMY_BINDS for cors or many db?
 
+if dbmigration_alembic_config['alembic']['sqlalchemy.url'] != ApplicationSessionConfig.SQLALCHEMY_DATABASE_URI:
+    print("just in case, updating setting alembic migration ini entry")
+    dbmigration_alembic_config['alembic']['sqlalchemy.url'] = ApplicationSessionConfig.SQLALCHEMY_DATABASE_URI
+    with open(MIGRATION_INI_FILE_NAME,r'w') as configfile:
+        dbmigration_alembic_config.write(configfile)
+# alembic revision --autogenerate -m "version_msg"
+# alembic upgrade head
 if parsed_cli_args.config_options is not None:
     for config_name,config_value in parsed_cli_args.config_options.items():
         setattr(ApplicationSessionConfig,config_name,config_value)

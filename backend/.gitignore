@@ -2,6 +2,9 @@
 .env
 .env.*
 
+alembic.ini
+alembic
+
 local_flask_sessions/*
 
 .credentials_firebase_adminsdk_8mtwu_187f5d4799.json
