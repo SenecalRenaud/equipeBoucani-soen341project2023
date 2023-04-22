@@ -28,7 +28,7 @@ class CommentPost(db.Model):
     __tablename__ = "comment_post"
 
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), unique=True, nullable=False)
+    title = db.Column(db.String(100), unique=True)
     body = db.Column(db.Text())
     date = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now)
     editDate = db.Column(db.DateTime(timezone=True), default=lambda: None)

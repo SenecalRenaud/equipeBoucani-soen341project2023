@@ -692,7 +692,7 @@ def get_all_commentposts():
         all_commentposts = list(filter(lambda comment: not comment.is_reply, all_commentposts))
 
     results_arr = commentposts_schema.dump(all_commentposts)
-    print(all_commentposts,results_arr)
+    # print(all_commentposts,results_arr)
 
     if any(filter(None,results_arr)) and request.args.get('mapAsFields') == 'true':
         # print("Mapped fields into dict instead of array of obj!")

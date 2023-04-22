@@ -32,10 +32,14 @@ function CommentCard({ commentObj, nestedLevel = 0 ,parent_card_id}) {
   
   useEffect(() => {
     CommentAPIService.GetUserDetails(commentObj.posterUid).then(
-      data => setUserCache(data)
+      data => {
+        setUserCache(data)
+        setReplies(commentObj.replies)
+      }
     )
     
   },[commentObj.posterUid])
+
 //   const getUserInfo = useCallback(async (uid) => {
 //     if (userCache[uid]) {
 //       return userCache[uid];
@@ -50,7 +54,7 @@ function CommentCard({ commentObj, nestedLevel = 0 ,parent_card_id}) {
     e.preventDefault();
     let newReplyObj =       {
         body: newReply,
-        title: '',
+        title: null,
         posterUid : state.userData.uid,
         // date: new Date().toISOString().slice(0,19),
         post_id: parent_card_id,
@@ -61,10 +65,11 @@ function CommentCard({ commentObj, nestedLevel = 0 ,parent_card_id}) {
     ).then(
       data => {
           console.log("POSTED REPLY !")
-          console.log(data) //TODO USE DATA IN THE STATE HOOK INSTEAD
           console.log(newReplyObj)
-          setReplies([...replies, newReplyObj]);
           setNewReply('');
+          setReplies([...replies, newReplyObj]);
+          commentObj.replies.append(newReplyObj)
+
       }
     )
 
@@ -127,7 +132,7 @@ function CommentCard({ commentObj, nestedLevel = 0 ,parent_card_id}) {
   );
 }
 
-function Card({ title, body, post_id}) { //TODO PASS COMMENTS DATASTRUCTURE FROM BACKEND API
+function Card({ title, body, post_id}) {
   const [comments,setComments] = useState(
       [
           {
@@ -146,7 +151,7 @@ function Card({ title, body, post_id}) { //TODO PASS COMMENTS DATASTRUCTURE FROM
               posterUid: "ahSBM7SDQ4VyKGDnZbIdj2MVbCf2"
           }]);
     useEffect(() => {
-      fetch("/getcomment?mapAsFields=false").then(
+      fetch("/getcomment?ignore=replies&mapAsFields=false").then(
           response => response.json()
       ).then(
           data => {
