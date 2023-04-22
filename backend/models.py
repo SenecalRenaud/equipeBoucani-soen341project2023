@@ -84,10 +84,10 @@ class CommentPostSchema(ma.SQLAlchemyAutoSchema):
         model = CommentPost
         include_fk = True
         load_instance = True
-        exclude = ('replies', 'parent', 'post',)
+        exclude = ('parent', 'post',)
 
     replies = ma.List(ma.Nested(
-        lambda: CommentPostSchema(exclude=('replies','parent', 'post',))
+        lambda: CommentPostSchema()#exclude=('replies','parent', 'post',)
                                 ))
 
     # _links = ma.Hyperlinks(

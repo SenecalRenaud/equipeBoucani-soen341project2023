@@ -294,8 +294,8 @@ if dbmigration_alembic_config['alembic']['sqlalchemy.url'] != ApplicationSession
     dbmigration_alembic_config['alembic']['sqlalchemy.url'] = ApplicationSessionConfig.SQLALCHEMY_DATABASE_URI
     with open(MIGRATION_INI_FILE_NAME,r'w') as configfile:
         dbmigration_alembic_config.write(configfile)
-# alembic revision --autogenerate -m "version_msg"
-# alembic upgrade head
+    #NOTE: alembic revision --autogenerate -m "version_msg"
+    #NOTE: alembic upgrade head
 if parsed_cli_args.config_options is not None:
     for config_name,config_value in parsed_cli_args.config_options.items():
         setattr(ApplicationSessionConfig,config_name,config_value)
