@@ -716,13 +716,32 @@ def add_commentpost():
     }
     :return:  sql table type schema json response
     """
-    title, body, posterUid = request.json['title'], request.json['body'], request.json['posterUid']
+    #title, body, posterUid = request.json['title'], request.json['body'], request.json['posterUid']
+    #commentpost = CommentPost(title, body, posterUid)
 
-    commentpost = CommentPost(title, body, posterUid)
-    db.session.add(commentpost)
+    comment = commentpost_schema.load(
+        request.json,
+        #session = db.session
+    )
+    if comment.is_reply:
+        # If it's a reply, make sure the parent comment exists
+        parent = CommentPost.query.get(comment.parent_id)
+        if not parent:
+            return jsonify({'error': 'Parent comment not found'}), 404
+        parent.replies.append(comment)
+    elif comment.is_post_comment:
+        # If it's a post comment, make sure the post exists
+        post = JobPost.query.get(comment.post_id)
+        if not post:
+            return jsonify({'error': 'Post not found'}), 404
+        post.comments.append(comment)
+    else:
+        return jsonify({'error': 'Invalid comment type'}), 400
+
+    db.session.add(comment)
     db.session.commit()
 
-    return commentpost_schema.jsonify(commentpost)
+    return commentpost_schema.jsonify(comment)
 
 
 @app.route("/get/<_commentid>/",methods=['GET'])
@@ -936,6 +955,7 @@ def get_all_applications():
             if response_fieldsdict.setdefault(k, None):
                 response_fieldsdict[k].append(v)
         assert all(len(listed_fields_v) == len(results_arr) for listed_fields_v in response_fieldsdict.values())
+
         return jsonify(response_fieldsdict)
 
     return jsonify(results_arr)
