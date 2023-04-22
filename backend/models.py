@@ -52,10 +52,13 @@ class CommentPost(db.Model):
 
     #TODO Add reactions, like and dislike.
 
-    def __init__(self, title, body, posterUid):
+    def __init__(self, title, body, posterUid,post_id,parent_id=None):
         self.title = title
         self.body = body
         self.posterUid =posterUid
+
+        self.post_id = post_id
+        self.parent_id = parent_id
 
         self.isEdited = False
         self._editDate = None

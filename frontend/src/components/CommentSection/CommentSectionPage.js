@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from "react";
 import './commentsection.css'
 import UserDropDownMenu from "../UserDropDownMenu/UserDropDownMenu";
 import {UserAvatarWithText} from "../Avatars";
@@ -6,6 +6,7 @@ import {useUserContext} from "../../context/UserContext";
 import ReactionBox from "./ReactionBox";
 import {epochToTimeAgo} from "../../utils/async_and_time_helpers";
 import ThreeDotMoreOptions from "./ThreeDotMoreOptions";
+import CommentAPIService from "../../pages/BACKEND_DEBUG/CommentAPIService";
 
 
 function SqlDatetimeToAgoTime (sqlDatetime){
@@ -18,19 +19,62 @@ const MAX_NUMBER_OF_REPLIES_BEFORE_HIDE = 4; //TODO
 
   //TODO: If nestedLevel != 0, do not include a title because its a reply!!!!
 
-function CommentCard({ commentObj, nestedLevel = 0 }) {
-  const {state} = useUserContext(); // TODO ONLY FOR TESTING !!!!!
+function CommentCard({ commentObj, nestedLevel = 0 ,parent_card_id}) {
+
+  const {state} = useUserContext();
 
   const [showReplies, setShowReplies] = useState(false);
   const [newReply, setNewReply] = useState('');
   const [replies, setReplies] = useState([]);
 
+   //TODO CACHE AND MEMOIZE WITH USEMEMO+USECALLBACK
+  const [userCache, setUserCache] = useState({});
+  
+  useEffect(() => {
+    CommentAPIService.GetUserDetails(commentObj.posterUid).then(
+      data => setUserCache(data)
+    )
+    
+  },[commentObj.posterUid])
+//   const getUserInfo = useCallback(async (uid) => {
+//     if (userCache[uid]) {
+//       return userCache[uid];
+//     }
+//
+//     const userInfo = await CommentAPIService.GetUserDetails(uid);
+//     setUserCache((prevCache) => ({ ...prevCache, ...userInfo }));
+//
+//     return userInfo;
+// }, [userCache]);
   const handleSubmit = (e) => {
     e.preventDefault();
-    setReplies([...replies, newReply]);
-    setNewReply('');
+    let newReplyObj =       {
+        body: newReply,
+        title: '',
+        posterUid : state.userData.uid,
+        // date: new Date().toISOString().slice(0,19),
+        post_id: parent_card_id,
+        parent_id: commentObj.id
+      };
+    CommentAPIService.AddCommentPost(
+      newReplyObj
+    ).then(
+      data => {
+          console.log("POSTED REPLY !")
+          console.log(data) //TODO USE DATA IN THE STATE HOOK INSTEAD
+          console.log(newReplyObj)
+          setReplies([...replies, newReplyObj]);
+          setNewReply('');
+      }
+    )
+
+
   };
-  if (state.userData == null){
+
+  //getUserInfo(commentObj.posterUid)
+
+  if (userCache == null){
+
     return null;
   }
   return (
@@ -38,8 +82,9 @@ function CommentCard({ commentObj, nestedLevel = 0 }) {
       <header className="comment-header">
         <span className="comment-avatar">
           {<UserDropDownMenu
-                    triggerMenuMarkup={UserAvatarWithText(state.userData, 0,50)}
-                    triggeredUserUid={state.userData.uid}
+                    triggerMenuMarkup={UserAvatarWithText(
+                      userCache, 0,50)}
+                    triggeredUserUid={commentObj.posterUid}
                 />}
         </span>
         <span className="comment-info">
@@ -65,7 +110,8 @@ function CommentCard({ commentObj, nestedLevel = 0 }) {
           {showReplies &&
             <div className="replies">
               {replies.map((reply, index) => (
-                <CommentCard key={index} commentObj={reply} nestedLevel={nestedLevel + 1} />
+                <CommentCard key={index} commentObj={reply} nestedLevel={nestedLevel + 1}
+                             parent_card_id={commentObj.id} />
               ))}
               <form onSubmit={handleSubmit} className="reply-form">
                 <input className="reply-input" type="text" value={newReply} onChange={(e) => setNewReply(e.target.value)} />
@@ -81,7 +127,7 @@ function CommentCard({ commentObj, nestedLevel = 0 }) {
   );
 }
 
-function Card({ title, body }) { //TODO PASS COMMENTS DATASTRUCTURE FROM BACKEND API
+function Card({ title, body, post_id}) { //TODO PASS COMMENTS DATASTRUCTURE FROM BACKEND API
   const [comments,setComments] = useState(
       [
           {
@@ -99,7 +145,17 @@ function Card({ title, body }) { //TODO PASS COMMENTS DATASTRUCTURE FROM BACKEND
               editDate: "NULL",
               posterUid: "ahSBM7SDQ4VyKGDnZbIdj2MVbCf2"
           }]);
+    useEffect(() => {
+      fetch("/getcomment?mapAsFields=false").then(
+          response => response.json()
+      ).then(
+          data => {
+            if (data != null && data.length > 0)
+              setComments(data);
 
+          }
+      )
+  },[])
   const handleNewComment = (newComment) => {
       let newComments = [...comments,newComment]
       setComments(newComments)
@@ -110,34 +166,42 @@ function Card({ title, body }) { //TODO PASS COMMENTS DATASTRUCTURE FROM BACKEND
       <p>{body}</p>
       <h3>Comments:</h3>
       {comments.map((comment, index) => (
-        <CommentCard key={index} commentObj={comment} />
+        <CommentCard key={index} commentObj={comment} parent_card_id={post_id} />
       ))}
-      <PostACommentForm handleNewComment={handleNewComment}/>
+      <PostACommentForm handleNewComment={handleNewComment}  parent_card_id={post_id}/>
     </div>
   );
 }
-function PostACommentForm({handleNewComment}) {
-
+function PostACommentForm({handleNewComment,parent_card_id}) {
+  const {state} = useUserContext();
   const [commentTitle,setCommentTitle] = useState("")
   const [commentBody,setCommentBody] = useState("")
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    //TODO  BACKEND API REQUESTS AND HANDLING HERE
     let commentObj = {
         title: commentTitle,
         body: commentBody,
-        date: new Date().toISOString().slice(0,19)
+        // date: new Date().toISOString().slice(0,19),
+        posterUid: state.userData.uid,
+        post_id: parent_card_id
       }
-    handleNewComment(
+
+    CommentAPIService.AddCommentPost(
       commentObj
-
-    ) //TODO FETCH ASYNC THEN
-
-    setCommentTitle("")
-    setCommentBody("")
+    ).then(
+      data => {
+        handleNewComment(
+          commentObj
+        )
+      setCommentTitle("")
+      setCommentBody("")
+      }
+    )
 
     document.forms[0].reset();
+
   }
   return (
       <form onSubmit={handleSubmit} className={'post-comment-form'}>
@@ -159,6 +223,7 @@ function CommentSectionPage() {
       <Card
         title="Example Card"
         body="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+        post_id={2}
       />
     </div>
   );
