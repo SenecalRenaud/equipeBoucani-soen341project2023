@@ -8,6 +8,7 @@ export default class CommentAPIService{
             //'mode': "no-cors",//remove this line if troublesome in environment where deployed
             'method':'POST',
              headers : {
+             'Authorization': `Bearer ${Cookies.get('access_token')}`,
             'Content-Type':'application/json',
       },
             body:JSON.stringify(request_body)
@@ -20,6 +21,7 @@ export default class CommentAPIService{
         return await fetch(`http://localhost:5000/delete/${comment_id}/`,{
             'method':'DELETE',
             headers : {
+                'Authorization': `Bearer ${Cookies.get('access_token')}`,
                 'Content-Type':'application/json',
             },
         })
@@ -32,6 +34,7 @@ export default class CommentAPIService{
             //'mode': "no-cors",//remove this line if troublesome in environment where deployed
             'method':'PUT',
             headers : {
+                'Authorization': `Bearer ${Cookies.get('access_token')}`,
                 'Content-Type':'application/json',
             },
             body:JSON.stringify(request_body)

@@ -1,5 +1,6 @@
 .app {
   background: #eead88;
+  margin: auto 0;
 }
 .card {
   border: 1px solid #ccc;
@@ -53,14 +54,22 @@
   font-family: 'Verdana',sans-serif;
   font-style: oblique;
   font-size: 1.233333ch;
+  margin-right: 23%;
 
+}
+.comment-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 .comment-info > * {
   text-wrap: normal;
 }
 .comment-moreoptions button {
   float: right;
-  margin-left: 85px;
+  /*position: relative;*/
+  /*width: max-content;*/
+
 }
 .post-comment-form {
   background-color: #f5f5f5;

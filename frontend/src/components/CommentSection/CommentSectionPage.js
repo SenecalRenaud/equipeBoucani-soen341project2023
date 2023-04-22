@@ -46,13 +46,16 @@ function CommentCard({ commentObj, nestedLevel = 0 }) {
           <span className="comment-date"> &bull;&nbsp;{SqlDatetimeToAgoTime(commentObj.date)}</span>
           {!isNaN(Date.parse(commentObj.editDate)) && <span className="comment-date"> &nbsp; &bull; Edited:&nbsp;
                { SqlDatetimeToAgoTime(commentObj.editDate) }</span>}
-          <span className="comment-moreoptions"> <ThreeDotMoreOptions/> </span>
+
         </span>
+        <span className="comment-moreoptions"> <ThreeDotMoreOptions/> </span>
       </header>
       <article className="comment-content">
         <h2 className="comment-title"> {commentObj.title} </h2>
          <p className="comment-body">{commentObj.body}</p>
+        <ReactionBox/>
       </article>
+
       <footer className="comment-footer">
       {
         nestedLevel < MAX_NESTED_LEVEL && ( <>
@@ -72,7 +75,7 @@ function CommentCard({ commentObj, nestedLevel = 0 }) {
           }
         </>)
       }
-      <ReactionBox/>
+
       </footer>
     </div>
   );
@@ -121,13 +124,14 @@ function PostACommentForm({handleNewComment}) {
     event.preventDefault();
 
     //TODO  BACKEND API REQUESTS AND HANDLING HERE
-
-    handleNewComment(
-
-      {
+    let commentObj = {
         title: commentTitle,
-        body: commentBody
+        body: commentBody,
+        date: new Date().toISOString().slice(0,19)
       }
+    handleNewComment(
+      commentObj
+
     ) //TODO FETCH ASYNC THEN
 
     setCommentTitle("")

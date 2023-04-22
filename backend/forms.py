@@ -70,8 +70,9 @@ def authorized(**permissions):
 
                 if 'myself' in permissions:
                     if (session_user := session.get("user", None)) is None or session_user['idToken'] != id_token:
+                        print()
                         raise auth.ExpiredSessionCookieError(
-                            f"Backend session could not be found and myself permission thus couldnt be verified; Authorization denied.",
+                            f"Backend session could not be found and myself permission thus couldnt be verified; Authorization denied. [session_user: {session_user}]",
                             session_user
                         )
                     affected_user_uid = ""

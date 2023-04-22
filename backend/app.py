@@ -733,8 +733,7 @@ def get_commentpost(_commentid):
 
 
 @app.route("/update/<_commentid>/",methods=['PUT'],endpoint="update_commentpost")
-@authorized(myself=True)
-def update_commentpost(_commentid):
+def update_commentpost(_commentid):#TODO @authorized(myself=True) or original poster
     commentpost = CommentPost.query.get(_commentid)
 
     if 'title' in request.json:
@@ -748,8 +747,7 @@ def update_commentpost(_commentid):
 
     return commentpost_schema.jsonify(commentpost)
 @app.route("/delete/<_commentid>/",methods=['DELETE'],endpoint="delete_commentpost")
-@authorized(myself=True)
-def delete_commentpost(_commentid):
+def delete_commentpost(_commentid):#TODO @authorized(myself=True) or original poster
     commentpost = CommentPost.query.get(_commentid)
 
     db.session.delete(commentpost)
