@@ -38,9 +38,18 @@ class CommentPost(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey('job_post.id'))
     parent = db.relationship('CommentPost',
                              remote_side=[id],
-                             backref= backref('replies', lazy='dynamic'))
+                             backref= backref(
+                                 'parent_replies',
+                                 lazy='dynamic',
+                                cascade='all, delete-orphan'))
+
     post = db.relationship('JobPost',
                            backref= backref('post_comments', lazy='dynamic'))
+
+    replies = db.relationship('CommentPost',
+                              cascade='all, delete-orphan',
+                              backref=backref('parent_comment', remote_side=[id]),
+                              single_parent=True)
 
     @hybrid_property
     def is_reply(self):
@@ -87,7 +96,7 @@ class CommentPostSchema(ma.SQLAlchemyAutoSchema):
         exclude = ('parent', 'post',)
 
     replies = ma.List(ma.Nested(
-        lambda: CommentPostSchema()#exclude=('replies','parent', 'post',)
+        lambda: CommentPostSchema()#exclude=('replies', 'parent_replies', 'parent', 'post',))
                                 ))
 
     # _links = ma.Hyperlinks(

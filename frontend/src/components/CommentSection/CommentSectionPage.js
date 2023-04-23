@@ -34,11 +34,11 @@ function CommentCard({ commentObj, nestedLevel = 0 ,parent_card_id}) {
     CommentAPIService.GetUserDetails(commentObj.posterUid).then(
       data => {
         setUserCache(data)
-        setReplies(commentObj.replies)
+        setReplies(commentObj.replies == null ? [] : commentObj.replies)
       }
     )
     
-  },[commentObj.posterUid])
+  },[commentObj.posterUid,commentObj.replies])
 
 //   const getUserInfo = useCallback(async (uid) => {
 //     if (userCache[uid]) {
@@ -68,7 +68,7 @@ function CommentCard({ commentObj, nestedLevel = 0 ,parent_card_id}) {
           console.log(newReplyObj)
           setNewReply('');
           setReplies([...replies, newReplyObj]);
-          commentObj.replies.append(newReplyObj)
+          commentObj.replies.push(newReplyObj)
 
       }
     )
@@ -78,8 +78,7 @@ function CommentCard({ commentObj, nestedLevel = 0 ,parent_card_id}) {
 
   //getUserInfo(commentObj.posterUid)
 
-  if (userCache == null){
-
+  if (userCache == null || replies == null){
     return null;
   }
   return (
@@ -98,7 +97,7 @@ function CommentCard({ commentObj, nestedLevel = 0 ,parent_card_id}) {
                { SqlDatetimeToAgoTime(commentObj.editDate) }</span>}
 
         </span>
-        <span className="comment-moreoptions"> <ThreeDotMoreOptions/> </span>
+        <span className="comment-moreoptions"> <ThreeDotMoreOptions post_obj={commentObj}/> </span>
       </header>
       <article className="comment-content">
         <h2 className="comment-title"> {commentObj.title} </h2>
@@ -109,7 +108,9 @@ function CommentCard({ commentObj, nestedLevel = 0 ,parent_card_id}) {
       <footer className="comment-footer">
       {
         nestedLevel < MAX_NESTED_LEVEL && ( <>
-          <button className="toggle-replies" onClick={() => setShowReplies(!showReplies)}>
+          <button className="toggle-replies" onClick={() =>
+          {setShowReplies(!showReplies)
+          }}>
             {showReplies ? 'Hide Replies' : 'Show Replies'}
           </button>
           {showReplies &&
@@ -157,6 +158,7 @@ function Card({ title, body, post_id}) {
           data => {
             if (data != null && data.length > 0)
               setComments(data);
+
 
           }
       )
