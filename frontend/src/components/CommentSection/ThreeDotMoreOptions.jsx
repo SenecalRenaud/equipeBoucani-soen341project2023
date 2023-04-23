@@ -92,6 +92,7 @@ function ThreeDotMoreOptions({post_obj}) {
     <Modal isOpen={isOpenEditModal} onRequestClose={toggleModal} ariaHideApp={false}>
         <form onSubmit={() => {handleEdit(); toggleModal()}}>
             <br/><br/>
+          { post_obj.parent_id == null && (
             <label>
                 Title:
                 <input
@@ -101,7 +102,8 @@ function ThreeDotMoreOptions({post_obj}) {
                     onChange={(e) => {setToBeEditedData({...toBeEditedData,'title': e.target.value} )}}
                     value={toBeEditedData.title}
                 />
-            </label>
+            </label> )
+          }
             <label>
                 Body:
                 <textarea

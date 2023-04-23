@@ -754,8 +754,41 @@ def add_commentpost():
 @app.route("/getcomment/<_commentid>/",methods=['GET'])
 def get_commentpost(_commentid):
     commentpost = CommentPost.query.get(_commentid)
-    return commentpost_schema.jsonify(commentpost)
+    print(commentpost)
+    print(commentpost_schema.jsonify(commentpost))
+    reaction = CommentReaction(reaction_type=ReactionType.LIKE,
+                               reacterUid="ahSBM7SDQ4VyKGDnZbIdj2MVbCf2",
+                               comment_id=_commentid)
+    print(reaction.reaction_type)
+    print(reaction.reaction_type.name)
+    print(reaction.reaction_type.value)
+    print(commentpost_schema.dump(commentpost))
+    print(reaction)
+    commentreaction_schema = CommentReactionSchema()
+    dumped_reaction = commentreaction_schema.dump(reaction)
+    print(dumped_reaction)
+    # print(commentpost.reactions)
+    commentpost.reactions.append(reaction)
+    print("APPENDED!")
+    db.session.commit()
 
+    print("COMMITTED")
+
+
+    db.session.add(reaction)
+    print("ADDED")
+    print(commentpost)
+    print(commentpost_schema.dump(commentpost))
+    print("DUMPED")
+
+    # db.session.add(commentpost)
+    db.session.commit()
+    print("COMMITED")
+
+    print(commentpost_schema.dump(commentpost))
+    print("DUMPED")
+
+    return commentpost_schema.jsonify(commentpost)
 
 
 @app.route("/updatecomment/<_commentid>/",methods=['PUT'],endpoint="update_commentpost")

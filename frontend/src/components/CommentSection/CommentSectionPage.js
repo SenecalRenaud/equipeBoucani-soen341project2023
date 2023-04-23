@@ -101,8 +101,10 @@ function CommentCard({ commentObj, nestedLevel = 0 ,parent_card_id}) {
       </header>
       <article className="comment-content">
         <h2 className="comment-title"> {commentObj.title} </h2>
-         <p className="comment-body">{commentObj.body}</p>
-        <ReactionBox/>
+         <p className="comment-body">{commentObj.body}
+         <ReactionBox/>
+         </p>
+
       </article>
 
       <footer className="comment-footer">

@@ -217,4 +217,7 @@ h3 {
   justify-content: flex-start;
   float: right;
   margin-right: -30px;
+  color: rgba(85, 85, 85, 0.51);
+  /*position: relative;*/
+  /*margin-bottom: -30px;*/
 }

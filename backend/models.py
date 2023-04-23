@@ -3,7 +3,7 @@ from flask_marshmallow import Marshmallow,fields
 
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import backref
-
+from sqlalchemy import Enum
 
 import datetime
 import enum
@@ -15,6 +15,10 @@ generate_pr_uuid = lambda: uuid4().hex
 db = SQLAlchemy()
 
 ma = Marshmallow()
+
+from sqlalchemy.types import TypeDecorator, VARCHAR,String
+import json
+
 
 
 class CommentPost(db.Model):
@@ -51,6 +55,10 @@ class CommentPost(db.Model):
                               backref=backref('parent_comment', remote_side=[id]),
                               single_parent=True)
 
+    reactions = db.relationship('CommentReaction',
+                                backref='comment',
+                                cascade='all, delete-orphan',
+                                lazy='dynamic')
     @hybrid_property
     def is_reply(self):
         return bool(self.parent)
@@ -72,20 +80,61 @@ class CommentPost(db.Model):
         self.isEdited = False
         self._editDate = None
 
+class ReactionType(enum.Enum):
+    LIKE = "fa-thumbs-up"
+    DISLIKE = "fa-thumbs-down"
+    MEH = "fa-face-meh"
+    APPLAUSE = "fa-hands-clapping"
+    INNOVATIVE = "fa-lightbulb-on"
+    LOVE = "fa-heart"
+    THINKING = "fa-face-thinking"
+    FUNNY = "fa-face-laugh-beam"
+class ReactionEnumType(TypeDecorator):
+    impl = String
+    def process_bind_param(self, value, dialect):
+        print(f"process_bind_param: {value}" )
 
+        if value is not None:
+            return value.value
 
+    def process_result_value(self, value, dialect):
+        print(f"process_result_value: {value}" )
+
+        if value not in [None,'']:
+            return ReactionType(value)
+class CommentReaction(db.Model):
+    __slots__ = ()
+    __tablename__ = "comment_reaction"
+
+    id = db.Column(db.Integer, primary_key=True)
+    reaction_type = db.Column(ReactionEnumType, nullable=False)
+    reacterUid = db.Column(db.VARCHAR(28), nullable=False)
+    comment_id = db.Column(db.Integer, db.ForeignKey('comment_post.id'), nullable=False)
+
+    __table_args__ = (db.UniqueConstraint('reacterUid', 'comment_id'),)
+
+    def __init__(self, reaction_type, reacterUid, comment_id):
+        self.reaction_type = reaction_type
+        self.reacterUid = reacterUid
+        self.comment_id = comment_id
+
+class CommentReactionSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = CommentReaction
+        include_fk = True
+        load_instance = True
 
 
 class CommentPostSchema(ma.SQLAlchemyAutoSchema):
 
-    # @fields.post_load
+    #todo @fields.post_load
     # def make_comment(self, data, **kwargs):
     #     replies = data.pop('replies', [])
     #     comment = Comment(**data)
     #     self.set_replies(comment, replies)
     #     return comment
     #
-    # @fields.pre_dump
+    #todo @fields.pre_dump
     # def get_replies_data(self, obj, **kwargs):
     #     self.get_replies(obj)
     #     return obj
@@ -98,100 +147,10 @@ class CommentPostSchema(ma.SQLAlchemyAutoSchema):
     replies = ma.List(ma.Nested(
         lambda: CommentPostSchema()#exclude=('replies', 'parent_replies', 'parent', 'post',))
                                 ))
-
+    reactions = ma.List(ma.Nested(
+        lambda: CommentReactionSchema()))
     # _links = ma.Hyperlinks(
 
-"""
-class Comment(db.Model):
-    __tablename__ = 'comments'
-    id = db.Column(db.Integer, primary_key=True)
-    text = db.Column(db.String(200))
-    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
-    parent_id = db.Column(db.Integer, db.ForeignKey('comments.id'))
-    parent = db.relationship('Comment', remote_side=[id])
-    post = db.relationship('Post', backref='comments')
-
-class CommentSchema(Schema):
-    id = fields.Int(dump_only=True)
-    text = fields.Str(required=True)
-    post = fields.Nested(PostSchema)
-    replies = fields.Nested('self', many=True)
-
-    @staticmethod
-    def get_replies(obj):
-        return obj.replies or []
-
-    @staticmethod
-    def set_replies(obj, replies):
-        obj.replies = replies
-
-    @fields.post_load
-    def make_comment(self, data, **kwargs):
-        replies = data.pop('replies', [])
-        comment = Comment(**data)
-        self.set_replies(comment, replies)
-        return comment
-
-    @fields.pre_dump
-    def get_replies_data(self, obj, **kwargs):
-        self.get_replies(obj)
-        return obj
-
-comment = Comment.query.get(1)
-comment_schema = CommentSchema()
-json_data = comment_schema.dump(comment)
-print(json_data)
-from datetime import datetime
-from marshmallow import Schema, fields
-from myapp import db
-
-class Comment(db.Model):
-    __tablename__ = 'comments'
-    id = db.Column(db.Integer, primary_key=True)
-    text = db.Column(db.String(200))
-    parent_id = db.Column(db.Integer, db.ForeignKey('comments.id'))
-    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    parent = db.relationship('Comment', remote_side=[id], backref='replies')
-    post = db.relationship('Post', backref='comments')
-
-    def __repr__(self):
-        return f'<Comment {self.id}>'
-
-class CommentSchema(Schema):
-    id = fields.Int(dump_only=True)
-    text = fields.Str(required=True)
-    parent_id = fields.Int()
-    post_id = fields.Int()
-    created_at = fields.DateTime(dump_only=True)
-    parent = fields.Nested('self', exclude=('parent',), dump_only=True)
-    replies = fields.Nested('self', exclude=('replies',), many=True, dump_only=True)
-
-class Post(db.Model):
-    __tablename__ = 'posts'
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(50))
-    body = db.Column(db.String(200))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    comments = db.relationship('Comment', backref='post')
-
-    def __repr__(self):
-        return f'<Post {self.id}>'
-
-class PostSchema(Schema):
-    id = fields.Int(dump_only=True)
-    title = fields.Str(required=True)
-    body = fields.Str(required=True)
-    created_at = fields.DateTime(dump_only=True)
-    comments = fields.Nested(CommentSchema, many=True, dump_only=True)
-
-class CommentInputSchema(Schema):
-    text = fields.Str(required=True)
-    parent_id = fields.Int()
-    post_id = fields.Int()
-
-
-"""
 
 class UserType(enum.Enum):
     APPLICANT = 0
